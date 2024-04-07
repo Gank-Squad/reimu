@@ -1,5 +1,6 @@
 package com.git.ganksquad.expressions;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
@@ -20,11 +21,15 @@ public class AssignmentExpression implements Expression {
 	
 	public static AssignmentExpression declare(String name, Expression value) {
 		
+		ParseChecks.RequiredNotNull(name, value);
+		
 		return new AssignmentExpression(name, value, true);
 	}
 
 	public static AssignmentExpression assign(String name, Expression value) {
 		
+		ParseChecks.RequiredNotNull(name, value);
+
 		return new AssignmentExpression(name, value, false);
 	}
 

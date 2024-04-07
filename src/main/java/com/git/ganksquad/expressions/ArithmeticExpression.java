@@ -1,6 +1,7 @@
 package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.Operator;
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.ArithmeticData;
 import com.git.ganksquad.data.Data;
@@ -21,20 +22,28 @@ public class ArithmeticExpression implements Expression {
 
 	public static ArithmeticExpression add(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new ArithmeticExpression(Operator.ADD, left, right);
 	}
 
 	public static ArithmeticExpression sub(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new ArithmeticExpression(Operator.SUB, left, right);
 	}
 
 	public static ArithmeticExpression mul(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+		
 		return new ArithmeticExpression(Operator.MUL, left, right);
 	}
 
 	public static ArithmeticExpression div(Expression left, Expression right) {
+		
+		ParseChecks.RequiredNotNull(left, right);
 		
 		return new ArithmeticExpression(Operator.DIV, left, right);
 	}

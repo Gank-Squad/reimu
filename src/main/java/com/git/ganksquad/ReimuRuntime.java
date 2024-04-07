@@ -3,11 +3,14 @@ package com.git.ganksquad;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.exceptions.NullAssignmentExpression;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 import com.git.ganksquad.exceptions.SymbolNotFoundException;
 
@@ -60,6 +63,24 @@ public class ReimuRuntime {
     	return r;
     }
 
+    public ReimuRuntime subScope(Iterator<String> names, Iterator<Data> values) throws ReimuRuntimeException {
+
+    	ReimuRuntime r = this.subScope();
+
+    	while(names.hasNext() && values.hasNext()){
+    		
+    		r.symbolTable.put(names.next(), values.next());
+    	}
+
+    	if(names.hasNext() || values.hasNext()) {
+    		
+    		throw new ReimuRuntimeException("Cannot bind variables to scope because they missmatch the values");
+    	}
+    	
+    	return r;
+    
+    }
+
     /**
      * Creates a new sub-scope from the current runtime
      * @return The new scope
@@ -81,7 +102,7 @@ public class ReimuRuntime {
     	
     	if(value == null) {
 
-    		throw new ReimuRuntimeException("Tried to assign value as null!");
+    		throw NullAssignmentExpression.fromVariableDeclaration(name);
     	}
     
     	this.symbolTable.put(name, value);
@@ -97,6 +118,21 @@ public class ReimuRuntime {
     }
 
     /**
+     * Declare a function
+     * @param value The {@link FunctionData} to declare
+     * @throws ReimuRuntimeException if the value is null
+     */
+    public void declareFunction(FunctionData value) throws ReimuRuntimeException {
+    	
+    	if(value == null) {
+
+    		throw NullAssignmentExpression.fromFuncDef();
+    	}
+    
+    	this.symbolTable.put(value.getName(), value);
+    }
+
+    /**
      * Assign data to the symbol in the parent or current scope.
      * 
      * This should only be used if the variable has already been declared using {@link ReimuRuntime#declare}
@@ -109,7 +145,7 @@ public class ReimuRuntime {
     
     	if(value == null) {
 
-    		throw new ReimuRuntimeException("Tried to assign value as null!");
+    		throw NullAssignmentExpression.fromVariableAssignment(name);
     	}
 
     	if(this.symbolTable.containsKey(name)) {
@@ -146,6 +182,24 @@ public class ReimuRuntime {
     	}
     	
     	return parent.deref(name);
+    }
+    
+    
+    public FunctionData derefFunction(String name, int paramCount) throws SymbolNotFoundException {
+    	
+    	Object d = this.symbolTable.get(FunctionData.resolveName(name, paramCount));
+    	
+    	if(d != null) {
+    		
+    		return (FunctionData)d;
+    	}
+    	
+    	if(this.parent == null) {
+    		
+    		throw new SymbolNotFoundException(String.format("Cannot deref symbol with name %s, since it does not exist", name));
+    	}
+    	
+    	return (FunctionData)parent.derefFunction(name, paramCount);
     }
 
     @Override

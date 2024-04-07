@@ -1,5 +1,6 @@
 package com.git.ganksquad.expressions;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
@@ -19,6 +20,8 @@ public class WhileExpression implements Expression {
 	
 	public static WhileExpression from(Expression cond, BlockExpression body) {
 		
+		ParseChecks.RequiredNotNull(cond, body);
+
 		return new WhileExpression(cond, body);
 	}
 

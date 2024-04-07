@@ -1,6 +1,7 @@
 package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.Operator;
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
@@ -22,31 +23,43 @@ public class CompareExpression implements Expression {
 	
 	public static CompareExpression eq(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new CompareExpression(Operator.EQ, left, right);
 	}
 
 	public static CompareExpression neq(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new CompareExpression(Operator.NEQ, left, right);
 	}
 
 	public static CompareExpression lt(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new CompareExpression(Operator.LT, left, right);
 	}
 
 	public static CompareExpression lteq(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new CompareExpression(Operator.LTEQ, left, right);
 	}
 
 	public static CompareExpression gt(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new CompareExpression(Operator.GT, left, right);
 	}
 
 	public static CompareExpression gteq(Expression left, Expression right) {
 		
+		ParseChecks.RequiredNotNull(left, right);
+
 		return new CompareExpression(Operator.GTEQ, left, right);
 	}
 

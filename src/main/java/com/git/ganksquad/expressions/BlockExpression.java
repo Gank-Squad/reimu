@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
@@ -32,6 +33,8 @@ public class BlockExpression implements Expression {
 	}
 
 	public static BlockExpression fromList(List<Expression> expr) {
+		
+		ParseChecks.RequiredNotNull(expr);
 		
 		return new BlockExpression(expr);
 	}

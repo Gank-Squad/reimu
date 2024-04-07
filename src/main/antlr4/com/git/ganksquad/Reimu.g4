@@ -14,14 +14,14 @@ g_program
     returns [List<Expression> value]
     @init { $value = new ArrayList<Expression>(); }
     : (   g_statement  { $value.add($g_statement.value); }
-        /* | g_funcdef    { $value.add($g_funcdef.value); } */
+        | g_funcdef    { $value.add($g_funcdef.value); } 
       )+
     ;
     
-// g_funcdef returns [FuncDefExpr value]
-//     : 'function' s1=SYMBOL '(' s2=g_symbol_list ')' '{' s3=g_statement_list '}' 
-//       { $value = FuncDefExpr.from($s1.text, $s2.value, $s3.value); }
-//     ;
+g_funcdef returns [FunctionDefinitionExpression value]
+    : 'func' s1=SYMBOL '(' s2=g_symbol_list ')' s3=g_block 
+      { $value = FunctionDefinitionExpression.from($s1.text, $s2.value, $s3.value); }
+    ;
 
 g_statement_list returns [List<Expression> value] 
     @init { $value = new ArrayList<Expression>(); }
@@ -58,7 +58,7 @@ g_expr returns [Expression value]
     | e1=g_expr '>=' e2=g_expr      { $value = CompareExpression.gteq($e1.value, $e2.value); }
     | SYMBOL '=' e1=g_expr          { $value = AssignmentExpression.assign($SYMBOL.text, $e1.value); }
     | 'var' SYMBOL '=' e1=g_expr    { $value = AssignmentExpression.declare($SYMBOL.text, $e1.value); }
-//    | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunc.from($SYMBOL.text, $g_expr_list.value); }
+    | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
 

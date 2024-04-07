@@ -1,5 +1,6 @@
 package com.git.ganksquad.expressions;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.StringData;
@@ -17,11 +18,15 @@ public class StringLiteral implements Expression {
 	
 	public static StringLiteral fromString(String str) {
 		
+		ParseChecks.RequiredNotNull(str);
+
 		return new StringLiteral(str);
 	}
 
 	public static StringLiteral fromQuotedString(String str) {
 		
+		ParseChecks.RequiredNotNull(str);
+
 		return new StringLiteral(str.substring(1, str.length() - 1));
 	}
 

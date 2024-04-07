@@ -2,6 +2,7 @@ package com.git.ganksquad.expressions;
 
 import java.util.List;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
@@ -28,14 +29,23 @@ public class IfExpression implements Expression {
 	
 	public static IfExpression from(Expression cond, BlockExpression body) {
 		
+		ParseChecks.RequiredNotNull(cond, body);
+
 		return new IfExpression(cond, body);
 	}
 
 	public static IfExpression from(Expression cond, List<Expression> body) {
 		
+		ParseChecks.RequiredNotNull(cond, body);
+
 		return new IfExpression(cond, BlockExpression.fromList(body));
 	}
 	
+	/**
+	 * Returns a boolean indicating if this if statement was true or not
+	 * @return the result of the expression
+	 * @throws ReimuRuntimeException If the if statement has not been evaluated yet
+	 */
 	public boolean conditionWasTrue() throws ReimuRuntimeException {
 		
 		if(this.wasTrue == UNKNWON_EVAL) {

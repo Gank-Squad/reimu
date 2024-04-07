@@ -1,5 +1,6 @@
 package com.git.ganksquad.expressions;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.BooleanData;
@@ -16,6 +17,8 @@ public class BooleanLiteral implements Expression {
 	}
 	
 	public static BooleanLiteral fromString(String str) {
+		
+		ParseChecks.RequiredNotNull(str);
 		
 		return new BooleanLiteral(Boolean.parseBoolean(str));
 	}

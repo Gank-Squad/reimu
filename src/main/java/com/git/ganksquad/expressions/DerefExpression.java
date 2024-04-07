@@ -1,5 +1,6 @@
 package com.git.ganksquad.expressions;
 
+import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
@@ -15,6 +16,8 @@ public class DerefExpression implements Expression {
 	
 	public static DerefExpression fromString(String name) {
 		
+		ParseChecks.RequiredNotNull(name);
+
 		return new DerefExpression(name);
 	}
 
