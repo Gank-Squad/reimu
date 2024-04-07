@@ -3,7 +3,7 @@ package com.git.ganksquad.expressions;
 import java.util.List;
 
 import com.git.ganksquad.ReimuRuntime;
-import com.git.ganksquad.data.BooleanEvaluatable;
+import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.InvalidBooleanException;
@@ -51,7 +51,7 @@ public class IfExpression implements Expression {
 		
 		Data c = this.condition.eval(reimuRuntime);
 		
-		if(BooleanEvaluatable.throwOrEval(c)) {
+		if(BooleanEvaluable.throwOrEval(c)) {
 			
 			this.wasTrue = TRUE_EVAL;
 			

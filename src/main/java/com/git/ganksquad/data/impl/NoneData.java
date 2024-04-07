@@ -1,10 +1,10 @@
 package com.git.ganksquad.data.impl;
 
-import com.git.ganksquad.data.BooleanEvaluatable;
+import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 
-public class NoneData implements Data, BooleanEvaluatable {
+public class NoneData implements Data, BooleanEvaluable {
 	
 	public static final NoneData instance = new NoneData();
 	

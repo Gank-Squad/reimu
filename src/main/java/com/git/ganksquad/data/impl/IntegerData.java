@@ -1,7 +1,7 @@
 package com.git.ganksquad.data.impl;
 
 import com.git.ganksquad.data.ArithmeticData;
-import com.git.ganksquad.data.BooleanEvaluatable;
+import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
@@ -11,7 +11,7 @@ import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
 
-public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluatable {
+public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluable {
 	
 	public int value = 0;
 	

@@ -1,7 +1,7 @@
 package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ReimuRuntime;
-import com.git.ganksquad.data.BooleanEvaluatable;
+import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
@@ -33,7 +33,7 @@ public class WhileExpression implements Expression {
 
 			Data c = this.condExpression.eval(scope);
 
-			if(BooleanEvaluatable.throwOrEval(c)) {
+			if(BooleanEvaluable.throwOrEval(c)) {
 
 				r = this.bodyExpression.evalPartial(scope);
 				

@@ -1,9 +1,8 @@
 package com.git.ganksquad.data;
 
 import com.git.ganksquad.exceptions.InvalidBooleanException;
-import com.git.ganksquad.expressions.Expression;
 
-public interface BooleanEvaluatable {
+public interface BooleanEvaluable {
 
 	/**
 	 * Evaluate the data as a boolean
@@ -14,9 +13,9 @@ public interface BooleanEvaluatable {
 	
 	public static boolean throwOrEval(Data e) throws InvalidBooleanException {
 
-		if(e instanceof BooleanEvaluatable) {
+		if(e instanceof BooleanEvaluable) {
 			
-			return ((BooleanEvaluatable)e).evalAsBool();
+			return ((BooleanEvaluable)e).evalAsBool();
 		}
 
 		throw new InvalidBooleanException(e);
