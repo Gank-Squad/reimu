@@ -1,6 +1,8 @@
 package com.git.ganksquad.data;
 
-
+/**
+ * The base data type which all data must be
+ */
 public interface Data {
 	
 	/**

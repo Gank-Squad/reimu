@@ -2,6 +2,9 @@ package com.git.ganksquad.exceptions;
 
 import com.git.ganksquad.data.Data;
 
+/**
+ * Raised when an expression cannot be reduced to a boolean.
+ */
 public class InvalidBooleanException extends ReimuRuntimeException {
 
 	private static final long serialVersionUID = -5045662217944146416L;

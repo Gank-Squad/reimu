@@ -4,6 +4,9 @@ import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 
+/**
+ * Represents a null value, which there exists only one.
+ */
 public class NoneData implements Data, BooleanEvaluable {
 	
 	public static final NoneData instance = new NoneData();

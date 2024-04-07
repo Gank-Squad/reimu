@@ -1,5 +1,10 @@
 package com.git.ganksquad.data;
 
+/**
+ * Used for unique numbering of class types.
+ * 
+ * This allows the {@link Data} type to be switch cased easily
+ */
 public interface ClassKeys {
 
 	public static final int NONE_DATA = 0;

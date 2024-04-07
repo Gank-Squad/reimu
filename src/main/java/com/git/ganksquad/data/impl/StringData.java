@@ -6,6 +6,9 @@ import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.exceptions.CannotCompareException;
 
+/**
+ * Represents a string value.
+ */
 public class StringData implements Data, ComparableData, BooleanEvaluable {
 	
 	public String value = "";

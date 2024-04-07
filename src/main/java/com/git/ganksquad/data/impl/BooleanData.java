@@ -11,8 +11,16 @@ import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
 
+/**
+ * Represents boolean data, which can hold true or false.
+ * 
+ * Boolean's can be treated like integers, in most cases.
+ */
 public class BooleanData implements Data, ArithmeticData, ComparableData, BooleanEvaluable {
 	
+	/**
+	 * The value of this data
+	 */
 	public boolean value = false;
 	
 	public BooleanData() {}
@@ -22,6 +30,10 @@ public class BooleanData implements Data, ArithmeticData, ComparableData, Boolea
 		this.value = value;
 	}
 	
+	/**
+	 * Returns this value as an integer
+	 * @return
+	 */
 	public int valueAsInt() {
 		
 		if(this.value) 

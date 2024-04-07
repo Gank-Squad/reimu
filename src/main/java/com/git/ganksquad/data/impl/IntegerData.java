@@ -11,6 +11,9 @@ import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
 
+/**
+ * Represents integer data, which can hold a 32bit integer.
+ */
 public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluable {
 	
 	public int value = 0;
