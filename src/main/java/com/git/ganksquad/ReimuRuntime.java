@@ -49,6 +49,18 @@ public class ReimuRuntime {
     	this.parent = parent;
     }
     
+
+    /**
+     * Creates a new sub-scope from the current runtime
+     * @return The new scope
+     */
+    public ReimuRuntime subScope() {
+    	
+    	ReimuRuntime r = new ReimuRuntime(this);
+    	
+    	return r;
+    }
+
     /**
      * Creates a new sub-scope from the current runtime
      * @param bindings Variables which should be put into the new scope
@@ -63,6 +75,13 @@ public class ReimuRuntime {
     	return r;
     }
 
+    /**
+     * Creates a new sub-scope from the current runtime and populates the symbol table with the given bindings
+     * @param names The names to bind to the value
+     * @param values  The values to bind to the names
+     * @throws ReimuRuntimeException if there is a different number of names as values
+     * @return The new scope
+     */
     public ReimuRuntime subScope(Iterator<String> names, Iterator<Data> values) throws ReimuRuntimeException {
 
     	ReimuRuntime r = this.subScope();
@@ -79,17 +98,6 @@ public class ReimuRuntime {
     	
     	return r;
     
-    }
-
-    /**
-     * Creates a new sub-scope from the current runtime
-     * @return The new scope
-     */
-    public ReimuRuntime subScope() {
-    	
-    	ReimuRuntime r = new ReimuRuntime(this);
-    	
-    	return r;
     }
     
     /**
@@ -118,7 +126,8 @@ public class ReimuRuntime {
     }
 
     /**
-     * Declare a function
+     * Declare a function, this allows for basic function overloading. 
+     * All functions must have a different number of params.
      * @param value The {@link FunctionData} to declare
      * @throws ReimuRuntimeException if the value is null
      */
@@ -185,6 +194,13 @@ public class ReimuRuntime {
     }
     
     
+    /**
+     * Get a function. This requires the number of arguments to allow for function overloading.
+     * @param name The function name
+     * @param paramCount The param count
+     * @return The function data
+     * @throws SymbolNotFoundException If the function was not found
+     */
     public FunctionData derefFunction(String name, int paramCount) throws SymbolNotFoundException {
     	
     	Object d = this.symbolTable.get(FunctionData.resolveName(name, paramCount));
