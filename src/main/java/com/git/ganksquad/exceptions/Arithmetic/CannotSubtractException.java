@@ -1,4 +1,4 @@
-package com.git.ganksquad.exceptions;
+package com.git.ganksquad.exceptions.Arithmetic;
 
 import com.git.ganksquad.data.Data;
 

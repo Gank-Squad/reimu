@@ -1,9 +1,9 @@
 package com.git.ganksquad.data;
 
-import com.git.ganksquad.exceptions.CannotAddException;
-import com.git.ganksquad.exceptions.CannotDivideException;
-import com.git.ganksquad.exceptions.CannotMultiplyException;
-import com.git.ganksquad.exceptions.CannotSubtractException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotAddException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
 
 public interface ArithmeticData {
 

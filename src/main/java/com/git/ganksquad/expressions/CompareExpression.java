@@ -2,9 +2,9 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.Operator;
 import com.git.ganksquad.ReimuRuntime;
-import com.git.ganksquad.data.BooleanData;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.BooleanData;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class CompareExpression implements Expression {
@@ -93,11 +93,9 @@ public class CompareExpression implements Expression {
 
 	@Override
 	public String toString() {
-		return String.format(
-				"%s(%s, %s, %s)", 
-				this.getClass().getSimpleName(),
+		return this.formatToString(
 				Operator.opString(this.operator),
-				this.left.toString(),
-				this.right.toString());
+				this.left,
+				this.right);
 	}
 }

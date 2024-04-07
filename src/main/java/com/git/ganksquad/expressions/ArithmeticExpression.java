@@ -65,11 +65,9 @@ public class ArithmeticExpression implements Expression {
 
 	@Override
 	public String toString() {
-		return String.format(
-				"%s(%s, %s, %s)", 
-				this.getClass().getSimpleName(),
+		return this.formatToString(
 				Operator.opString(this.operator),
-				this.left.toString(),
-				this.right.toString());
+				this.left,
+				this.right);
 	}
 }

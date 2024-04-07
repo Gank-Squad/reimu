@@ -2,7 +2,7 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.data.NoneData;
+import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class NoneExpression implements Expression {
@@ -18,6 +18,6 @@ public class NoneExpression implements Expression {
 	
 	@Override
 	public String toString() {
-		return "NoneExpression()";
+		return this.formatToString();
 	}
 }

@@ -1,12 +1,17 @@
-package com.git.ganksquad.data;
+package com.git.ganksquad.data.impl;
 
-import com.git.ganksquad.exceptions.CannotAddException;
+import com.git.ganksquad.data.ArithmeticData;
+import com.git.ganksquad.data.BooleanEvaluatable;
+import com.git.ganksquad.data.ClassKeys;
+import com.git.ganksquad.data.ComparableData;
+import com.git.ganksquad.data.Data;
 import com.git.ganksquad.exceptions.CannotCompareException;
-import com.git.ganksquad.exceptions.CannotDivideException;
-import com.git.ganksquad.exceptions.CannotMultiplyException;
-import com.git.ganksquad.exceptions.CannotSubtractException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotAddException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
 
-public class IntegerData implements Data, ArithmeticData, ComparableData {
+public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluatable {
 	
 	public int value = 0;
 	
@@ -128,8 +133,18 @@ public class IntegerData implements Data, ArithmeticData, ComparableData {
 	}
 
 	@Override
+	public boolean evalAsBool() {
+		return this.value != 0;
+	}
+
+	@Override
 	public int getClassKey() {
 		
 		return ClassKeys.INTEGER_DATA;
+	}
+	
+	@Override
+	public String toString() {
+		return Integer.toString(this.value);
 	}
 }

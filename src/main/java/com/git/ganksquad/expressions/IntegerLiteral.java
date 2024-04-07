@@ -2,7 +2,7 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.data.IntegerData;
+import com.git.ganksquad.data.impl.IntegerData;
 
 public class IntegerLiteral implements Expression {
 	
@@ -33,6 +33,6 @@ public class IntegerLiteral implements Expression {
 	
 	@Override
 	public String toString() {
-		return Integer.toString(this.value);
+		return this.formatToString(this.value);
 	}
 }

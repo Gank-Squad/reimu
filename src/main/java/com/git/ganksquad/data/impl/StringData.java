@@ -1,8 +1,12 @@
-package com.git.ganksquad.data;
+package com.git.ganksquad.data.impl;
 
+import com.git.ganksquad.data.BooleanEvaluatable;
+import com.git.ganksquad.data.ClassKeys;
+import com.git.ganksquad.data.ComparableData;
+import com.git.ganksquad.data.Data;
 import com.git.ganksquad.exceptions.CannotCompareException;
 
-public class StringData implements Data, ComparableData {
+public class StringData implements Data, ComparableData, BooleanEvaluatable {
 	
 	public String value = "";
 	
@@ -53,9 +57,19 @@ public class StringData implements Data, ComparableData {
 	}
 
 	@Override
+	public boolean evalAsBool() {
+		return !this.value.isEmpty();
+	}
+
+	@Override
 	public int getClassKey() {
 
 		return ClassKeys.STRING_DATA;
+	}
+
+	@Override
+	public String toString() {
+		return '"' + this.value + '"';
 	}
 
 }

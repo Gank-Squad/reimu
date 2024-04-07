@@ -31,7 +31,9 @@ g_statement_list returns [List<Expression> value]
 g_statement returns [Expression value]
     : STATEMENT_END         { $value = NoneExpression.get(); }
     | g_expr STATEMENT_END  { $value = $g_expr.value; }
-//    | g_ifelse              { $value = $g_ifelse.value; }
+    | g_block               { $value = $g_block.value; }
+    | g_ifelse              { $value = $g_ifelse.value; }
+    | g_while               { $value = $g_while.value; }
 //    | g_foreach             { $value = $g_foreach.value; }
     ;
 
@@ -54,7 +56,8 @@ g_expr returns [Expression value]
     | e1=g_expr '<=' e2=g_expr      { $value = CompareExpression.lteq($e1.value, $e2.value); }
     | e1=g_expr '>' e2=g_expr       { $value = CompareExpression.gt($e1.value, $e2.value); }
     | e1=g_expr '>=' e2=g_expr      { $value = CompareExpression.gteq($e1.value, $e2.value); }
-//    | SYMBOL '=' e1=g_expr          { $value = AssignExpr.from($SYMBOL.text, $e1.value); }
+    | SYMBOL '=' e1=g_expr          { $value = AssignmentExpression.assign($SYMBOL.text, $e1.value); }
+    | 'var' SYMBOL '=' e1=g_expr    { $value = AssignmentExpression.declare($SYMBOL.text, $e1.value); }
 //    | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunc.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
@@ -63,18 +66,31 @@ g_value returns [Expression value]
     : INTEGER { $value = IntegerLiteral.fromString($INTEGER.text); } 
     | STRING  { $value = StringLiteral.fromQuotedString($STRING.text); }
     | BOOLEAN { $value = BooleanLiteral.fromString($BOOLEAN.text); }
-//    | SYMBOL  { $value = DerefExpr.fromString($SYMBOL.text); }
+    | SYMBOL  { $value = DerefExpression.fromString($SYMBOL.text); }
 //    | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
     ;
 
-// g_ifelse
-//     returns [Expression value]
-//     : 'if' '(' g_expr ')' '{' g_statement_list '}'          
-//         { $value = IfElseExpr.from($g_expr.value, $g_statement_list.value); }
-//     | 'if' '(' g_expr ')' '{' e1=g_statement_list '}' 'else' '{' e2=g_statement_list '}'
-//         { $value = IfElseExpr.from($g_expr.value, $e1.value, $e2.value); }
-//     
-//     ;
+g_block
+    returns [BlockExpression value]
+    : '{' g_statement_list '}'   { $value = BlockExpression.fromList($g_statement_list.value); }
+    ;
+
+g_ifelse
+    returns [Expression value]
+    @init {
+        ArrayList<IfExpression> ifs = new ArrayList<>();
+    }
+    : 'if' '(' g_expr ')' g_block { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
+      ( 
+        'el' '(' g_expr ')' g_block { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
+      )*
+      ( 'el' g_block )?    { $value = IfElseExpression.from(ifs, ($g_block.ctx == null) ? BlockExpression.empty() : $g_block.value); }
+    ;
+
+g_while
+    returns [Expression value]
+    : 'while' '(' g_expr ')' g_block { $value = WhileExpression.from($g_expr.value, $g_block.value); }
+    ;
     
 // g_foreach
 //     returns [Expression value]
@@ -89,7 +105,7 @@ g_symbol_list
     ;
 
 
-STATEMENT_END : ( ';' | '\n' )+ ;
+STATEMENT_END : ( ';' )+ ;
 
 
 STRING                : '"' ( ESCAPED_CHAR | ~["\\] )* '"' ;

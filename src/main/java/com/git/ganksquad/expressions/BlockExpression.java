@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.data.NoneData;
+import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class BlockExpression implements Expression {
@@ -36,8 +36,7 @@ public class BlockExpression implements Expression {
 		return new BlockExpression(expr);
 	}
 
-	@Override
-	public Data eval(ReimuRuntime runtime) throws ReimuRuntimeException {
+	public Data evalPartial(ReimuRuntime runtime) throws ReimuRuntimeException {
 
 		Data result = NoneData.instance;
 		
@@ -48,11 +47,19 @@ public class BlockExpression implements Expression {
 		
 		return result;
 	}
+
+	@Override
+	public Data eval(ReimuRuntime runtime) throws ReimuRuntimeException {
+		
+		ReimuRuntime scope = runtime;
+		
+		return this.evalPartial(scope);
+	}
 	
 	@Override
 	public String toString() {
-		return this.expressions.stream()
+		return this.formatToString(this.expressions.stream()
 				.map(x -> x.toString())
-				.collect(Collectors.joining("\n"));
+				.collect(Collectors.joining(", ")));
 		}
 }

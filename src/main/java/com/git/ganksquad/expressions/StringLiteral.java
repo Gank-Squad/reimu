@@ -2,6 +2,7 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.StringData;
 
 public class StringLiteral implements Expression {
 
@@ -26,14 +27,12 @@ public class StringLiteral implements Expression {
 
 	@Override
 	public Data eval(ReimuRuntime runtime) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return new StringData(this.value);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s(%s)", 
-				this.getClass().getSimpleName(),
-				this.value);
+		return this.formatToString('"' + this.value + '"');
 	}
 }

@@ -1,8 +1,8 @@
 package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ReimuRuntime;
-import com.git.ganksquad.data.BooleanData;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.BooleanData;
 
 public class BooleanLiteral implements Expression {
 
@@ -28,6 +28,6 @@ public class BooleanLiteral implements Expression {
 
 	@Override
 	public String toString() {
-		return Boolean.toString(this.value);
+		return this.formatToString(this.value);
 	}
 }
