@@ -34,6 +34,7 @@ g_statement returns [Expression value]
     | g_block               { $value = $g_block.value; }
     | g_ifelse              { $value = $g_ifelse.value; }
     | g_while               { $value = $g_while.value; }
+    | g_for                 { $value = $g_for.value; }
     | g_foreach             { $value = $g_foreach.value; }
     ;
 
@@ -99,6 +100,12 @@ g_foreach
     returns [Expression value]
     : 'for' '(' SYMBOL 'in' g_expr ')' g_block
         { $value = ForeachLoopExpression.from($SYMBOL.text, $g_expr.value, $g_block.value); }
+    ;
+
+g_for
+    returns [Expression value]
+    : 'for' '(' e1=g_expr STATEMENT_END e2=g_expr STATEMENT_END e3=g_expr ')' g_block
+        { $value = ForLoopExpression.from($e1.value, $e2.value, $e3.value, $g_block.value); }
     ;
     
 g_symbol_list
