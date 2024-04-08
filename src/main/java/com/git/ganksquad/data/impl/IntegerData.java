@@ -6,10 +6,14 @@ import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.exceptions.CannotCompareException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotANDException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotAddException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotModulusException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotORException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotXORException;
 
 /**
  * Represents integer data, which can hold a 32bit integer.
@@ -136,6 +140,70 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	}
 
 	@Override
+	public Data mod(Data other) throws CannotModulusException{
+
+		switch (other.getClassKey()) {
+
+		case ClassKeys.INTEGER_DATA:
+			return new IntegerData(this.value % ((IntegerData)other).value);
+
+		case ClassKeys.BOOLEAN_DATA:
+			return new IntegerData(this.value % ((BooleanData)other).valueAsInt());
+
+		default:
+			throw new CannotModulusException(this, other);
+		}
+	}
+
+	@Override
+	public Data xor(Data other) throws CannotXORException {
+
+		switch (other.getClassKey()) {
+
+		case ClassKeys.INTEGER_DATA:
+			return new IntegerData(this.value ^ ((IntegerData)other).value);
+
+		case ClassKeys.BOOLEAN_DATA:
+			return new IntegerData(this.value ^ ((BooleanData)other).valueAsInt());
+
+		default:
+			throw new CannotXORException(this, other);
+		}
+	}
+
+	@Override
+	public Data or(Data other) throws CannotORException {
+
+		switch (other.getClassKey()) {
+
+		case ClassKeys.INTEGER_DATA:
+			return new IntegerData(this.value | ((IntegerData)other).value);
+
+		case ClassKeys.BOOLEAN_DATA:
+			return new IntegerData(this.value | ((BooleanData)other).valueAsInt());
+
+		default:
+			throw new CannotORException(this, other);
+		}
+	}
+
+	@Override
+	public Data and(Data other) throws CannotANDException {
+
+		switch (other.getClassKey()) {
+
+		case ClassKeys.INTEGER_DATA:
+			return new IntegerData(this.value & ((IntegerData)other).value);
+
+		case ClassKeys.BOOLEAN_DATA:
+			return new IntegerData(this.value & ((BooleanData)other).valueAsInt());
+
+		default:
+			throw new CannotANDException(this, other);
+		}
+	}
+
+	@Override
 	public boolean evalAsBool() {
 		return this.value != 0;
 	}
@@ -150,4 +218,5 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	public String toString() {
 		return Integer.toString(this.value);
 	}
+
 }

@@ -2,8 +2,8 @@ grammar Reimu;
 
 @header {
 import com.git.ganksquad.expressions.*;
-import com.git.ganksquad.data.*;
 import com.git.ganksquad.exceptions.*;
+import com.git.ganksquad.data.*;
 }
 
 program returns [Expression expr]
@@ -34,7 +34,7 @@ g_statement returns [Expression value]
     | g_block               { $value = $g_block.value; }
     | g_ifelse              { $value = $g_ifelse.value; }
     | g_while               { $value = $g_while.value; }
-//    | g_foreach             { $value = $g_foreach.value; }
+    | g_foreach             { $value = $g_foreach.value; }
     ;
 
 g_expr_list returns [List<Expression> value] 
@@ -44,12 +44,15 @@ g_expr_list returns [List<Expression> value]
 
 g_expr returns [Expression value]
     : '(' g_expr ')'                { $value = $g_expr.value; }
-    | e1=g_expr '+' e2=g_expr       { $value = ArithmeticExpression.add($e1.value, $e2.value); }
-    | e1=g_expr '++' e2=g_expr      { $value = ArithmeticExpression.add($e1.value, $e2.value); }
-    | e1=g_expr '-' e2=g_expr       { $value = ArithmeticExpression.sub($e1.value, $e2.value); }
-    | e1=g_expr '*' e2=g_expr       { $value = ArithmeticExpression.mul($e1.value, $e2.value); }
-    | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
     | '-' e2=g_expr                 { $value = ArithmeticExpression.sub(IntegerLiteral.zero(), $e2.value);}
+    | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
+    | e1=g_expr '*' e2=g_expr       { $value = ArithmeticExpression.mul($e1.value, $e2.value); }
+    | e1=g_expr '%' e2=g_expr       { $value = ArithmeticExpression.mod($e1.value, $e2.value); }
+    | e1=g_expr '+' e2=g_expr       { $value = ArithmeticExpression.add($e1.value, $e2.value); }
+    | e1=g_expr '-' e2=g_expr       { $value = ArithmeticExpression.sub($e1.value, $e2.value); }
+    | e1=g_expr '&' e2=g_expr       { $value = ArithmeticExpression.and($e1.value, $e2.value); }
+    | e1=g_expr '^' e2=g_expr       { $value = ArithmeticExpression.xor($e1.value, $e2.value); }
+    | e1=g_expr '|' e2=g_expr       { $value = ArithmeticExpression.or($e1.value, $e2.value); }
     | e1=g_expr '==' e2=g_expr      { $value = CompareExpression.eq($e1.value, $e2.value); }
     | e1=g_expr '!=' e2=g_expr      { $value = CompareExpression.neq($e1.value, $e2.value); }
     | e1=g_expr '<' e2=g_expr       { $value = CompareExpression.lt($e1.value, $e2.value); }
@@ -67,7 +70,7 @@ g_value returns [Expression value]
     | STRING  { $value = StringLiteral.fromQuotedString($STRING.text); }
     | BOOLEAN { $value = BooleanLiteral.fromString($BOOLEAN.text); }
     | SYMBOL  { $value = DerefExpression.fromString($SYMBOL.text); }
-//    | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
+    | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
     ;
 
 g_block
@@ -92,11 +95,11 @@ g_while
     : 'while' '(' g_expr ')' g_block { $value = WhileExpression.from($g_expr.value, $g_block.value); }
     ;
     
-// g_foreach
-//     returns [Expression value]
-//     : 'for' '(' SYMBOL 'in' g_expr ')' '{' g_statement_list '}'
-//         { $value = ForeachLoopExpr.from($SYMBOL.text, $g_expr.value, $g_statement_list.value); }
-//     ;
+g_foreach
+    returns [Expression value]
+    : 'for' '(' SYMBOL 'in' g_expr ')' g_block
+        { $value = ForeachLoopExpression.from($SYMBOL.text, $g_expr.value, $g_block.value); }
+    ;
     
 g_symbol_list
     returns [List<String> value]

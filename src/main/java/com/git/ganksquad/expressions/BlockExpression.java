@@ -39,6 +39,11 @@ public class BlockExpression implements Expression {
 		return new BlockExpression(expr);
 	}
 
+	/**
+	 * Evaluates this block without making a new scope.
+	 * 
+	 * This trusts that the caller has already done so
+	 */
 	public Data evalPartial(ReimuRuntime runtime) throws ReimuRuntimeException {
 
 		Data result = NoneData.instance;

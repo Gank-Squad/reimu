@@ -20,6 +20,13 @@ public class FunctionData implements Data {
 		this.params = params;
 		this.body = body;
 	}
+
+	public FunctionData(ReimuRuntime rt, String name, List<String> params, BlockExpression body) {
+		
+		this(name, params, body);
+
+		this.scope = rt;
+	}
 	
 	public String getName() {
 		

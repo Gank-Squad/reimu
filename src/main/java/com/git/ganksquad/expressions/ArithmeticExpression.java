@@ -48,6 +48,34 @@ public class ArithmeticExpression implements Expression {
 		return new ArithmeticExpression(Operator.DIV, left, right);
 	}
 
+	public static ArithmeticExpression mod(Expression left, Expression right) {
+		
+		ParseChecks.RequiredNotNull(left, right);
+		
+		return new ArithmeticExpression(Operator.MOD, left, right);
+	}
+
+	public static ArithmeticExpression xor(Expression left, Expression right) {
+		
+		ParseChecks.RequiredNotNull(left, right);
+		
+		return new ArithmeticExpression(Operator.XOR, left, right);
+	}
+
+	public static ArithmeticExpression or(Expression left, Expression right) {
+		
+		ParseChecks.RequiredNotNull(left, right);
+		
+		return new ArithmeticExpression(Operator.OR, left, right);
+	}
+
+	public static ArithmeticExpression and(Expression left, Expression right) {
+		
+		ParseChecks.RequiredNotNull(left, right);
+		
+		return new ArithmeticExpression(Operator.AND, left, right);
+	}
+
 	@Override
 	public Data eval(ReimuRuntime runtime) throws ReimuRuntimeException {
 		
@@ -55,6 +83,7 @@ public class ArithmeticExpression implements Expression {
 		Data rData = right.eval(runtime);
 		
 		switch (this.operator) {
+
 		case Operator.ADD:
 			return ArithmeticData.add(lData, rData);
 
@@ -66,6 +95,18 @@ public class ArithmeticExpression implements Expression {
 
 		case Operator.MUL:
 			return ArithmeticData.mul(lData, rData);
+
+		case Operator.MOD:
+			return ArithmeticData.mod(lData, rData);
+
+		case Operator.XOR:
+			return ArithmeticData.xor(lData, rData);
+
+		case Operator.OR:
+			return ArithmeticData.or(lData, rData);
+
+		case Operator.AND:
+			return ArithmeticData.and(lData, rData);
 
 		default:
 			throw new RuntimeException(String.format("Invalid operator given to %s", this.getClass().getSimpleName()));

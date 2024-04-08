@@ -72,7 +72,7 @@ public class StringData implements Data, ComparableData, BooleanEvaluable {
 
 	@Override
 	public String toString() {
-		return '"' + this.value + '"';
+		return this.value;
 	}
 
 }

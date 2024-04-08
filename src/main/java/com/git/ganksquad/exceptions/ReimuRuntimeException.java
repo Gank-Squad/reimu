@@ -9,6 +9,11 @@ public class ReimuRuntimeException extends Exception {
 
 	public ReimuRuntimeException() {}
 
+	public ReimuRuntimeException(Exception e) {
+		
+		super(e);
+	}
+
 	public ReimuRuntimeException(String message) {
 
 		super(message);

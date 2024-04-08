@@ -53,4 +53,8 @@ public class InvokeFunctionExpression implements Expression {
 		return data.body.eval(rt);
 	}
 
+	@Override
+	public String toString() {
+		return this.formatToString(symbol, args);
+	}
 }

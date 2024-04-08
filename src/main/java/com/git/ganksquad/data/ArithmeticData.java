@@ -1,9 +1,13 @@
 package com.git.ganksquad.data;
 
+import com.git.ganksquad.exceptions.Arithmetic.CannotANDException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotAddException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotModulusException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotORException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
+import com.git.ganksquad.exceptions.Arithmetic.CannotXORException;
 
 /**
  * Represents a generic data which arithmetic can be performed with another data.
@@ -44,6 +48,37 @@ public interface ArithmeticData {
 	 */
 	abstract Data div(Data other) throws CannotDivideException;
 
+	/**
+	 * Modulus this data to other data
+	 * @param other The right side of the operation
+	 * @return The result of the operation
+	 * @throws CannotDivideException if this data or other data cannot be divided
+	 */
+	abstract Data mod(Data other) throws CannotModulusException;
+
+	/**
+	 * XOR this data to other data
+	 * @param other The right side of the operation
+	 * @return The result of the operation
+	 * @throws CannotDivideException if this data or other data cannot be divided
+	 */
+	abstract Data xor(Data other) throws CannotXORException;
+
+	/**
+	 * OR this data to other data
+	 * @param other The right side of the operation
+	 * @return The result of the operation
+	 * @throws CannotDivideException if this data or other data cannot be divided
+	 */
+	abstract Data or(Data other) throws CannotORException;
+
+	/**
+	 * and this data to other data
+	 * @param other The right side of the operation
+	 * @return The result of the operation
+	 * @throws CannotDivideException if this data or other data cannot be divided
+	 */
+	abstract Data and(Data other) throws CannotANDException;
 
 	/**
 	 * Add the two datas together
@@ -60,7 +95,7 @@ public interface ArithmeticData {
 		}
 
 		throw new CannotAddException(left, right);
-	};
+	}
 
 	/**
 	 * Subtract the two datas together
@@ -77,7 +112,7 @@ public interface ArithmeticData {
 		}
 
 		throw new CannotSubtractException(left, right);
-	};
+	}
 
 	/**
 	 * Multiply the two datas together
@@ -94,7 +129,7 @@ public interface ArithmeticData {
 		}
 
 		throw new CannotMultiplyException(left, right);
-	};
+	}
 
 	/**
 	 * Multiply the two datas together
@@ -111,5 +146,73 @@ public interface ArithmeticData {
 		}
 
 		throw new CannotDivideException(left, right);
-	};
+	}
+
+	/**
+	 * modulus the two datas together
+	 * @param left The left data, which should be {@link ArithmeticData}
+	 * @param right The right data
+	 * @return The sum of left * right
+	 * @throws CannotDivideException If they cannot be divided
+	 */
+	public static Data mod(Data left, Data right) throws CannotModulusException {
+		
+		if (left instanceof ArithmeticData) {
+			
+			return ((ArithmeticData)left).mod(right);
+		}
+
+		throw new CannotModulusException(left, right);
+	}
+
+	/**
+	 * xor the two datas together
+	 * @param left The left data, which should be {@link ArithmeticData}
+	 * @param right The right data
+	 * @return The sum of left * right
+	 * @throws CannotDivideException If they cannot be divided
+	 */
+	public static Data xor(Data left, Data right) throws CannotXORException {
+		
+		if (left instanceof ArithmeticData) {
+			
+			return ((ArithmeticData)left).xor(right);
+		}
+
+		throw new CannotXORException(left, right);
+	}
+
+	/**
+	 * or the two datas together
+	 * @param left The left data, which should be {@link ArithmeticData}
+	 * @param right The right data
+	 * @return The sum of left * right
+	 * @throws CannotDivideException If they cannot be divided
+	 */
+	public static Data or(Data left, Data right) throws CannotORException {
+		
+		if (left instanceof ArithmeticData) {
+			
+			return ((ArithmeticData)left).or(right);
+		}
+
+		throw new CannotORException(left, right);
+	}
+
+	/**
+	 * and the two datas together
+	 * @param left The left data, which should be {@link ArithmeticData}
+	 * @param right The right data
+	 * @return The sum of left * right
+	 * @throws CannotDivideException If they cannot be divided
+	 */
+	public static Data and(Data left, Data right) throws CannotANDException {
+		
+		if (left instanceof ArithmeticData) {
+			
+			return ((ArithmeticData)left).and(right);
+		}
+
+		throw new CannotANDException(left, right);
+	}
 }

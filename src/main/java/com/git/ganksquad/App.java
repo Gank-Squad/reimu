@@ -2,6 +2,7 @@ package com.git.ganksquad;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Iterator;
 
@@ -18,10 +19,51 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 
 import com.git.ganksquad.ReimuParser.ProgramContext;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.NativeMethod;
+import com.git.ganksquad.data.impl.FunctionData;
+import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.expressions.BlockExpression;
+import com.git.ganksquad.expressions.InvokeNativeExpression;
 
 public class App 
 {
+	public static ReimuRuntime getGlobalRuntime() throws ReimuRuntimeException {
+
+		ReimuRuntime rt = new ReimuRuntime();
+		
+		populateRuntime(rt);
+
+		return rt;
+	}
+
+	public static void populateRuntime(ReimuRuntime rt) throws ReimuRuntimeException {
+		
+		rt.declareFunction(
+				new FunctionData(
+						rt,
+						"print", 
+						Arrays.asList("a"), 
+						new BlockExpression(Arrays.asList(
+								new InvokeNativeExpression(new NativeMethod<Data>() {
+									
+									@Override
+									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
+										System.out.println(runtime.deref(args[0]));
+										return NoneData.instance;
+									}
+									
+									@Override
+									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
+										System.out.println();
+										return NoneData.instance;
+									}
+								},  new String[]{"a"})))));
+		
+		
+		
+	}
 
     public static void eval(String srcCode) throws ReimuRuntimeException, IOException {
 
@@ -35,7 +77,7 @@ public class App
     	
     	ProgramContext result = parser.program();
 
-    	ReimuRuntime rt = new ReimuRuntime();
+    	ReimuRuntime rt = getGlobalRuntime();
 
     	try {
 			
@@ -59,10 +101,10 @@ public class App
     	
     	ProgramContext result = parser.program();
 
-    	tokens.getTokens().forEach(x->System.out.println(x));
-    	System.out.println(result.expr);
+//    	tokens.getTokens().forEach(x->System.out.println(x));
+//    	System.out.println(result.expr);
 
-    	ReimuRuntime rt = new ReimuRuntime();
+    	ReimuRuntime rt = getGlobalRuntime();
 
     	try {
 			
@@ -73,10 +115,10 @@ public class App
 			System.err.println(e);
 		}
     	
-    	for(ReimuRuntime r : ReimuRuntime.runtimes) {
-    		
-    		System.out.println(r);
-    	}
+//    	for(ReimuRuntime r : ReimuRuntime.runtimes) {
+//    		
+//    		System.out.println(r);
+//    	}
     }
 
 
