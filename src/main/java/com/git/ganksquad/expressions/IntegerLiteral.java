@@ -23,6 +23,20 @@ public class IntegerLiteral implements Expression {
 		return new IntegerLiteral(Integer.parseInt(str));
 	}
 
+	public static IntegerLiteral fromHexString(String str) {
+		
+		ParseChecks.RequiredNotNull(str);
+
+		return new IntegerLiteral(Integer.parseInt(str.substring(2), 16));
+	}
+
+	public static IntegerLiteral fromBinString(String str) {
+		
+		ParseChecks.RequiredNotNull(str);
+
+		return new IntegerLiteral(Integer.parseInt(str.substring(2), 2));
+	}
+
 	public static IntegerLiteral zero() {
 		
 		return new IntegerLiteral(0);

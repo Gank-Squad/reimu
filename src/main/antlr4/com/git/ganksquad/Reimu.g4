@@ -67,10 +67,12 @@ g_expr returns [Expression value]
     ;
 
 g_value returns [Expression value]
-    : INTEGER { $value = IntegerLiteral.fromString($INTEGER.text); } 
-    | STRING  { $value = StringLiteral.fromQuotedString($STRING.text); }
-    | BOOLEAN { $value = BooleanLiteral.fromString($BOOLEAN.text); }
-    | SYMBOL  { $value = DerefExpression.fromString($SYMBOL.text); }
+    : INTEGER      { $value = IntegerLiteral.fromString($INTEGER.text); } 
+    | HEX_INTEGER  { $value = IntegerLiteral.fromHexString($HEX_INTEGER.text); } 
+    | BIN_INTEGER  { $value = IntegerLiteral.fromBinString($BIN_INTEGER.text); } 
+    | STRING       { $value = StringLiteral.fromQuotedString($STRING.text); }
+    | BOOLEAN      { $value = BooleanLiteral.fromString($BOOLEAN.text); }
+    | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
     | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
     ;
 
@@ -123,8 +125,9 @@ fragment ESCAPED_CHAR : '\\' ( UNICODE | . ) ;
 fragment UNICODE      : 'u' HEX HEX HEX HEX ;
 fragment HEX          : [0-9a-fA-F] ;
 
-INTEGER      : '0' | [1-9] [0-9]* ;
-fragment EXP : [Ee] [+\-]? INTEGER    ;
+INTEGER      : '0' | [1-9] [0-9_]*    { setText(getText().replace("_","")); };
+HEX_INTEGER  : '0x' HEX (HEX | '_')*  { setText(getText().replace("_","")); };
+BIN_INTEGER  : '0b' [01] [01_]*       { setText(getText().replace("_","")); };
 
 BOOLEAN: ( 'true' | 'false' ) ;
 
