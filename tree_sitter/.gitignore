@@ -1,14 +1,14 @@
-./tree-sitter-c
-./tree-sitter-json
-./Package.swift
-./Cargo.toml
-./setup.py
-./binding.gyp
-./Package.swift
-./package.json
-./pyproject.toml
-./bindings
-./tree-sitter-linux-x64*
+tree-sitter-c
+tree-sitter-json
+Package.swift
+Cargo.toml
+setup.py
+binding.gyp
+Package.swift
+package.json
+pyproject.toml
+bindings
+tree-sitter-linux-x64*
 
 # Rust artifacts
 Cargo.lock
