@@ -27,6 +27,5 @@ test:
 
 clean:
 	rm ./Cargo.toml ./setup.py ./binding.gyp ./Package.swift ./package.json ./pyproject.toml
-	rm -r ./src
 	rm -r ./bindings
 
