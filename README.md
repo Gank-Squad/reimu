@@ -24,3 +24,19 @@ Once you have the interpreter jar file, simply run it with source files as the i
 ```sh
 java -jar reimu.jar ./src_files/test.rei
 ```
+
+## Features
+ - [x] variables
+ - [x] functions
+ - [x] c style for loops
+ - [x] for each loop
+ - [ ] arrays
+ - [x] int
+ - [ ] float/double
+ - [x] string
+ - [x] boolean
+ - [ ] casting
+ - [ ] type system
+ - [ ] variable parameter function calls
+ - [ ] threading
+ - [ ] math casting (in cast)/(out cast)
