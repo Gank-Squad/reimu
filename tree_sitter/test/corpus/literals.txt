@@ -27,8 +27,9 @@ Integers
   (statement_end))
  (statement
   (expression
-   (expression
-    (integer)))
+   (unary_expression
+    (expression
+     (integer))))
   (statement_end))
  (statement
   (expression
@@ -40,8 +41,9 @@ Integers
   (statement_end))
  (statement
   (expression
-   (expression
-    (bin_integer)))
+   (unary_expression
+    (expression
+     (bin_integer))))
   (statement_end))
  (statement
   (expression
@@ -53,8 +55,9 @@ Integers
   (statement_end))
  (statement
   (expression
-   (expression
-    (hex_integer)))
+   (unary_expression
+    (expression
+     (hex_integer))))
   (statement_end))
  (statement
   (expression

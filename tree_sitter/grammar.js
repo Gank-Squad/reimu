@@ -55,9 +55,9 @@ module.exports = grammar({
             seq($.expression, $.statement_end),
             $.block,
             $.ifelse,
-            // $.while,
-            // $.for,
-            // $.foreach
+            $.while,
+            $.for,
+            $.foreach
         ),
 
         block: $ => seq(
@@ -65,6 +65,33 @@ module.exports = grammar({
             repeat($.statement),
             '}'
         ),
+
+        while: $ => seq(
+            'while', '(',
+            $.expression,
+            ')',
+            $.block
+        ),
+        for: $ => seq(
+            'for', '(',
+            $.expression,
+            $.statement_end,
+            $.expression,
+            $.statement_end,
+            $.expression,
+            ')',
+            $.block
+        ),
+
+        foreach: $ => seq(
+            'for', '(',
+            $.identifier,
+            'in',
+            $.expression,
+            ')',
+            $.block
+        ),
+
 
         ifelse: $ => seq(
             'if', '(',
@@ -74,18 +101,29 @@ module.exports = grammar({
             optional(
                 repeat(
                     seq(
-                        'el', '(', 
-                        $.expression, 
+                        'el', '(',
+                        $.expression,
                         ')',
                         $.block))),
             optional(
                 seq(
-                    'el', 
+                    'el',
                     $.block)),
         ),
 
+        unary_expression: $ => prec.left(PREC.UNARY,
+            seq(
+                choice(
+                    '!',
+                    '-',
+                    '--',
+                    '++',
+                    '~',
+                ),
+                $.expression)
+        ),
         expression: $ => choice(
-            prec.left(PREC.UNARY, seq('-', $.expression)),
+            $.unary_expression,
             prec.left(PREC.PAREN_DECLARATOR, seq('(', $.expression ,')')),
             prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
             prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
@@ -104,16 +142,16 @@ module.exports = grammar({
             prec.left(PREC.ASSIGNMENT, seq($.identifier, '=', $.expression)),
             prec.left(PREC.ASSIGNMENT, seq('var', $.identifier, '=', $.expression)),
             prec.left(PREC.CALL, seq($.identifier, '(', commaSep($.expression), ')')),
-            $.integer, 
-            $.hex_integer, 
-            $.bin_integer, 
-            $.string, 
-            $.boolean, 
-            $.identifier, 
-            seq($.integer, '..', $.integer), 
+            $.integer,
+            $.hex_integer,
+            $.bin_integer,
+            $.string,
+            $.boolean,
+            $.identifier,
+            seq($.integer, '..', $.integer),
         ),
 
-        string: $ => /"(\\(u[0-9a-fA-F]{4}|.)|[^\\\"])*"/, 
+        string: $ => /"(\\(u[0-9a-fA-F]{4}|.)|[^\\\"])*"/,
 
         integer: $ => /(0|[1-9])[0-9_]*/,
         hex_integer: $ => /0x[0-9a-fA-F][0-9a-fA-F_]*/,
@@ -126,6 +164,8 @@ module.exports = grammar({
         identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/
     }
 });
+
+module.exports.PREC = PREC;
 
 /**
  * Creates a rule to optionally match one or more of the rules separated by a comma
