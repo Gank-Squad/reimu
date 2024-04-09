@@ -1,0 +1,30 @@
+==================
+Empty Function Definition
+==================
+
+func x() {
+}
+
+---
+(source_file
+ (function_definition
+  (identifier)
+  (block)))
+
+
+
+==================
+Param Function Definition
+==================
+
+func x(a, b, c) {
+}
+
+---
+(source_file
+ (function_definition
+  (identifier)
+  (identifier)
+  (identifier)
+  (identifier)
+  (block)))

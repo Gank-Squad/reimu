@@ -1,0 +1,73 @@
+==================
+If Statements
+==================
+
+if(1){
+
+}
+
+---
+(source_file
+ (statement
+  (ifelse
+   (expression
+    (integer))
+   (block))))
+
+
+
+==================
+If Else Statements
+==================
+
+if(1 == 9) {
+
+} el {
+
+}
+
+
+if(x == true) {
+
+} el(x < 5) {
+
+} el(x > 5) {
+
+} el {
+
+}
+
+---
+(source_file
+ (statement
+  (ifelse
+   (expression
+    (expression
+     (integer))
+    (expression
+     (integer)))
+   (block)
+   (block)))
+ (statement
+  (ifelse
+   (expression
+    (expression
+     (identifier))
+    (expression
+     (boolean)))
+   (block)
+   (expression
+    (expression
+     (identifier))
+    (expression
+     (integer)))
+   (block)
+   (expression
+    (expression
+     (identifier))
+    (expression
+     (integer)))
+   (block)
+   (block))))
+
+

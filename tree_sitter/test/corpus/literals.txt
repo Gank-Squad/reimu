@@ -1,0 +1,127 @@
+==================
+Integers
+==================
+
+0;
+1;
+-1;
+1_000_000;
+
+0b1011_1101;
+-0b1011_1101;
+0b0000_0000;
+
+0xFFab;
+-0xFFab;
+0x0000;
+
+---
+(source_file
+ (statement
+  (expression
+   (integer))
+  (statement_end))
+ (statement
+  (expression
+   (integer))
+  (statement_end))
+ (statement
+  (expression
+   (expression
+    (integer)))
+  (statement_end))
+ (statement
+  (expression
+   (integer))
+  (statement_end))
+ (statement
+  (expression
+   (bin_integer))
+  (statement_end))
+ (statement
+  (expression
+   (expression
+    (bin_integer)))
+  (statement_end))
+ (statement
+  (expression
+   (bin_integer))
+  (statement_end))
+ (statement
+  (expression
+   (hex_integer))
+  (statement_end))
+ (statement
+  (expression
+   (expression
+    (hex_integer)))
+  (statement_end))
+ (statement
+  (expression
+   (hex_integer))
+  (statement_end))
+ )
+
+
+
+
+==================
+Strings
+==================
+
+"";
+"Hello world";
+"Hello \"world\"";
+"Hello world\n";
+"Hello\tworld\n";
+"\uFFFF";
+
+---
+(source_file
+ (statement
+  (expression
+   (string))
+  (statement_end))
+ (statement
+  (expression
+   (string))
+  (statement_end))
+ (statement
+  (expression
+   (string))
+  (statement_end))
+ (statement
+  (expression
+   (string))
+  (statement_end))
+ (statement
+  (expression
+   (string))
+  (statement_end))
+ (statement
+  (expression
+   (string))
+  (statement_end))
+ )
+
+
+
+
+==================
+Boolean
+==================
+
+true;
+false;
+
+---
+(source_file
+ (statement
+  (expression
+   (boolean))
+  (statement_end))
+ (statement
+  (expression
+   (boolean))
+  (statement_end))
+ )
