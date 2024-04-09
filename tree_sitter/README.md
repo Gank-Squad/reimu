@@ -69,6 +69,9 @@ Once you've added the above lua code you can then install the grammar using:
 :TSInstall reimu
 ```
 
+Once it is installed you will want to enable the highlighting. This can be done by copying the contents of `./queries` to your nvim-treesitter [runtime folder](https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#adding-queries).
+
+For Lazy.nvim you will want to put the highlights file at `~/.local/share/nvim/lazy/nvim-treesitter/queries/reimu/highlights.scm`
 
 
 # References
