@@ -175,7 +175,11 @@ BIN_INTEGER  : '0b' [01] [01_]*       { setText(getText().replace("_","")); };
 
 BOOLEAN: ( 'true' | 'false' ) ;
 
+
 // MUST COME AFTER KEYWORDS
 SYMBOL          : [a-zA-Z_][0-9a-zA-Z_]* ;
 
+LINE_COMMENT: '//' ~( '\r' | '\n' )*  -> skip;
+BLOCK_COMMENT: '/*' ( ~'*' )* '*'+ ( ~[/*] ( ~'*' )* '*' )* '/' -> skip;
 WHITESPACE : [ \t\r\n]+ -> skip;
+
