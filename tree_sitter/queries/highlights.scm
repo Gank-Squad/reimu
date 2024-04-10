@@ -6,6 +6,7 @@
 [
  "var"
  "func"
+ "in"
  ] @keyword
 
 [
@@ -41,7 +42,7 @@
  ; "||"
  ] @operator
 
-; "." @delimiter
+"," @delimiter
 ; ";" @delimiter
 
 (string) @string
@@ -50,3 +51,8 @@
 (hex_integer) @number
 (bin_integer) @number
 
+(call_expression
+  function: (identifier) @function)
+
+
+(comment) @comment

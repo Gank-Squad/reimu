@@ -4,7 +4,7 @@
 FILE := "tree-sitter-linux-x64"
 EXPECTED_HASH := "457eb788a80c27dd2b4f63146e97b6704162d18b7b83a9e73e4af18ff58b2da5"
 
-all: generate test
+all: generate test build
 
 get:
 
@@ -24,6 +24,9 @@ generate:
 
 test:
 	./${FILE} test
+
+build:
+	./${FILE} build
 
 clean:
 	rm ./Cargo.toml ./setup.py ./binding.gyp ./Package.swift ./package.json ./pyproject.toml

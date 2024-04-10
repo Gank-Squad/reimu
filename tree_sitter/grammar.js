@@ -1,9 +1,12 @@
 /**
  * @file Reimu grammar for tree-sitter
  * @author Minno
+ *
+ * Lots of stuff taken from https://github.com/tree-sitter/tree-sitter-c
+ *
+ * https://tree-sitter.github.io/tree-sitter/creating-parsers#the-first-few-rules
  */
 
-// https://tree-sitter.github.io/tree-sitter/creating-parsers#the-first-few-rules
 
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
@@ -66,12 +69,20 @@ module.exports = grammar({
             '}'
         ),
 
-        while: $ => seq(
-            'while', '(',
-            $.expression,
-            ')',
-            $.block
+        while: $ => choice(
+            seq(
+                'while', '(',
+                $.expression,
+                ')',
+                $.block
+            ),
+            seq(
+                'while',
+                $.expression,
+                $.block
+            )
         ),
+
         for: $ => seq(
             'for', '(',
             $.expression,
@@ -83,27 +94,38 @@ module.exports = grammar({
             $.block
         ),
 
-        foreach: $ => seq(
-            'for', '(',
-            $.identifier,
-            'in',
-            $.expression,
-            ')',
-            $.block
+        foreach: $ => choice(
+            seq(
+                'for', '(',
+                $.identifier,
+                'in',
+                $.expression,
+                ')',
+                $.block
+            ),
+            seq(
+                'for',
+                $.identifier,
+                'in',
+                $.expression,
+                $.block
+            )
         ),
 
 
         ifelse: $ => seq(
-            'if', '(',
-            $.expression,
-            ')',
+            choice(
+                seq('if', '(', $.expression, ')'),
+                seq('if', $.expression),
+            ),
             $.block,
             optional(
                 repeat(
                     seq(
-                        'el', '(',
-                        $.expression,
-                        ')',
+                        choice(
+                            seq('el', '(', $.expression, ')'),
+                            seq('el', $.expression)
+                        ),
                         $.block))),
             optional(
                 seq(
@@ -122,6 +144,14 @@ module.exports = grammar({
                 ),
                 $.expression)
         ),
+
+        call_expression: $ => prec.left(PREC.CALL, seq(
+            field("function", $.identifier),
+            '(',
+            field("arguments", commaSep($.expression)),
+            ')'
+        )),
+
         expression: $ => choice(
             $.unary_expression,
             prec.left(PREC.PAREN_DECLARATOR, seq('(', $.expression ,')')),
@@ -141,7 +171,7 @@ module.exports = grammar({
             prec.left(PREC.RELATIONAL, seq($.expression, '>=', $.expression)),
             prec.left(PREC.ASSIGNMENT, seq($.identifier, '=', $.expression)),
             prec.left(PREC.ASSIGNMENT, seq('var', $.identifier, '=', $.expression)),
-            prec.left(PREC.CALL, seq($.identifier, '(', commaSep($.expression), ')')),
+            $.call_expression,
             $.integer,
             $.hex_integer,
             $.bin_integer,
@@ -161,7 +191,17 @@ module.exports = grammar({
 
         statement_end: $ => ';',
 
-        identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/
+        identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
+
+        // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
+        comment: _ => token(choice(
+            seq('//', /(\\+(.|\r?\n)|[^\\\n])*/),
+            seq(
+                '/*',
+                /[^*]*\*+([^/*][^*]*\*+)*/,
+                '/',
+            ),
+        )),
     }
 });
 
