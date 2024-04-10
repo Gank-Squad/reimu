@@ -1,5 +1,7 @@
 package com.git.ganksquad.expressions;
 
+import java.util.List;
+
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.BooleanEvaluable;
@@ -9,12 +11,12 @@ import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class ForLoopExpression implements Expression {
 	
-	public Expression assignment;
+	public BlockExpression assignment;
 	public Expression condition;
-	public Expression update;
+	public BlockExpression update;
 	public BlockExpression body;
 	
-	public ForLoopExpression(Expression as, Expression con, Expression up, BlockExpression body) {
+	public ForLoopExpression(BlockExpression as, Expression con, BlockExpression up, BlockExpression body) {
 		
 		this.assignment = as;
 		this.condition= con;
@@ -22,7 +24,18 @@ public class ForLoopExpression implements Expression {
 		this.body = body;
 	}
 	
-	public static ForLoopExpression from(Expression as, Expression con, Expression up, BlockExpression body) {
+	public static ForLoopExpression from(List<Expression> as, Expression con, List<Expression> up, BlockExpression body) {
+		
+		ParseChecks.RequiredNotNull(as, con, up, body);
+
+		return new ForLoopExpression(
+				BlockExpression.fromList(as),
+				con,
+				BlockExpression.fromList(up),
+				body);
+	}
+
+	public static ForLoopExpression from(BlockExpression as, Expression con, BlockExpression up, BlockExpression body) {
 		
 		ParseChecks.RequiredNotNull(as, con, up, body);
 
@@ -34,7 +47,7 @@ public class ForLoopExpression implements Expression {
 		
 		ReimuRuntime scope = reimuRuntime.subScope();
 		
-		this.assignment.eval(scope);
+		this.assignment.evalPartial(scope);
 
 		Data c = this.condition.eval(scope);
 		
@@ -47,7 +60,7 @@ public class ForLoopExpression implements Expression {
 			
 			this.body.evalPartial(scope);
 
-			this.update.eval(scope);
+			this.update.evalPartial(scope);
 			
 			c = condition.eval(scope);
 
@@ -58,4 +71,8 @@ public class ForLoopExpression implements Expression {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return this.formatToString(this.assignment, this.condition, this.update, this.body);
+	}
 }

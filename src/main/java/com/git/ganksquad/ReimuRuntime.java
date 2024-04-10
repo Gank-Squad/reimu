@@ -11,6 +11,7 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.NullAssignmentExpression;
+import com.git.ganksquad.exceptions.RedeclarationException;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 import com.git.ganksquad.exceptions.SymbolNotFoundException;
 
@@ -111,6 +112,11 @@ public class ReimuRuntime {
     	if(value == null) {
 
     		throw NullAssignmentExpression.fromVariableDeclaration(name);
+    	}
+    	
+    	if(this.symbolTable.containsKey(name)) { 
+    		
+    		throw RedeclarationException.fromVariableDeclaration(name);
     	}
     
     	this.symbolTable.put(name, value);

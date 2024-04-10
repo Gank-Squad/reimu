@@ -7,7 +7,7 @@ import com.git.ganksquad.data.*;
 }
 
 program returns [Expression expr]
-    :  g_program { $expr = BlockExpression.fromList($g_program.value); }
+    :  g_program EOF { $expr = BlockExpression.fromList($g_program.value); }
     ;
     
 g_program
@@ -29,13 +29,14 @@ g_statement_list returns [List<Expression> value]
     ;
     
 g_statement returns [Expression value]
-    : STATEMENT_END         { $value = NoneExpression.get(); }
-    | g_expr STATEMENT_END  { $value = $g_expr.value; }
-    | g_block               { $value = $g_block.value; }
-    | g_ifelse              { $value = $g_ifelse.value; }
-    | g_while               { $value = $g_while.value; }
-    | g_for                 { $value = $g_for.value; }
-    | g_foreach             { $value = $g_foreach.value; }
+    : ENDL                               { $value = NoneExpression.get(); }
+    | g_expr ENDL                        { $value = $g_expr.value; }
+    | g_declare ENDL                     { $value = $g_declare.value; }
+    | g_block                            { $value = $g_block.value; }
+    | g_ifelse                           { $value = $g_ifelse.value; }
+    | g_while                            { $value = $g_while.value; }
+    | g_for                              { $value = $g_for.value; }
+    | g_foreach                          { $value = $g_foreach.value; }
     ;
 
 g_expr_list returns [List<Expression> value] 
@@ -61,7 +62,6 @@ g_expr returns [Expression value]
     | e1=g_expr '>' e2=g_expr       { $value = CompareExpression.gt($e1.value, $e2.value); }
     | e1=g_expr '>=' e2=g_expr      { $value = CompareExpression.gteq($e1.value, $e2.value); }
     | SYMBOL '=' e1=g_expr          { $value = AssignmentExpression.assign($SYMBOL.text, $e1.value); }
-    | 'var' SYMBOL '=' e1=g_expr    { $value = AssignmentExpression.declare($SYMBOL.text, $e1.value); }
     | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
@@ -74,6 +74,22 @@ g_value returns [Expression value]
     | BOOLEAN      { $value = BooleanLiteral.fromString($BOOLEAN.text); }
     | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
     | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
+    ;
+
+g_primative_type
+    : 'i64'
+    | 'i32'
+    | 'i16'
+    | 'i8'
+    | 'f64'
+    | 'f32'
+    | 'bool'
+    ;
+
+g_declare
+    returns [AssignmentExpression value]
+    : 'var' SYMBOL              { $value = AssignmentExpression.declare($SYMBOL.text, NoneExpression.get()); }
+    | 'var' SYMBOL '=' g_expr   { $value = AssignmentExpression.declare($SYMBOL.text, $g_expr.value); }
     ;
 
 g_block
@@ -106,8 +122,20 @@ g_foreach
 
 g_for
     returns [Expression value]
-    : 'for' '(' e1=g_expr STATEMENT_END e2=g_expr STATEMENT_END e3=g_expr ')' g_block
+    : 'for' '(' e1=g_for_def_expr ENDL e2=g_expr ENDL e3=g_expr_list ')' g_block
         { $value = ForLoopExpression.from($e1.value, $e2.value, $e3.value, $g_block.value); }
+    ;
+
+g_for_def_expr
+    returns [List<Expression> value]
+    @init  { $value = new ArrayList<Expression>(); }
+    : ( el+=g_expr_declare ( ',' el+=g_expr_declare )* )?  { for(var e : $el) $value.add(e.value); }
+    ;
+
+g_expr_declare
+    returns [Expression value]
+    : g_expr     { $value = $g_expr.value; }
+    | g_declare  { $value = $g_declare.value; }
     ;
     
 g_symbol_list
@@ -117,7 +145,7 @@ g_symbol_list
     ;
 
 
-STATEMENT_END : ( ';' )+ ;
+ENDL : ( ';' )+ ;
 
 
 STRING                : '"' ( ESCAPED_CHAR | ~["\\] )* '"' ;

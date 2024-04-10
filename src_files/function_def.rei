@@ -13,3 +13,4 @@ func square(x) {
 
 var y = square(5);
 
+println(y)

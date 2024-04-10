@@ -45,6 +45,8 @@ public class AssignmentExpression implements Expression {
 		} else {
 			
 			reimuRuntime.assign(this.symbolName, r);	
+			
+			return r;
 		}
 		
 		return NoneData.instance;

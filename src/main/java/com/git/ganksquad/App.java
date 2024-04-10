@@ -50,6 +50,25 @@ public class App
 									
 									@Override
 									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
+										System.out.print(runtime.deref(args[0]));
+										return NoneData.instance;
+									}
+									
+									@Override
+									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
+										return NoneData.instance;
+									}
+								},  new String[]{"a"})))));
+		rt.declareFunction(
+				new FunctionData(
+						rt,
+						"println", 
+						Arrays.asList("a"), 
+						new BlockExpression(Arrays.asList(
+								new InvokeNativeExpression(new NativeMethod<Data>() {
+									
+									@Override
+									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
 										System.out.println(runtime.deref(args[0]));
 										return NoneData.instance;
 									}
@@ -79,14 +98,7 @@ public class App
 
     	ReimuRuntime rt = getGlobalRuntime();
 
-    	try {
-			
-    		result.expr.eval(rt);
-
-		} catch (ReimuRuntimeException e) {
-
-			System.err.println(e);
-		}
+    	result.expr.eval(rt);
     	
     }
     public static void eval(Path sourceFile) throws ReimuRuntimeException, IOException {
@@ -102,7 +114,7 @@ public class App
     	ProgramContext result = parser.program();
 
 //    	tokens.getTokens().forEach(x->System.out.println(x));
-//    	System.out.println(result.expr);
+    	System.out.println(result.expr);
 
     	ReimuRuntime rt = getGlobalRuntime();
 

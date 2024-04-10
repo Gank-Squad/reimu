@@ -59,7 +59,7 @@ public class BlockExpression implements Expression {
 	@Override
 	public Data eval(ReimuRuntime runtime) throws ReimuRuntimeException {
 		
-		ReimuRuntime scope = runtime;
+		ReimuRuntime scope = runtime.subScope();
 		
 		return this.evalPartial(scope);
 	}
