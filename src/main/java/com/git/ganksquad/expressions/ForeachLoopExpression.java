@@ -4,7 +4,9 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IterableData;
+import com.git.ganksquad.data.IterableData.IterState;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.impl.iterable.TestIterState;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class ForeachLoopExpression implements Expression {
@@ -48,16 +50,18 @@ public class ForeachLoopExpression implements Expression {
 		
 		IterableData it = (IterableData)n;
 		
+		IterState s = it.newState();
+
 		while (true) {
 			
-			n = it.next();
+			it.update(s);
 			
-			if(n == NoneData.instance) {
+			if(!s.hasData) {
 				
 				break;
 			}
 			
-			scope.assign(variable, n);
+			scope.assign(variable, s.value);
 			
 			this.body.evalPartial(scope);
 		}
@@ -65,4 +69,8 @@ public class ForeachLoopExpression implements Expression {
 		return NoneData.instance;
 	}
 
+	@Override
+	public String toString() {
+		return this.formatToString(this.variable, this.iterable, this.body);
+	}
 }

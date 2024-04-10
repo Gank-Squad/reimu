@@ -3,6 +3,9 @@ package com.git.ganksquad.data.impl;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IterableData;
+import com.git.ganksquad.data.impl.iterable.CounterIterState;
+import com.git.ganksquad.exceptions.InvalidIterStateException;
+import com.git.ganksquad.exceptions.ReimuRuntimeException;
 import com.git.ganksquad.expressions.IntegerLiteral;
 
 public class RangeData implements Data, IterableData {
@@ -24,28 +27,41 @@ public class RangeData implements Data, IterableData {
 
 		this.step = step;
 	}
+	
+	@Override
+	public IterState newState() {
+		
+		return new CounterIterState(this.start);
+	}
 
 	@Override
-	public Data next() {
+	public void update(IterState state) throws ReimuRuntimeException {
+		
+		state.mustBe(CounterIterState.class);
+		
+		CounterIterState s = (CounterIterState)state;
 		
 		if(step < 0) {
 			
-			if(start <= stop) {
-				return NoneData.instance;
+			if(s.counter <= stop) {
+				
+				s.markFinished();
+
+				return;
 			}
 		}
 		else {
 			
-			if(start >= stop) {
-				return NoneData.instance;
+			if(s.counter >= stop) {
+
+				s.markFinished();
+
+				return;
 			}
 		}
 		
-		IntegerData r = new IntegerData( start );
-		
-		this.start += this.step;
-
-		return r;
+		s.value = new IntegerData(s.counter);
+		s.counter += this.step;
 	}
 
 	@Override
@@ -54,4 +70,8 @@ public class RangeData implements Data, IterableData {
 		return ClassKeys.RANGE_DATA;
 	}
 
+	@Override
+	public String toString() {
+		return this.start + ".." + this.stop + ":" + this.step;
+	}
 }

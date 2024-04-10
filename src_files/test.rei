@@ -1,20 +1,15 @@
 
 
 
-var test1;
-var test2;
-var test3;
-var test4;
-var test = test2 = "hello world";
+var a = 0..10;
 
-{
-    var test = "nyah";
+for(i in a){
 
+    for(j in a){
+        print(i);
+    }
+    println("");
 }
-
-print(test2)
-
-print(test)
 
 
 

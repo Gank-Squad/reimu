@@ -41,4 +41,8 @@ public class RangeLiteral implements Expression {
 		return this.range;
 	}
 
+	@Override
+	public String toString() {
+		return this.formatToString(this.range);
+	}
 }
