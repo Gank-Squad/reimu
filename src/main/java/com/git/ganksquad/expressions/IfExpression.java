@@ -7,8 +7,9 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.InvalidBooleanException;
+import com.git.ganksquad.exceptions.ReimuCompileException;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.TypeException;
 
 public class IfExpression implements Expression {
 	
@@ -25,6 +26,17 @@ public class IfExpression implements Expression {
 		
 		this.condition = cond;
 		this.body = body;
+	}
+	
+	@Override
+	public byte typeCheck() throws ReimuCompileException  {
+		
+		if(this.condition.typeCheck() != Expression.Types.BOOLEAN) {
+			
+			throw new TypeException("condition must be a boolean type");
+		}
+
+		return this.body.typeCheck();
 	}
 	
 	public static IfExpression from(Expression cond, BlockExpression body) {

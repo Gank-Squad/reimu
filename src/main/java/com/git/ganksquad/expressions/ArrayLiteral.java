@@ -7,6 +7,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.ArrayData;
+import com.git.ganksquad.exceptions.ReimuCompileException;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class ArrayLiteral implements Expression {
@@ -24,6 +25,17 @@ public class ArrayLiteral implements Expression {
 		ParseChecks.RequiredNotNull(expr);
 		
 		return new ArrayLiteral(expr);
+	}
+	
+	@Override
+	public byte typeCheck() throws ReimuCompileException {
+		
+		if(this.arr.size() == 0) {
+			
+			return Types.UNKNOWN;
+		}
+		
+		return this.arr.get(0).typeCheck();
 	}
 
 	@Override

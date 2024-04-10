@@ -9,6 +9,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.exceptions.ReimuCompileException;
 import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class BlockExpression implements Expression {
@@ -37,6 +38,18 @@ public class BlockExpression implements Expression {
 		ParseChecks.RequiredNotNull(expr);
 		
 		return new BlockExpression(expr);
+	}
+
+
+	@Override
+	public byte typeCheck() throws ReimuCompileException {
+
+		if(this.expressions.size() == 0) {
+			
+			return Types.UNKNOWN;
+		}
+
+		return this.expressions.get(this.expressions.size() - 1).typeCheck();
 	}
 
 	/**

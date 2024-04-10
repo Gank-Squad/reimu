@@ -4,6 +4,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.BooleanData;
+import com.git.ganksquad.exceptions.ReimuCompileException;
 
 public class BooleanLiteral implements Expression {
 
@@ -21,6 +22,11 @@ public class BooleanLiteral implements Expression {
 		ParseChecks.RequiredNotNull(str);
 		
 		return new BooleanLiteral(Boolean.parseBoolean(str));
+	}
+
+	@Override
+	public byte typeCheck() throws ReimuCompileException {
+		return Types.BOOLEAN;
 	}
 
 	@Override

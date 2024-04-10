@@ -4,6 +4,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.StringData;
+import com.git.ganksquad.exceptions.ReimuCompileException;
 
 public class StringLiteral implements Expression {
 
@@ -28,6 +29,11 @@ public class StringLiteral implements Expression {
 		ParseChecks.RequiredNotNull(str);
 
 		return new StringLiteral(str.substring(1, str.length() - 1));
+	}
+
+	@Override
+	public byte typeCheck() throws ReimuCompileException {
+		return Types.STRING;
 	}
 
 	@Override

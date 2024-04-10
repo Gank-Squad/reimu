@@ -4,6 +4,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.IntegerData;
+import com.git.ganksquad.exceptions.ReimuCompileException;
 
 public class IntegerLiteral implements Expression {
 	
@@ -42,6 +43,11 @@ public class IntegerLiteral implements Expression {
 		return new IntegerLiteral(0);
 	}
 	
+	@Override
+	public byte typeCheck() throws ReimuCompileException {
+		return Types.NUMERIC;
+	}
+
 	@Override
 	public Data eval(ReimuRuntime runtime) {
 

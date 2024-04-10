@@ -38,6 +38,17 @@ public class ReimuRuntime {
 	 */
     private Map<String, Data> symbolTable = new HashMap<>();
 
+//    private Map<String, TypeSignature> typeSignatures = new HashMap<>();
+//    
+//    public static class TypeSignature {
+//    	
+//    	String type;
+//
+//    	public VariableData() {
+//    		// TODO Auto-generated constructor stub
+//    	}
+//    	}
+
     public ReimuRuntime() {
     	
     	runtimes.add(this);
