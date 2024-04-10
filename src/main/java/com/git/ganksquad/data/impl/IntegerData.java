@@ -5,6 +5,7 @@ import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.IndexKeyData;
 import com.git.ganksquad.exceptions.CannotCompareException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotANDException;
 import com.git.ganksquad.exceptions.Arithmetic.CannotAddException;
@@ -18,7 +19,7 @@ import com.git.ganksquad.exceptions.Arithmetic.CannotXORException;
 /**
  * Represents integer data, which can hold a 32bit integer.
  */
-public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluable {
+public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluable, IndexKeyData {
 	
 	public int value = 0;
 	

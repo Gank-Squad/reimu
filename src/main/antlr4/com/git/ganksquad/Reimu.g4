@@ -47,6 +47,7 @@ g_expr_list returns [List<Expression> value]
 g_expr returns [Expression value]
     : '(' g_expr ')'                { $value = $g_expr.value; }
     | '-' e2=g_expr                 { $value = ArithmeticExpression.sub(IntegerLiteral.zero(), $e2.value);}
+    | e1=g_expr '[' e2=g_expr ']'   { $value = ArrayIndexExpression.from($e1.value, $e2.value); }
     | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
     | e1=g_expr '*' e2=g_expr       { $value = ArithmeticExpression.mul($e1.value, $e2.value); }
     | e1=g_expr '%' e2=g_expr       { $value = ArithmeticExpression.mod($e1.value, $e2.value); }
@@ -103,7 +104,10 @@ g_ifelse
     @init {
         ArrayList<IfExpression> ifs = new ArrayList<>();
     }
-    : 'if' '(' g_expr ')' g_block { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
+    : ( 
+          'if' '(' g_expr ')' g_block    { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
+        | 'if' g_expr g_block            { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); } 
+      )
       ( 
         'el' '(' g_expr ')' g_block { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
       )*
