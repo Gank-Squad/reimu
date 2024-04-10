@@ -106,28 +106,39 @@ g_ifelse
     }
     : ( 
           'if' '(' g_expr ')' g_block    { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
-        | 'if' g_expr g_block            { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); } 
+        | 'if'     g_expr     g_block    { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); } 
       )
       ( 
-        'el' '(' g_expr ')' g_block { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
+          'el' '(' g_expr ')' g_block   { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
+        | 'el'     g_expr     g_block   { ifs.add(IfExpression.from($g_expr.value, $g_block.value)); }
       )*
-      ( 'el' g_block )?    { $value = IfElseExpression.from(ifs, ($g_block.ctx == null) ? BlockExpression.empty() : $g_block.value); }
+      ( 
+        'el' g_block 
+      )?    
+      { $value = IfElseExpression.from(ifs, ($g_block.ctx == null) ? BlockExpression.empty() : $g_block.value); }
     ;
 
 g_while
     returns [Expression value]
-    : 'while' '(' g_expr ')' g_block { $value = WhileExpression.from($g_expr.value, $g_block.value); }
+    : 'while' '(' g_expr ')' g_block  { $value = WhileExpression.from($g_expr.value, $g_block.value); }
+    | 'while'     g_expr     g_block  { $value = WhileExpression.from($g_expr.value, $g_block.value); }
     ;
     
 g_foreach
     returns [Expression value]
     : 'for' '(' SYMBOL 'in' g_expr ')' g_block
         { $value = ForeachLoopExpression.from($SYMBOL.text, $g_expr.value, $g_block.value); }
+
+    | 'for' SYMBOL 'in' g_expr g_block
+        { $value = ForeachLoopExpression.from($SYMBOL.text, $g_expr.value, $g_block.value); }
     ;
 
 g_for
     returns [Expression value]
     : 'for' '(' e1=g_for_def_expr ENDL e2=g_expr ENDL e3=g_expr_list ')' g_block
+        { $value = ForLoopExpression.from($e1.value, $e2.value, $e3.value, $g_block.value); }
+
+    | 'for' e1=g_for_def_expr ENDL e2=g_expr ENDL e3=g_expr_list g_block
         { $value = ForLoopExpression.from($e1.value, $e2.value, $e3.value, $g_block.value); }
     ;
 
