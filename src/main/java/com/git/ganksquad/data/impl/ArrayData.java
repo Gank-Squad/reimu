@@ -1,5 +1,9 @@
 package com.git.ganksquad.data.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IterableData;
@@ -8,21 +12,31 @@ import com.git.ganksquad.exceptions.ReimuRuntimeException;
 
 public class ArrayData<T extends Data> implements Data, IterableData {
 	
-	public T[] arr;
+	protected ArrayList<T> arr;
+	
+	public ArrayData(T[] arr){
+		
+		this.arr = new ArrayList<T>(Arrays.asList(arr));
+	}
+
+	public ArrayData(List<T> lis){
+		
+		this.arr = new ArrayList<T>(lis);
+	}
 
 	public void set(int index, T value) {
 		
-		this.arr[index] = value;
+		this.arr.set(index, value);
 	}
 
 	public T get(int index) {
 		
-		return this.arr[index];
+		return this.arr.get(index);
 	}
 
 	public int size() {
 		
-		return this.arr.length;
+		return this.arr.size();
 	}
 
 	@Override
@@ -53,5 +67,10 @@ public class ArrayData<T extends Data> implements Data, IterableData {
 	@Override
 	public IterState newState() {
 		return new CounterIterState(0);
+	}
+	
+	@Override
+	public String toString() {
+		return this.arr.toString();
 	}
 }

@@ -74,6 +74,7 @@ g_value returns [Expression value]
     | BOOLEAN      { $value = BooleanLiteral.fromString($BOOLEAN.text); }
     | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
     | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
+    | '[' e=g_expr_list ']'      { $value = ArrayLiteral.from($g_expr_list.value); }
     ;
 
 g_primative_type
