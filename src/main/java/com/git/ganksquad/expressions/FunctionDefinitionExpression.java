@@ -42,7 +42,7 @@ public class FunctionDefinitionExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
-		resolver.declare(ReimuNameResolver.getFunctionName(name, argTypes), new FunctionType(type, argTypes));
+		resolver.declareFunction(name, new FunctionType(type, argTypes));
 
 		return SpecialType.VOID;
 	}
