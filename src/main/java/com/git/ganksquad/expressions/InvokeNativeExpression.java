@@ -34,6 +34,7 @@ public class InvokeNativeExpression implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		this.trace();
 		return SpecialType.VOID;
 	}
 

@@ -34,7 +34,9 @@ public class ForeachLoopExpression implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
-		
+
+		this.trace();
+
 		ReimuType t = this.iterable.typeCheck(resolver);
 		
 		if(!(t instanceof IterableTrait)) {

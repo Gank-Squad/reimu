@@ -39,14 +39,17 @@ public class InvokeFunctionExpression implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		this.trace();
 		
 		for(Expression e : this.args) {
-			
+
 			ReimuType t = e.typeCheck(resolver);
 
 			this.argTypes.add(t);
 		}
-		
+
+		Logger.debug("Type checking function invoke {} {} {}", this.symbol, this.argTypes, this.args);
 		ReimuType t = resolver.resolveFunction(this.symbol, this.argTypes);
 
 		if(!(t instanceof FunctionType)) {

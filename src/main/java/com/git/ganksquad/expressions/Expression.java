@@ -2,6 +2,7 @@ package com.git.ganksquad.expressions;
 
 import java.util.Arrays;
 
+import com.git.ganksquad.App;
 import com.git.ganksquad.ReimuNameResolver;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
@@ -24,5 +25,11 @@ public interface Expression {
 
 	public default String formatToString(Object... param) {
 		return ReimuNameResolver.getFormatedName(this, param);
+	}
+	
+	public default void trace() {
+		
+		if(App.IS_DEBUG)
+			System.err.println(new Throwable().getStackTrace()[1]);
 	}
 }

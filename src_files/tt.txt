@@ -1,35 +1,19 @@
 
 BlockExpression[
 
-    AssignmentExpression[BOOLEAN, wasFound, NoneExpression[], true],
+    IfElseExpression[
 
-    ForLoopExpression[
+        IfExpression[
 
-        BlockExpression[AssignmentExpression[INT, i, IntegerLiteral[0], true]],
+            IntegerLiteral[1], 
 
-        CompareExpression[op.LT, DerefExpression[i], IntegerLiteral[10]],
+            BlockExpression[
 
-        BlockExpression[AssignmentExpression[UNKNOWN, i, ArithmeticExpression[op.ADD, DerefExpression[i], IntegerLiteral[1]], false]],
-
-        BlockExpression[
-
-            IfElseExpression[
-
-                IfExpression[
-                    CompareExpression[op.EQ, ArithmeticExpression[op.MOD, DerefExpression[i], IntegerLiteral[2]], IntegerLiteral[0]],
-                    BlockExpression[AssignmentExpression[UNKNOWN, wasFound, BooleanLiteral[true], false]]
-                ],
-                IfExpression[
-                    CompareExpression[op.EQ, ArithmeticExpression[op.MOD, DerefExpression[i], IntegerLiteral[3]], IntegerLiteral[0]],
-                    BlockExpression[AssignmentExpression[UNKNOWN, wasFound, BooleanLiteral[false], false]]
-                ],
-                IfExpression[
-                    CompareExpression[op.EQ, ArithmeticExpression[op.MOD, DerefExpression[i], IntegerLiteral[4]], IntegerLiteral[0]],
-                    BlockExpression[AssignmentExpression[UNKNOWN, wasFound, IntegerLiteral[1], false]]
-                ],
-                BlockExpression[AssignmentExpression[UNKNOWN, wasFound, IntegerLiteral[0], false]]
+            InvokeFunctionExpression[
+                println, [StringLiteral["hello"]]]
             ]
-        ]
-    ],
-    InvokeFunctionExpression[println, [DerefExpression[wasFound]]]
+        ], 
+
+        BlockExpression[IntegerLiteral[1]]
+    ]
 ]

@@ -1,5 +1,6 @@
 package com.git.ganksquad.expressions;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,12 +47,18 @@ public class IfElseExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
+		this.trace();
+
 		ReimuType r = this.ifstatements.get(0).typeCheck(resolver);
 		ReimuType t;
 		
-		for(Expression e : this.ifstatements) {
+		Iterator<IfExpression> it = this.ifstatements.iterator();
+		
+		it.next();
+		
+		while(it.hasNext()) {
 
-			t = e.typeCheck(resolver);
+			t = it.next().typeCheck(resolver);
 
 			if(r != SpecialType.VOID && !t.equals(r)) {
 				r = SpecialType.VOID;

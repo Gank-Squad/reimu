@@ -10,8 +10,8 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.data.types.FunctionType;
-import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -43,9 +43,13 @@ public class FunctionDefinitionExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
+		this.trace();
+
 		resolver.declareFunction(name, new FunctionType(type, argTypes));
 		
-		ReimuType t = this.body.typeCheck(resolver);
+		ReimuTypeResolver scope = resolver.subScope(this.argNames.iterator(), this.argTypes.iterator());
+
+		ReimuType t = this.body.typeCheckPartial(scope);
 		
 		if(!this.type.isAssignableFrom(t)) {
 			

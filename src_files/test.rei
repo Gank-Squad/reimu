@@ -1,9 +1,23 @@
 
 
 
-void test() {
-    println("test");
+
+bool iseven(i32 i) {
+
+    if(i % 2 == 0) {
+        true;
+    }
+    el {
+        false;
+    }
 }
 
 
-test();
+i32 i = 4;
+
+if(iseven(i)) {
+    println("is even");
+}
+el {
+    println("not even");
+}

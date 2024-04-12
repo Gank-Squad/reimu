@@ -33,6 +33,8 @@ public class WhileExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
+		this.trace();
+
 		ReimuType t = this.condExpression.typeCheck(resolver);	
 		
 		if(t == SpecialType.VOID) {

@@ -72,6 +72,8 @@ public class CompareExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		
+		this.trace();
+
 		ReimuType l = this.left.typeCheck(resolver);
 		ReimuType r = this.right.typeCheck(resolver);
 		

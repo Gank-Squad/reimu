@@ -45,8 +45,9 @@ public class AssignmentExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
+		this.trace();
+
 		ReimuType t = this.value.typeCheck(resolver);
-		
 		
 		if(this.declare) {
 

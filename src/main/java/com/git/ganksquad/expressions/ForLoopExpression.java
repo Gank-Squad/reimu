@@ -68,6 +68,8 @@ public class ForLoopExpression implements Expression {
 	@Override
 	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
 		
+		this.trace();
+
 		ReimuRuntime scope = reimuRuntime.subScope();
 		
 		this.assignment.evalPartial(scope);

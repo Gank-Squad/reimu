@@ -29,6 +29,9 @@ public class BooleanLiteral implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		
+		this.trace();
+		
 		return PrimitiveType.BOOLEAN;
 	}
 

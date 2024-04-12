@@ -170,6 +170,7 @@ public class App
 
 		 if(IS_DEBUG)
          {
+             Configuration.set("writer.format", "{class}.{method}({file}:{line})\t{message}");
              Configuration.set("writer.level", "trace");
          }
          else

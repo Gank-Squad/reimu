@@ -38,6 +38,8 @@ public class ArrayLiteral implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		
+		this.trace();
+
 		if(this.arr.size() == 0) {
 			
 			return AggregateType.UNKNOWN_ARRAY_TYPE;
@@ -68,7 +70,7 @@ public class ArrayLiteral implements Expression {
 
 	@Override
 	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
-		
+
 		List<Data> l = new ArrayList<Data>(this.arr.size());
 		
 		for(Expression e : this.arr) {

@@ -26,6 +26,9 @@ public class DerefExpression implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		this.trace();
+
 		return resolver.resolve(this.symbol);
 	}
 

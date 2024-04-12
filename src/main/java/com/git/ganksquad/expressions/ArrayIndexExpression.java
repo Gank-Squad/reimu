@@ -35,6 +35,8 @@ public class ArrayIndexExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		
+		this.trace();
+
 		if(right.typeCheck(resolver) == SpecialType.VOID) {
 			
 			throw new TypeException("Cannot index with void type");

@@ -51,7 +51,9 @@ public class BlockExpression implements Expression {
 
 
 	public ReimuType typeCheckPartial(ReimuTypeResolver resolver) throws ReimuCompileException {
-	
+		
+		this.trace();
+
 		ReimuType t = SpecialType.VOID;
 		
 		for(Expression e : this.expressions) {

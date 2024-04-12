@@ -34,6 +34,8 @@ public class IfExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException  {
 		
+		this.trace();
+
 		ReimuType t = this.condition.typeCheck(resolver);
 		
 		if(t == SpecialType.VOID) {

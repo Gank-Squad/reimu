@@ -42,6 +42,7 @@ public class RangeLiteral implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		this.trace();
 		return AggregateType.NUMERIC_ITERATOR_TYPE;
 	}
 

@@ -38,6 +38,7 @@ public class StringLiteral implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		this.trace();
 		return AggregateType.STRING_TYPE;
 	}
 

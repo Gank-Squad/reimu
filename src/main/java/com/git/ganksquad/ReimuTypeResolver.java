@@ -3,19 +3,21 @@ package com.git.ganksquad;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.tinylog.Logger;
 
-import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.data.types.FunctionType;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.ReimuException;
 import com.git.ganksquad.exceptions.compiler.NoneTypeException;
 import com.git.ganksquad.exceptions.compiler.RedeclarationException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.SymbolNotFoundException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ReimuTypeResolver {
 
@@ -55,6 +57,23 @@ public class ReimuTypeResolver {
     	this.children.add(r);
     	
     	return r;
+    }
+    public ReimuTypeResolver subScope(Iterator<String> names, Iterator<ReimuType> values) throws ReimuCompileException {
+
+    	ReimuTypeResolver r = this.subScope();
+
+    	while(names.hasNext() && values.hasNext()){
+    		
+    		r.symbolTable.put(names.next(), values.next());
+    	}
+
+    	if(names.hasNext() || values.hasNext()) {
+    		
+    		throw new ReimuCompileException("Cannot bind variables to scope because they missmatch the values");
+    	}
+    	
+    	return r;
+    
     }
 
     public void declareFunction(String name, FunctionType t) throws ReimuCompileException {
