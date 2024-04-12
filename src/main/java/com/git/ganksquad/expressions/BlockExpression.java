@@ -29,6 +29,10 @@ public class BlockExpression implements Expression {
 				toList();
 	}
 	
+	public boolean isEmpty() {
+		return this.expressions.isEmpty();
+	}
+	
 	public static BlockExpression empty() {
 		
 		return new BlockExpression();
@@ -44,7 +48,7 @@ public class BlockExpression implements Expression {
 
 	public ReimuType typeCheckPartial(ReimuTypeResolver resolver) throws ReimuCompileException {
 	
-		ReimuType t = ReimuType.UNKNOWN;
+		ReimuType t = ReimuType.NONE;
 		
 		for(Expression e : this.expressions) {
 
@@ -82,6 +86,9 @@ public class BlockExpression implements Expression {
 	@Override
 	public Data eval(ReimuRuntime runtime) throws ReimuRuntimeException {
 		
+		if(this.expressions.size() == 0) 
+			return NoneData.instance;
+
 		ReimuRuntime scope = runtime.subScope();
 		
 		return this.evalPartial(scope);

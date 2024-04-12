@@ -13,6 +13,7 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class FunctionDefinitionExpression implements Expression {
 	
+	public ReimuType type;
 	public FunctionData func;
 	
 	public FunctionDefinitionExpression(FunctionData data) {
@@ -20,9 +21,9 @@ public class FunctionDefinitionExpression implements Expression {
 		this.func = data;
 	}
 	
-	public static FunctionDefinitionExpression from(String name, List<String> args, BlockExpression body) {
+	public static FunctionDefinitionExpression from(ReimuType t, String name, List<String> args, BlockExpression body) {
 		
-		ParseChecks.RequiredNotNull(name, args, body);
+		ParseChecks.RequiredNotNull(t, name, args, body);
 
 		return new FunctionDefinitionExpression(new FunctionData(name, args, body));
 	}

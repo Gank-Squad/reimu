@@ -1,10 +1,10 @@
 package com.git.ganksquad.data.types;
 
-public class ArrayType extends AggregateType implements SingleTypeContainer {
-	
+public class IterableType extends AggregateType implements SingleTypeContainer {
+
 	private TestReimuType containedType;
 	
-	public ArrayType(TestReimuType elements) {
+	public IterableType(TestReimuType elements) {
 		
 		this.containedType = elements;
 	}
@@ -19,15 +19,10 @@ public class ArrayType extends AggregateType implements SingleTypeContainer {
 		switch(other) {
 
 			case ITERABLE:
-			case INDEXABLE:
 				return true;
-
-			case STRING:
-				return this.containedType == PrimitiveType.CHAR;
 
 			default:
 				return false;
 		}
 	}
-
 }

@@ -1,7 +1,7 @@
 package com.git.ganksquad.expressions;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
@@ -23,45 +23,50 @@ public class IfElseExpression implements Expression {
 		this.elseBody = elseBody;
 	}
 	
-	public static IfElseExpression from(List<IfExpression> ifstatements, BlockExpression elseBody) {
-		
+	public static Expression fromAndOptimize(List<IfExpression> ifstatements, BlockExpression elseBody) {
+
+		ParseChecks.RequiredNotNull(ifstatements, elseBody);
+
 		if(ifstatements.size() == 0) {
 			
 			throw new NullPointerException("IfElseExpression created with empty list of IfExpression");
 		}
-		
-		ParseChecks.RequiredNotNull(ifstatements, elseBody);
+
+		if(ifstatements.size() == 1 && elseBody.isEmpty()) {
+			
+			return ifstatements.get(0);
+		}
 		
 		return new IfElseExpression(ifstatements, elseBody);
 	}
 
-	public static IfElseExpression from(List<IfExpression> ifstatements, List<Expression> elseBody) {
-		
-		if(ifstatements.size() == 0) {
-			
-			throw new NullPointerException("IfElseExpression created with empty list of IfExpression");
-		}
-
-		ParseChecks.RequiredNotNull(ifstatements, elseBody);
-
-		return new IfElseExpression(ifstatements, BlockExpression.fromList(elseBody));
-	}
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
 		ReimuType r = this.ifstatements.get(0).typeCheck(resolver);
+//		ReimuType t;
 		
 		for(Expression e : this.ifstatements) {
 			
-			if(e.typeCheck(resolver) != r) {
-				throw new TypeException("IfElse could resolve to different type");
+//			t = e.typeCheck(resolver);
+//
+//			if(t != r) {
+//				throw new TypeException(String.format("IfElse could resolve to different type, %s or %s", r, t));
+//			}
+
+			if(e.typeCheck(resolver) == ReimuType.NONE) {
+				r = ReimuType.NONE;
 			}
 		}
 		
-		if(this.elseBody.typeCheck(resolver) != r) {
-				throw new TypeException("IfElse could resolve to different type");
+		if(this.elseBody.typeCheck(resolver) == ReimuType.NONE) {
+			r = ReimuType.NONE;
 		}
+
+//		if(t != r) {
+//				throw new TypeException(String.format("IfElse could resolve to different type, %s or %s", r, t));
+//		}
 		
 		return r;
 	}
@@ -95,6 +100,10 @@ public class IfElseExpression implements Expression {
 	
 	@Override
 	public String toString() {
-		return this.formatToString(this.ifstatements, this.elseBody);
+
+		return this.formatToString(
+				this.ifstatements.stream()
+				.map(x -> x.toString())
+				.collect(Collectors.joining(", ")), this.elseBody);
 	}
 }

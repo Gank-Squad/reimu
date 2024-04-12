@@ -1,41 +1,42 @@
 package com.git.ganksquad.expressions;
 
-import org.tinylog.Logger;
-
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.exceptions.compiler.NoneTypeException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class AssignmentExpression implements Expression {
 	
+	public ReimuType type;
 	public String symbolName;
 	public Expression value;
 	public boolean declare;
 
-	public AssignmentExpression(String name, Expression value, boolean declare) {
+	public AssignmentExpression(ReimuType t, String name, Expression value, boolean declare) {
 		
+		this.type = t;
 		this.symbolName = name;
 		this.value = value;
 		this.declare = declare;
 	}
 	
-	public static AssignmentExpression declare(String name, Expression value) {
+	public static AssignmentExpression declare(ReimuType t, String name, Expression value) {
 		
-		ParseChecks.RequiredNotNull(name, value);
+		ParseChecks.RequiredNotNull(t, name, value);
 		
-		return new AssignmentExpression(name, value, true);
+		return new AssignmentExpression(t, name, value, true);
 	}
 
-	public static AssignmentExpression assign(String name, Expression value) {
+	public static AssignmentExpression assign(ReimuType t, String name, Expression value) {
 		
-		ParseChecks.RequiredNotNull(name, value);
+		ParseChecks.RequiredNotNull(t, name, value);
 
-		return new AssignmentExpression(name, value, false);
+		return new AssignmentExpression(t, name, value, false);
 	}
 
 
@@ -44,28 +45,28 @@ public class AssignmentExpression implements Expression {
 
 		ReimuType t = this.value.typeCheck(resolver);
 		
-		if(this.declare) {
-			
+		if(this.type == ReimuType.UNKNOWN) {
+
 			if(t == ReimuType.UNKNOWN) {
 				throw new TypeException(String.format("Could not resolve the type of variable %s", this.symbolName));
 			}
 
-			if(t != ReimuType.NONE) {
+			if(t == ReimuType.NONE) {
 
-				resolver.declare(this.symbolName, t);
+				throw new NoneTypeException(String.format("Tried to declare variable %s with None type",  this.symbolName));
 			} 
-			else {
 
-				// TODO: fix this
-				Logger.warn("Symbol {} is declared with None type, but we are making it NUMERIC, remember to fix this ", this.symbolName);
-
-				resolver.declare(this.symbolName, ReimuType.NUMERIC);
-			}
+			this.type = t;
+		}
+		
+		if(this.declare) {
+			
+			resolver.declare(this.symbolName, this.type);
 			
 			return ReimuType.NONE;
 		}
 
-		return t;
+		return this.type;
 	}
 
 	@Override
@@ -90,6 +91,7 @@ public class AssignmentExpression implements Expression {
 	public String toString() {
 		
 		return this.formatToString( 
+				this.type,
 				this.symbolName,
 				this.value,
 				this.declare

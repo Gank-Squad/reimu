@@ -25,7 +25,7 @@ public class ReimuRuntime {
 	/**
 	 * Runtime history, used for debugging
 	 */
-	public static List<ReimuRuntime> runtimes = new ArrayList<>();
+	public List<ReimuRuntime> children = new ArrayList<>();
     
 	/**
 	 * The parent runtime used by sub-scopes
@@ -50,7 +50,6 @@ public class ReimuRuntime {
 
     public ReimuRuntime() {
     	
-    	runtimes.add(this);
     }
 
     public ReimuRuntime(ReimuRuntime parent) {
@@ -68,6 +67,8 @@ public class ReimuRuntime {
     public ReimuRuntime subScope() {
     	
     	ReimuRuntime r = new ReimuRuntime(this);
+    	
+    	this.children.add(r);
     	
     	return r;
     }
@@ -241,6 +242,23 @@ public class ReimuRuntime {
     	String t = "Runtime" + Arrays.asList(this.symbolTable).toString();
 
     	return t;
+    }
+
+    public String toTreeString(int depth) {
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(int i = 0; i < depth; i++) 
+    		sb.append("\t");
+
+    	sb.append(this.toString()).append('\n');
+    	
+    	for(ReimuRuntime rt : this.children) {
+    		
+    		sb.append(rt.toTreeString(depth+1)).append('\n');
+    	}
+
+    	return sb.toString();
     }
 }
 

@@ -3,27 +3,30 @@ package com.git.ganksquad;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.tinylog.Logger;
+import org.tinylog.configuration.Configuration;
 
 import com.git.ganksquad.ReimuParser.ProgramContext;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.NativeMethod;
-import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.expressions.BlockExpression;
+import com.git.ganksquad.expressions.Expression.ReimuType;
 import com.git.ganksquad.expressions.FunctionDefinitionExpression;
 import com.git.ganksquad.expressions.InvokeNativeExpression;
 
 public class App 
 {
+	
+	public static boolean IS_DEBUG = false;
+	
 	private static class TinylogHandler implements UncaughtExceptionHandler
 	{
 		@Override
@@ -44,7 +47,7 @@ public class App
 	public static BlockExpression injectGlobal() throws ReimuRuntimeException {
 		
 		return BlockExpression.fromList(Arrays.asList(
-				FunctionDefinitionExpression.from(
+				FunctionDefinitionExpression.from(ReimuType.NONE,
 						"print",
 						Arrays.asList("a"), 
 						new BlockExpression(Arrays.asList(
@@ -64,7 +67,7 @@ public class App
 								)
 								)
 						),
-				FunctionDefinitionExpression.from(
+				FunctionDefinitionExpression.from(ReimuType.NONE,
 						"println",
 						Arrays.asList("a"), 
 						new BlockExpression(Arrays.asList(
@@ -125,8 +128,9 @@ public class App
     	ProgramContext result = parser.program();
 
 //    	tokens.getTokens().forEach(x->System.out.println(x));
-    	Logger.debug(result.expr);
 
+    	Logger.debug("--------- raw parsed tree -----------");
+    	Logger.debug(result.expr);
 
     	ReimuTypeResolver r = new ReimuTypeResolver();
     	ReimuRuntime rt = getGlobalRuntime();
@@ -134,12 +138,17 @@ public class App
     	BlockExpression globalScope = injectGlobal();
     	
     	globalScope.typeCheckPartial(r);
-    	Logger.info(r);
     	result.expr.typeCheck(r);
+
+    	Logger.debug("--------- type checked tree -----------");
+    	Logger.debug(result.expr);
+
+    	Logger.debug("--------- output -----------");
     	globalScope.evalPartial(rt);
-    	Logger.info("--------- output -----------");
     	result.expr.eval(rt);
-    	
+
+    	Logger.debug("--------- runtime scopes after tree -----------");
+    	Logger.debug(rt.toTreeString(0));
 //    	for(ReimuRuntime r : ReimuRuntime.runtimes) {
 //    		
 //    		System.out.println(r);
@@ -150,6 +159,18 @@ public class App
     public static void main( String[] args ) throws ReimuRuntimeException, IOException, ReimuCompileException
     {
 		Thread.setDefaultUncaughtExceptionHandler(new TinylogHandler());
+		
+		IS_DEBUG = Boolean.parseBoolean(System.getenv("DEBUG"));
+
+		 if(IS_DEBUG)
+         {
+             Configuration.set("writer.level", "trace");
+         }
+         else
+         {
+             Configuration.set("writer.level", "error");
+         }
+
 
     	if(args.length < 1) {
 

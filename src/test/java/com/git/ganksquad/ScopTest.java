@@ -20,7 +20,7 @@ public class ScopTest {
 
     	try {
     		// using i after the loop should throw an error
-    		App.eval("for(var i = 0; i < 10; i = i + 1) {"
+    		App.eval("for(i32 i = 0; i < 10; i = i + 1) {"
     				+ "    i;"
     				+ "}"
     				+ "i;"
@@ -37,7 +37,7 @@ public class ScopTest {
     	
 
     	// if we declare i above the loop, we can use it after
-    	App.eval("var i;" 
+    	App.eval("i32 i;" 
     			+ "for(i = 0; i < 10; i = i + 1) {"
     			+ "    i;"
     			+ "}"
@@ -50,7 +50,7 @@ public class ScopTest {
     {
     	try {
     		// cannot declare a twice
-    		App.eval("var a; var a;");
+    		App.eval("i32 a; i32 a;");
     		fail("Should thow exception because variable is already declared");
     	} catch (ReimuException e) {
 
@@ -60,13 +60,13 @@ public class ScopTest {
     	}
 
     	// shadowing is valid
-    	App.eval("var a; { var a; }");
+    	App.eval("i32 a; { i32 a; }");
 
     	// shadowing is valid
-    	App.eval("var a; { var a; { var a;} }");
+    	App.eval("i32 a; { i32 a; { i32 a;} }");
 
     	// a should be contained in the block
-    	App.eval("{ var a; } var a;");
+    	App.eval("{ i32 a; } i32 a;");
     }
 
 }
