@@ -146,9 +146,12 @@ public class App
     	Logger.debug("--------- type checked tree -----------");
     	Logger.debug(result.expr);
 
-    	Logger.debug("--------- output -----------");
+    	Logger.debug("--------- global runtime -----------");
     	globalScope.evalPartial(rt);
-    	result.expr.eval(rt);
+    	Logger.debug(rt.toString());
+
+    	Logger.debug("--------- output -----------");
+    	result.expr.evalPartial(rt);
 
     	Logger.debug("--------- runtime scopes after tree -----------");
     	Logger.debug(rt.toTreeString(0));

@@ -13,6 +13,7 @@ import com.git.ganksquad.data.types.FunctionType;
 import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class FunctionDefinitionExpression implements Expression {
@@ -43,6 +44,13 @@ public class FunctionDefinitionExpression implements Expression {
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
 		resolver.declareFunction(name, new FunctionType(type, argTypes));
+		
+		ReimuType t = this.body.typeCheck(resolver);
+		
+		if(!this.type.isAssignableFrom(t)) {
+			
+			throw new TypeException("Function %s expects return type %s but it's body returns type %s", name, type, t);
+		}
 
 		return SpecialType.VOID;
 	}

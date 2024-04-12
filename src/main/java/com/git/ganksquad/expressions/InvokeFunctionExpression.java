@@ -44,19 +44,16 @@ public class InvokeFunctionExpression implements Expression {
 			
 			ReimuType t = e.typeCheck(resolver);
 
-			Logger.debug(t);
-
 			this.argTypes.add(t);
 		}
 		
-		Logger.debug("About to try resolving {} with types {}", this.symbol, this.argTypes);
-
 		ReimuType t = resolver.resolveFunction(this.symbol, this.argTypes);
 
 		if(!(t instanceof FunctionType)) {
 			
 			throw new NotAFunctionException(this.symbol);
 		}
+
 
 		return ((FunctionType)t).returnType;
 	}

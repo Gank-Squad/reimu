@@ -125,6 +125,7 @@ public class ReimuRuntime {
 //    		throw RedeclarationException.fromVariableDeclaration(name);
     	}
     
+    	Logger.debug("Declare runtime variable {} with value of {}", name, value);
     	this.symbolTable.put(name, value);
     }
 
@@ -150,7 +151,7 @@ public class ReimuRuntime {
     		throw NullAssignmentExpression.fromFuncDef();
     	}
     
-    	this.symbolTable.put(value.getName(), value);
+    	this.declare(value.getName(), value);
     }
 
     /**
@@ -224,7 +225,7 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", name));
+    		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", ReimuNameResolver.getFunctionName(name, argTypes)));
     	}
     	
     	return (FunctionData)parent.derefFunction(name, argTypes);

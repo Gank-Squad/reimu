@@ -20,4 +20,10 @@ public class TypeException extends ReimuCompileException {
 	public TypeException(String message, ReimuType t1,  ReimuType t2) {
 		super(String.format(message, t1.toString(), t2.toString()));
 	}
+	public TypeException(String string, String name, ReimuType t) {
+		super(String.format(string, name, t.toString()));
+	}
+	public TypeException(String string, String name, ReimuType type, ReimuType t) {
+		super(String.format(string, name, type.toString(), t.toString()));
+	}
 }

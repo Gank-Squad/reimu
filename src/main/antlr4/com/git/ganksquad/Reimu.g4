@@ -7,7 +7,7 @@ import com.git.ganksquad.data.types.*;
 import com.git.ganksquad.data.*;
 }
 
-program returns [Expression expr]
+program returns [BlockExpression expr]
     :  g_program EOF { $expr = BlockExpression.fromList($g_program.value); }
     ;
     
@@ -95,6 +95,7 @@ g_primative_type returns [ReimuType value]
     | 'f32'    { $value = PrimitiveType.FLOAT; }
     | 'bool'   { $value = PrimitiveType.BOOLEAN; }
     | 'char'   { $value = PrimitiveType.CHAR; }
+    | 'void'   { $value = SpecialType.VOID; }
     ;
 
 g_declare
