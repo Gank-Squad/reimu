@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.NotAFunctionException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class InvokeFunctionExpression implements Expression {
 	
@@ -25,6 +28,22 @@ public class InvokeFunctionExpression implements Expression {
 		ParseChecks.RequiredNotNull(name, args);
 
 		return new InvokeFunctionExpression(name, args);
+	}
+
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		if(resolver.resolveFunction(this.symbol, this.args.size()) != ReimuType.FUNCTION) {
+			
+			throw new NotAFunctionException(this.symbol);
+		}
+
+		for(Expression e : this.args) {
+			e.typeCheck(resolver);
+		}
+
+		return ReimuType.UNKNOWN;
 	}
 
 	@Override

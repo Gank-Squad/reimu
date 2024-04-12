@@ -10,10 +10,9 @@ import java.util.Map;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.NullAssignmentExpression;
-import com.git.ganksquad.exceptions.RedeclarationException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
-import com.git.ganksquad.exceptions.SymbolNotFoundException;
+import com.git.ganksquad.exceptions.compiler.SymbolNotFoundException;
+import com.git.ganksquad.exceptions.runtime.NullAssignmentExpression;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 
 /**
@@ -127,7 +126,8 @@ public class ReimuRuntime {
     	
     	if(this.symbolTable.containsKey(name)) { 
     		
-    		throw RedeclarationException.fromVariableDeclaration(name);
+    		throw new ReimuRuntimeException(String.format("%s is already defined, this should be impossible!!!", this.symbolTable));
+//    		throw RedeclarationException.fromVariableDeclaration(name);
     	}
     
     	this.symbolTable.put(name, value);
@@ -183,7 +183,7 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new SymbolNotFoundException(String.format("Cannot assgin to symbol with name %s, since it does not exist", name));
+    		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", name));
     	}
 
     	this.parent.assign(name, value);
@@ -195,7 +195,7 @@ public class ReimuRuntime {
      * @return The data held by the symbol
      * @throws SymbolNotFoundException thrown if the symbol cannot be found
      */
-    public Data deref(String name) throws SymbolNotFoundException {
+    public Data deref(String name) throws ReimuRuntimeException {
     	
     	if(this.symbolTable.containsKey(name)) {
     		
@@ -204,7 +204,7 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new SymbolNotFoundException(String.format("Cannot deref symbol with name %s, since it does not exist", name));
+    		throw new ReimuRuntimeException(String.format("Cannot deref Symbol %s because it was not defined, this should be impossible!!!", name));
     	}
     	
     	return parent.deref(name);
@@ -218,7 +218,7 @@ public class ReimuRuntime {
      * @return The function data
      * @throws SymbolNotFoundException If the function was not found
      */
-    public FunctionData derefFunction(String name, int paramCount) throws SymbolNotFoundException {
+    public FunctionData derefFunction(String name, int paramCount) throws ReimuRuntimeException {
     	
     	Object d = this.symbolTable.get(FunctionData.resolveName(name, paramCount));
     	
@@ -229,7 +229,7 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new SymbolNotFoundException(String.format("Cannot deref symbol with name %s, since it does not exist", name));
+    		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", name));
     	}
     	
     	return (FunctionData)parent.derefFunction(name, paramCount);

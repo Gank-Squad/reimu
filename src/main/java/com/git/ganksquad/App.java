@@ -1,90 +1,94 @@
 package com.git.ganksquad;
 
 import java.io.IOException;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Iterator;
 
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
+import org.tinylog.Logger;
 
 import com.git.ganksquad.ReimuParser.ProgramContext;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.NativeMethod;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.expressions.BlockExpression;
+import com.git.ganksquad.expressions.FunctionDefinitionExpression;
 import com.git.ganksquad.expressions.InvokeNativeExpression;
 
 public class App 
 {
+	private static class TinylogHandler implements UncaughtExceptionHandler
+	{
+		@Override
+		public void uncaughtException(Thread thread, Throwable ex)
+		{
+			Logger.error("! === Unhandled Exception === !");
+			Logger.error(ex);
+		}
+	}	
+	
 	public static ReimuRuntime getGlobalRuntime() throws ReimuRuntimeException {
 
 		ReimuRuntime rt = new ReimuRuntime();
-		
-		populateRuntime(rt);
 
 		return rt;
 	}
 
-	public static void populateRuntime(ReimuRuntime rt) throws ReimuRuntimeException {
+	public static BlockExpression injectGlobal() throws ReimuRuntimeException {
 		
-		rt.declareFunction(
-				new FunctionData(
-						rt,
-						"print", 
+		return BlockExpression.fromList(Arrays.asList(
+				FunctionDefinitionExpression.from(
+						"print",
 						Arrays.asList("a"), 
 						new BlockExpression(Arrays.asList(
 								new InvokeNativeExpression(new NativeMethod<Data>() {
-									
+
 									@Override
 									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
 										System.out.print(runtime.deref(args[0]));
 										return NoneData.instance;
 									}
-									
+
 									@Override
 									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
 										return NoneData.instance;
 									}
-								},  new String[]{"a"})))));
-		rt.declareFunction(
-				new FunctionData(
-						rt,
-						"println", 
+								},  new String[]{"a"})
+								)
+								)
+						),
+				FunctionDefinitionExpression.from(
+						"println",
 						Arrays.asList("a"), 
 						new BlockExpression(Arrays.asList(
 								new InvokeNativeExpression(new NativeMethod<Data>() {
-									
+
 									@Override
 									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
 										System.out.println(runtime.deref(args[0]));
 										return NoneData.instance;
 									}
-									
+
 									@Override
 									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
-										System.out.println();
 										return NoneData.instance;
 									}
-								},  new String[]{"a"})))));
-		
-		
+								},  new String[]{"a"})
+								)
+								)
+						)
+				));
 		
 	}
 
-    public static void eval(String srcCode) throws ReimuRuntimeException, IOException {
+    public static void eval(String srcCode) throws ReimuRuntimeException, IOException, ReimuCompileException {
 
     	CharStream input = CharStreams.fromString(srcCode);
     	
@@ -96,12 +100,19 @@ public class App
     	
     	ProgramContext result = parser.program();
 
+
+    	ReimuTypeResolver r = new ReimuTypeResolver();
     	ReimuRuntime rt = getGlobalRuntime();
 
+    	BlockExpression globalScope = injectGlobal();
+    	
+    	globalScope.typeCheckPartial(r);
+    	result.expr.typeCheck(r);
+    	globalScope.evalPartial(rt);
     	result.expr.eval(rt);
     	
     }
-    public static void eval(Path sourceFile) throws ReimuRuntimeException, IOException {
+    public static void eval(Path sourceFile) throws ReimuRuntimeException, IOException, ReimuCompileException {
 
     	CharStream input = CharStreams.fromPath(sourceFile);
     	
@@ -114,18 +125,20 @@ public class App
     	ProgramContext result = parser.program();
 
 //    	tokens.getTokens().forEach(x->System.out.println(x));
-    	System.out.println(result.expr);
+    	Logger.debug(result.expr);
 
+
+    	ReimuTypeResolver r = new ReimuTypeResolver();
     	ReimuRuntime rt = getGlobalRuntime();
 
-    	try {
-			
-    		result.expr.eval(rt);
-
-		} catch (ReimuRuntimeException e) {
-
-			System.err.println(e);
-		}
+    	BlockExpression globalScope = injectGlobal();
+    	
+    	globalScope.typeCheckPartial(r);
+    	Logger.info(r);
+    	result.expr.typeCheck(r);
+    	globalScope.evalPartial(rt);
+    	Logger.info("--------- output -----------");
+    	result.expr.eval(rt);
     	
 //    	for(ReimuRuntime r : ReimuRuntime.runtimes) {
 //    		
@@ -134,8 +147,10 @@ public class App
     }
 
 
-    public static void main( String[] args ) throws ReimuRuntimeException, IOException
+    public static void main( String[] args ) throws ReimuRuntimeException, IOException, ReimuCompileException
     {
+		Thread.setDefaultUncaughtExceptionHandler(new TinylogHandler());
+
     	if(args.length < 1) {
 
     		System.err.println("Provide source files...");

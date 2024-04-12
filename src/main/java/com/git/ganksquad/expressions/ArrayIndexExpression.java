@@ -2,12 +2,15 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IndexKeyData;
 import com.git.ganksquad.data.IndexableData;
-import com.git.ganksquad.exceptions.CannotIndexException;
-import com.git.ganksquad.exceptions.InvalidIndexKeyException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
+import com.git.ganksquad.exceptions.runtime.CannotIndexException;
+import com.git.ganksquad.exceptions.runtime.InvalidIndexKeyException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ArrayIndexExpression implements Expression {
 	
@@ -24,6 +27,20 @@ public class ArrayIndexExpression implements Expression {
 		ParseChecks.RequiredNotNull(l, r);
 		
 		return new ArrayIndexExpression(l, r);
+	}
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		
+		switch(right.typeCheck(resolver)) {
+			
+		case NONE:
+			throw new TypeException("Cannot index with unknown type");
+
+		default:
+			return left.typeCheck(resolver);
+		}
+
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.git.ganksquad.exceptions;
+package com.git.ganksquad.exceptions.runtime;
 
 public class NullAssignmentExpression extends ReimuRuntimeException {
 

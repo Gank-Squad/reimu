@@ -1,6 +1,6 @@
 package com.git.ganksquad.data;
 
-import com.git.ganksquad.exceptions.CannotIndexException;
+import com.git.ganksquad.exceptions.runtime.CannotIndexException;
 
 public interface IndexableData<T extends Data> {
 

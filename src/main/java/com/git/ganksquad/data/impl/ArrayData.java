@@ -10,8 +10,8 @@ import com.git.ganksquad.data.IndexKeyData;
 import com.git.ganksquad.data.IndexableData;
 import com.git.ganksquad.data.IterableData;
 import com.git.ganksquad.data.impl.iterable.CounterIterState;
-import com.git.ganksquad.exceptions.CannotIndexException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.runtime.CannotIndexException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ArrayData<T extends Data> implements Data, IterableData, IndexableData<T> {
 	

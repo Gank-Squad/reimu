@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class FunctionDefinitionExpression implements Expression {
 	
@@ -23,6 +25,14 @@ public class FunctionDefinitionExpression implements Expression {
 		ParseChecks.RequiredNotNull(name, args, body);
 
 		return new FunctionDefinitionExpression(new FunctionData(name, args, body));
+	}
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		resolver.declare(func.getName(), ReimuType.FUNCTION);
+
+		return ReimuType.NONE;
 	}
 
 	@Override

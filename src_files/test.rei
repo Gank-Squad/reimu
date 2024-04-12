@@ -1,25 +1,14 @@
 
 
-
 var a = 0..10;
 
-// hello world
 
-/* 
-this is a comment
+if(0){
 
-var uwu = 5;
+    println("True");
 
-**** */
-
-for i in a {
-
-    for j in a {
-        print(i);
-    }
-
-    println("");
+} el {
+    var a = 5;
+    println("false");
 }
-
-
 

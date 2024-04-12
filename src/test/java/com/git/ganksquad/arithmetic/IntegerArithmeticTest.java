@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.git.ganksquad.App;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class IntegerArithmeticTest {
 

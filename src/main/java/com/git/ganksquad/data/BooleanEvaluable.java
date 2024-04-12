@@ -1,6 +1,6 @@
 package com.git.ganksquad.data;
 
-import com.git.ganksquad.exceptions.InvalidBooleanException;
+import com.git.ganksquad.exceptions.runtime.InvalidBooleanException;
 
 /**
  * Represents a generic data which can be reduced to a boolean value.

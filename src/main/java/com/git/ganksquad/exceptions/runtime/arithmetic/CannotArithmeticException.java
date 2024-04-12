@@ -1,7 +1,7 @@
-package com.git.ganksquad.exceptions.Arithmetic;
+package com.git.ganksquad.exceptions.runtime.arithmetic;
 
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class CannotArithmeticException extends ReimuRuntimeException {
 

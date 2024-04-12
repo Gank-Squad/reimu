@@ -1,8 +1,8 @@
 package com.git.ganksquad.data;
 
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.InvalidIterStateException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.runtime.InvalidIterStateException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 /**
  * Represents a generic data which can be iterated over,

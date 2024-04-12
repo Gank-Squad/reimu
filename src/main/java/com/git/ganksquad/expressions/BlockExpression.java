@@ -7,10 +7,11 @@ import java.util.stream.Collectors;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuCompileException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class BlockExpression implements Expression {
 
@@ -41,15 +42,24 @@ public class BlockExpression implements Expression {
 	}
 
 
-	@Override
-	public byte typeCheck() throws ReimuCompileException {
+	public ReimuType typeCheckPartial(ReimuTypeResolver resolver) throws ReimuCompileException {
+	
+		ReimuType t = ReimuType.UNKNOWN;
+		
+		for(Expression e : this.expressions) {
 
-		if(this.expressions.size() == 0) {
-			
-			return Types.UNKNOWN;
+			t = e.typeCheck(resolver);
 		}
 
-		return this.expressions.get(this.expressions.size() - 1).typeCheck();
+		return t;
+	}
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuTypeResolver scope = resolver.subScope();
+
+		return this.typeCheckPartial(scope);
 	}
 
 	/**

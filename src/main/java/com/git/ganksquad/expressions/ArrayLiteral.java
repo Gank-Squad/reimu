@@ -5,10 +5,14 @@ import java.util.List;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.ArrayData;
-import com.git.ganksquad.exceptions.ReimuCompileException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.TestReimuType;
+import com.git.ganksquad.exceptions.compiler.NoneTypeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ArrayLiteral implements Expression {
 	
@@ -28,14 +32,31 @@ public class ArrayLiteral implements Expression {
 	}
 	
 	@Override
-	public byte typeCheck() throws ReimuCompileException {
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		
 		if(this.arr.size() == 0) {
 			
-			return Types.UNKNOWN;
+			return ReimuType.UNKNOWN;
 		}
 		
-		return this.arr.get(0).typeCheck();
+		ReimuType r = this.arr.get(0).typeCheck(resolver);
+		
+		
+		for(Expression e : this.arr) {
+			
+			ReimuType t = e.typeCheck(resolver);
+			
+			if(t == ReimuType.NONE) {
+
+				throw new NoneTypeException("Array cannot contain None resolving expression");
+			}
+
+			if(t != r) {
+				throw new TypeException("Array cannot be created with different types");
+			}
+		}
+		
+		return r;
 	}
 
 	@Override

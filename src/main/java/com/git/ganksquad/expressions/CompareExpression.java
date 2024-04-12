@@ -3,10 +3,13 @@ package com.git.ganksquad.expressions;
 import com.git.ganksquad.Operator;
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.BooleanData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class CompareExpression implements Expression {
 
@@ -61,6 +64,20 @@ public class CompareExpression implements Expression {
 		ParseChecks.RequiredNotNull(left, right);
 
 		return new CompareExpression(Operator.GTEQ, left, right);
+	}
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		
+		ReimuType l = this.left.typeCheck(resolver);
+		ReimuType r = this.right.typeCheck(resolver);
+		
+		if(l == ReimuType.NONE || r == ReimuType.NONE) {
+
+			throw new TypeException("Cannot do arithmetic with none resolved type");
+		}
+		
+		return ReimuType.BOOLEAN;
 	}
 
 	@Override

@@ -2,9 +2,10 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.StringData;
-import com.git.ganksquad.exceptions.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public class StringLiteral implements Expression {
 
@@ -32,8 +33,8 @@ public class StringLiteral implements Expression {
 	}
 
 	@Override
-	public byte typeCheck() throws ReimuCompileException {
-		return Types.STRING;
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		return ReimuType.STRING;
 	}
 
 	@Override

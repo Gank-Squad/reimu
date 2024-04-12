@@ -1,7 +1,7 @@
 package com.git.ganksquad.data;
 
 import com.git.ganksquad.ReimuRuntime;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public interface NativeMethod<T> {
 

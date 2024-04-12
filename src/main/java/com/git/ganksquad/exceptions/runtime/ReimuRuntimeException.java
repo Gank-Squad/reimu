@@ -1,9 +1,11 @@
-package com.git.ganksquad.exceptions;
+package com.git.ganksquad.exceptions.runtime;
+
+import com.git.ganksquad.exceptions.ReimuException;
 
 /**
  * The base runtime exception for all Reimu Exceptions
  */
-public class ReimuRuntimeException extends Exception {
+public class ReimuRuntimeException extends ReimuException {
 
 	private static final long serialVersionUID = -1621389320517765084L;
 

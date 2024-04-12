@@ -2,9 +2,11 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.RangeData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class RangeLiteral implements Expression {
 	
@@ -33,6 +35,13 @@ public class RangeLiteral implements Expression {
 				new RangeData(
 						Integer.parseInt(start),
 						Integer.parseInt(stop)));
+	}
+
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		// TODO Auto-generated method stub
+		return ReimuType.ITERABLE;
 	}
 
 	@Override

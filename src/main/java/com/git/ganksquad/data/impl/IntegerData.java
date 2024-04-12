@@ -6,15 +6,15 @@ import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IndexKeyData;
-import com.git.ganksquad.exceptions.CannotCompareException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotANDException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotAddException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotDivideException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotModulusException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotMultiplyException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotORException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotSubtractException;
-import com.git.ganksquad.exceptions.Arithmetic.CannotXORException;
+import com.git.ganksquad.exceptions.runtime.CannotCompareException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotANDException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotAddException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotDivideException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotModulusException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotMultiplyException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotORException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotSubtractException;
+import com.git.ganksquad.exceptions.runtime.arithmetic.CannotXORException;
 
 /**
  * Represents integer data, which can hold a 32bit integer.
