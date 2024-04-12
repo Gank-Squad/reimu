@@ -33,5 +33,20 @@ public class ParseChecks {
 			}
 		}
 	}
+	
+	public static String getUnquotedOrFail(String  s) {
+		
+		if(s.length() < 2) {
+			
+			throw new IllegalArgumentException("String must be at least 2 chars to be quoted");
+		}
+		
+		if(s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"') {
+			
+			return s.substring(1, s.length() - 1);
+		}
+
+		throw new IllegalArgumentException("String is not quoted");
+	}
 
 }

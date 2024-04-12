@@ -33,7 +33,7 @@ public class StringLiteral implements Expression {
 		
 		ParseChecks.RequiredNotNull(str);
 
-		return new StringLiteral(str.substring(1, str.length() - 1));
+		return new StringLiteral(ParseChecks.getUnquotedOrFail(str));
 	}
 
 	@Override

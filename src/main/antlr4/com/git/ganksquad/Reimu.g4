@@ -16,12 +16,18 @@ g_program
     @init { $value = new ArrayList<Expression>(); }
     : (   g_statement  { $value.add($g_statement.value); }
         | g_funcdef    { $value.add($g_funcdef.value); } 
+        | g_import     { $value.add($g_import.value); }
       )+
     ;
     
 g_funcdef returns [FunctionDefinitionExpression value]
     : g_type s1=SYMBOL '(' s2=g_typed_symbol_list ')' s3=g_block 
       { $value = FunctionDefinitionExpression.from($g_type.value, $s1.text, $s2.valueNames, $s2.valueTypes, $s3.value); }
+    ;
+
+g_import returns [ImportExpression value]
+    : 'import' STRING ENDL
+      { $value = ImportExpression.from($STRING.text); }
     ;
 
 g_statement_list returns [List<Expression> value] 

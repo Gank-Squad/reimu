@@ -136,6 +136,8 @@ public class App
     	Logger.debug(result.expr);
 
     	ReimuTypeResolver r = new ReimuTypeResolver();
+    	r.pushFile(sourceFile.toString());
+
     	ReimuRuntime rt = getGlobalRuntime();
 
     	BlockExpression globalScope = injectGlobal();

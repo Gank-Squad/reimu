@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.tinylog.Logger;
 
@@ -21,6 +22,7 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ReimuTypeResolver {
 
+	private Stack<String> fileStack;
 	
 	/**
 	 * Runtime history, used for debugging
@@ -38,12 +40,13 @@ public class ReimuTypeResolver {
     private Map<String, ReimuType> symbolTable = new HashMap<>();
     
     public ReimuTypeResolver() {
-    	this(null);	
+    	this(null, new Stack<>());	
     }
 
-    public ReimuTypeResolver(ReimuTypeResolver p) {
+    public ReimuTypeResolver(ReimuTypeResolver p, Stack<String> fs) {
 
     	this.parent = p;
+    	this.fileStack = fs;
     }
     
     /**
@@ -52,7 +55,7 @@ public class ReimuTypeResolver {
      */
     public ReimuTypeResolver subScope() {
     	
-    	ReimuTypeResolver r = new ReimuTypeResolver(this);
+    	ReimuTypeResolver r = new ReimuTypeResolver(this, this.fileStack);
     	
     	this.children.add(r);
     	
@@ -74,6 +77,22 @@ public class ReimuTypeResolver {
     	
     	return r;
     
+    }
+    
+    public void pushFile(String path) {
+    	Logger.debug("Entering file {}", path);
+    	this.fileStack.push(path);
+    }
+
+    public String popFile() {
+    	Logger.debug("Leaving file {}", this.currentFile());
+    	return this.fileStack.pop();
+    }
+    
+    public String currentFile() {
+    	if(this.fileStack.isEmpty())
+    		return "";
+    	return this.fileStack.peek();
     }
 
     public void declareFunction(String name, FunctionType t) throws ReimuCompileException {

@@ -1,7 +1,9 @@
 
 
+import "./math.rei";
+import "./function_def.rei";
 
-i32[] ca = [1, 2, 3, 4, 5];
+i32[] a = [1, 2, 3, 4, 5];
 
 bool iseven(i32 i) {
 
@@ -28,3 +30,5 @@ for(i in a) {
         println("not even");
     }
 }
+
+println(square(1));

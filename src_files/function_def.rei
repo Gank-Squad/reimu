@@ -1,16 +1,5 @@
-var x = 10;
 
-i32 one(){
-    1;
+char[] square(i32 x) {
+    "this is a square";
 }
-
-i32 square(i32 x) {
-    x * x * one();
-}
-
-
-
-var y = square(5);
-
-println(y);
 
