@@ -10,6 +10,6 @@ println(g);
 
 for(i in g){
 
-println(i);
+    println(i);
 }
 
