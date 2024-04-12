@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
@@ -38,16 +40,6 @@ public class ReimuRuntime {
 	 */
     private Map<String, Data> symbolTable = new HashMap<>();
 
-//    private Map<String, TypeSignature> typeSignatures = new HashMap<>();
-//    
-//    public static class TypeSignature {
-//    	
-//    	String type;
-//
-//    	public VariableData() {
-//    		// TODO Auto-generated constructor stub
-//    	}
-//    	}
 
     public ReimuRuntime() {
     	
@@ -128,7 +120,8 @@ public class ReimuRuntime {
     	
     	if(this.symbolTable.containsKey(name)) { 
     		
-    		throw new ReimuRuntimeException(String.format("%s is already defined, this should be impossible!!!", this.symbolTable));
+    		Logger.warn("Redeclaration of {} which should be impossible", name);
+//    		throw new ReimuRuntimeException(String.format("%s is already defined, this should be impossible!!!", this.symbolTable));
 //    		throw RedeclarationException.fromVariableDeclaration(name);
     	}
     
