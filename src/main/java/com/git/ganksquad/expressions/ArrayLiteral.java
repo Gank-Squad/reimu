@@ -1,6 +1,7 @@
 package com.git.ganksquad.expressions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.git.ganksquad.ParseChecks;
@@ -8,7 +9,10 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.ArrayData;
-import com.git.ganksquad.data.types.TestReimuType;
+import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.PrimitiveType;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.NoneTypeException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
@@ -36,23 +40,26 @@ public class ArrayLiteral implements Expression {
 		
 		if(this.arr.size() == 0) {
 			
-			return ReimuType.UNKNOWN;
+			return AggregateType.UNKNOWN_ARRAY_TYPE;
 		}
 		
 		ReimuType r = this.arr.get(0).typeCheck(resolver);
-		
-		
-		for(Expression e : this.arr) {
-			
-			ReimuType t = e.typeCheck(resolver);
-			
-			if(t == ReimuType.NONE) {
 
-				throw new NoneTypeException("Array cannot contain None resolving expression");
-			}
+		if(r == SpecialType.VOID) {
 
-			if(t != r) {
-				throw new TypeException("Array cannot be created with different types");
+			throw new NoneTypeException("Array cannot contain None resolving expression");
+		}
+
+		Iterator<Expression> it = this.arr.iterator();
+		
+		it.next();
+
+		while (it.hasNext()) {
+
+			ReimuType e = it.next().typeCheck(resolver);
+			
+			if(r != e) {
+				throw new TypeException("Array cannot be created with different types: %s and %s", r, e);
 			}
 		}
 		

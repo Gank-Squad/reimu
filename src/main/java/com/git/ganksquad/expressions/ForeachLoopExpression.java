@@ -7,6 +7,8 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IterableData;
 import com.git.ganksquad.data.IterableData.IterState;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.traits.IterableTrait;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
@@ -33,23 +35,18 @@ public class ForeachLoopExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		
-		// TODO: fix this, since iterable will resolve to an iterable type
-		// but we want to declare the variable as whatever type we get from the iterable
 		ReimuType t = this.iterable.typeCheck(resolver);
-
-		switch(t) {
-
-		case NONE:
-			throw new ReimuCompileException("Iteral must not resolve to None");
-
-		default:
-
-			ReimuTypeResolver scope = resolver.subScope();
+		
+		if(!(t instanceof IterableTrait)) {
 			
-			resolver.declare(this.variable, t);
-			
-			return this.body.typeCheck(scope);
+			throw new ReimuCompileException("Cannot iterate non-iterable type");
 		}
+
+		ReimuTypeResolver scope = resolver.subScope();
+
+		resolver.declare(this.variable, ((IterableTrait)t).produces());
+
+		return this.body.typeCheck(scope);
 	}
 
 	@Override

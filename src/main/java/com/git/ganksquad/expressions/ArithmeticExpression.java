@@ -6,6 +6,8 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.ArithmeticData;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -86,22 +88,24 @@ public class ArithmeticExpression implements Expression {
 		ReimuType l = this.left.typeCheck(resolver);
 		ReimuType r = this.right.typeCheck(resolver);
 		
-		if(l == ReimuType.NONE || r == ReimuType.NONE) {
+		if(l == SpecialType.VOID || r == SpecialType.VOID) {
 
-			throw new TypeException("Cannot do arithmetic with none resolved type");
+			throw new TypeException("Cannot do arithmetic with: %s and %s", l, r);
 		}
 		
-		if(l == ReimuType.UNKNOWN && r != ReimuType.UNKNOWN) {
-			
-			return r;
-		}
-
-		if(r == ReimuType.UNKNOWN && l != ReimuType.UNKNOWN) {
-			
+		if(l.isEqualType(r)) {
 			return l;
 		}
 		
-		return l;
+		if(l.isAssignableFrom(r)) {
+			return l;
+		}
+
+		if(r.isAssignableFrom(l)) {
+			return r;
+		}
+		
+		throw new TypeException("Cannot do arithmetic with: %s and %s because they are not the same type and not assignable", l, r);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ public class IntegerArithmeticTest {
 			App.eval(code);
 			return true;
 		} catch (Exception e) {
+			System.out.println(e);
 			return false;
 		}
 	}

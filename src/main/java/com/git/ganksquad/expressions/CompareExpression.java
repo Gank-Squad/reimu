@@ -7,6 +7,9 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.BooleanData;
+import com.git.ganksquad.data.types.PrimitiveType;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -72,12 +75,16 @@ public class CompareExpression implements Expression {
 		ReimuType l = this.left.typeCheck(resolver);
 		ReimuType r = this.right.typeCheck(resolver);
 		
-		if(l == ReimuType.NONE || r == ReimuType.NONE) {
+		if(l == SpecialType.VOID || r == SpecialType.VOID) {
 
-			throw new TypeException("Cannot do arithmetic with none resolved type");
+			throw new TypeException("Cannot compare void resolved type");
 		}
 		
-		return ReimuType.BOOLEAN;
+		if(l.isEqualType(r) || l.isAssignableFrom(r) || r.isAssignableFrom(l)) {
+			return PrimitiveType.BOOLEAN;
+		}
+
+		throw new TypeException("Cannot do compare types %s and %s since they are not the same and not assignable", l, r);
 	}
 
 	@Override

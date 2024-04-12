@@ -3,11 +3,15 @@ package com.git.ganksquad.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
+import com.git.ganksquad.data.types.FunctionType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.NotAFunctionException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -16,11 +20,13 @@ public class InvokeFunctionExpression implements Expression {
 	
 	public String symbol;
 	public List<Expression> args ;
+	public List<ReimuType> argTypes;
 	
 	public InvokeFunctionExpression(String symbol, List<Expression> args) {
 		
 		this.symbol = symbol;
 		this.args = args;
+		this.argTypes = new ArrayList<ReimuType>(this.args.size());
 	}
 	
 	public static InvokeFunctionExpression from(String name, List<Expression> args) {
@@ -33,23 +39,32 @@ public class InvokeFunctionExpression implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		
+		for(Expression e : this.args) {
+			
+			ReimuType t = e.typeCheck(resolver);
 
-		if(resolver.resolveFunction(this.symbol, this.args.size()) != ReimuType.FUNCTION) {
+			Logger.debug(t);
+
+			this.argTypes.add(t);
+		}
+		
+		Logger.debug("About to try resolving {} with types {}", this.symbol, this.argTypes);
+
+		ReimuType t = resolver.resolveFunction(this.symbol, this.argTypes);
+
+		if(!(t instanceof FunctionType)) {
 			
 			throw new NotAFunctionException(this.symbol);
 		}
 
-		for(Expression e : this.args) {
-			e.typeCheck(resolver);
-		}
-
-		return ReimuType.UNKNOWN;
+		return ((FunctionType)t).returnType;
 	}
 
 	@Override
 	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
 		
-		FunctionData data = reimuRuntime.derefFunction(this.symbol, this.args.size());
+		FunctionData data = reimuRuntime.derefFunction(this.symbol, this.argTypes);
 		
 		if(data.scope == null) {
 			

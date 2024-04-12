@@ -5,6 +5,8 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.RangeData;
+import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
@@ -40,8 +42,7 @@ public class RangeLiteral implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
-		// TODO Auto-generated method stub
-		return ReimuType.ITERABLE;
+		return AggregateType.NUMERIC_ITERATOR_TYPE;
 	}
 
 	@Override

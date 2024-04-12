@@ -1,28 +1,51 @@
 package com.git.ganksquad.data.types;
 
-public class IterableType extends AggregateType implements SingleTypeContainer {
+import com.git.ganksquad.data.types.traits.IterableTrait;
 
-	private TestReimuType containedType;
+public class IterableType implements AggregateType, SingleTypeContainer, IterableTrait {
+
+	private ReimuType containedType;
 	
-	public IterableType(TestReimuType elements) {
+	public IterableType(ReimuType elements) {
 		
 		this.containedType = elements;
 	}
 	
 	@Override
-	public TestReimuType getContainedType() {
+	public ReimuType getContainedType() {
 		return this.containedType;
 	}
 
 	@Override
-	public boolean isCompatibleWith(ReimuTypeEnumValue other) {
-		switch(other) {
+	public boolean isAssignableFrom(ReimuType other) {
 
-			case ITERABLE:
-				return true;
-
-			default:
-				return false;
+		if(other instanceof IterableType) {
+			
+			return this.containedType.isAssignableFrom(((IterableType)other).containedType);
 		}
+
+		if(other instanceof ArrayType) {
+			
+			return this.containedType.isAssignableFrom(((ArrayType)other).getContainedType());
+		}
+
+		return false;
+	}
+	
+	
+	@Override
+	public boolean isEqualType(ReimuType other) {
+		
+		return other instanceof IterableType &&
+			 this.containedType.isEqualType(((IterableType)other).containedType);
+	}
+
+	@Override
+	public ReimuType produces() {
+		return this.containedType;
+	}
+	@Override
+	public String toString() {
+		return this.formatToString(this.containedType);
 	}
 }

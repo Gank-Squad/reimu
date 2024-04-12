@@ -8,6 +8,8 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -45,28 +47,22 @@ public class IfElseExpression implements Expression {
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
 		ReimuType r = this.ifstatements.get(0).typeCheck(resolver);
-//		ReimuType t;
+		ReimuType t;
 		
 		for(Expression e : this.ifstatements) {
-			
-//			t = e.typeCheck(resolver);
-//
-//			if(t != r) {
-//				throw new TypeException(String.format("IfElse could resolve to different type, %s or %s", r, t));
-//			}
 
-			if(e.typeCheck(resolver) == ReimuType.NONE) {
-				r = ReimuType.NONE;
+			t = e.typeCheck(resolver);
+
+			if(r != SpecialType.VOID && !t.equals(r)) {
+				r = SpecialType.VOID;
 			}
 		}
 		
-		if(this.elseBody.typeCheck(resolver) == ReimuType.NONE) {
-			r = ReimuType.NONE;
-		}
+		t = this.elseBody.typeCheck(resolver);
 
-//		if(t != r) {
-//				throw new TypeException(String.format("IfElse could resolve to different type, %s or %s", r, t));
-//		}
+		if(r != SpecialType.VOID && !t.equals(r)) {
+			r = SpecialType.VOID;
+		}
 		
 		return r;
 	}

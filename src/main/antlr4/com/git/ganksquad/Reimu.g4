@@ -3,6 +3,7 @@ grammar Reimu;
 @header {
 import com.git.ganksquad.expressions.*;
 import com.git.ganksquad.exceptions.*;
+import com.git.ganksquad.data.types.*;
 import com.git.ganksquad.data.*;
 }
 
@@ -19,8 +20,8 @@ g_program
     ;
     
 g_funcdef returns [FunctionDefinitionExpression value]
-    : g_type s1=SYMBOL '(' s2=g_symbol_list ')' s3=g_block 
-      { $value = FunctionDefinitionExpression.from($g_type.value, $s1.text, $s2.value, $s3.value); }
+    : g_type s1=SYMBOL '(' s2=g_typed_symbol_list ')' s3=g_block 
+      { $value = FunctionDefinitionExpression.from($g_type.value, $s1.text, $s2.valueNames, $s2.valueTypes, $s3.value); }
     ;
 
 g_statement_list returns [List<Expression> value] 
@@ -62,7 +63,7 @@ g_expr returns [Expression value]
     | e1=g_expr '<=' e2=g_expr      { $value = CompareExpression.lteq($e1.value, $e2.value); }
     | e1=g_expr '>' e2=g_expr       { $value = CompareExpression.gt($e1.value, $e2.value); }
     | e1=g_expr '>=' e2=g_expr      { $value = CompareExpression.gteq($e1.value, $e2.value); }
-    | SYMBOL '=' e1=g_expr          { $value = AssignmentExpression.assign(Expression.ReimuType.UNKNOWN, $SYMBOL.text, $e1.value); }
+    | SYMBOL '=' e1=g_expr          { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $SYMBOL.text, $e1.value); }
     | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
@@ -79,22 +80,21 @@ g_value returns [Expression value]
     ;
 
 
-g_type returns [Expression.ReimuType value]
-    : g_primative_type '[]'    { $value = Expression.ReimuType.ARRAY; }
-    | 'var'                    { $value = Expression.ReimuType.UNKNOWN; }
-    | 'iter'                   { $value = Expression.ReimuType.ITERABLE; }
-    | 'fun'                    { $value = Expression.ReimuType.FUNCTION; }
+g_type returns [ReimuType value]
+    : e=g_type '[]'              { $value = new ArrayType($e.value); }
+    | 'var'                    { $value = SpecialType.UNKNOWN; }
     | g_primative_type         { $value = $g_primative_type.value; }
     ;
 
-g_primative_type returns [Expression.ReimuType value]
-    : 'i64'    { $value = Expression.ReimuType.NUMERIC; }
-    | 'i32'    { $value = Expression.ReimuType.NUMERIC; }
-    | 'i16'    { $value = Expression.ReimuType.NUMERIC; }
-    | 'i8'     { $value = Expression.ReimuType.NUMERIC; }
-    | 'f64'    { $value = Expression.ReimuType.NUMERIC; }
-    | 'f32'    { $value = Expression.ReimuType.NUMERIC; }
-    | 'bool'   { $value = Expression.ReimuType.BOOLEAN; }
+g_primative_type returns [ReimuType value]
+    : 'i64'    { $value = PrimitiveType.LONG; }
+    | 'i32'    { $value = PrimitiveType.INT; }
+    | 'i16'    { $value = PrimitiveType.SHORT; }
+    | 'i8'     { $value = PrimitiveType.BYTE; }
+    | 'f64'    { $value = PrimitiveType.DOUBLE; }
+    | 'f32'    { $value = PrimitiveType.FLOAT; }
+    | 'bool'   { $value = PrimitiveType.BOOLEAN; }
+    | 'char'   { $value = PrimitiveType.CHAR; }
     ;
 
 g_declare
@@ -167,6 +167,19 @@ g_symbol_list
     returns [List<String> value]
     @init  { $value = new ArrayList<String>(); }
     : ( el+=SYMBOL ( ',' el+=SYMBOL )* )?          { for(var e : $el) $value.add(e.getText()); }
+    ;
+
+g_typed_symbol_list
+    returns [List<String> valueNames, List<ReimuType> valueTypes]
+    @init  { 
+        $valueNames = new ArrayList<String>(); 
+        $valueTypes = new ArrayList<ReimuType>(); 
+        }
+    : ( et+=g_type el+=SYMBOL ( ',' et+=g_type el+=SYMBOL )* )?          
+      
+      { for(var e : $et) $valueTypes.add(e.value); 
+        for(var e : $el) $valueNames.add(e.getText()); 
+      }
     ;
 
 

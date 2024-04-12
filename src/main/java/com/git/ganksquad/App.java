@@ -15,10 +15,11 @@ import com.git.ganksquad.ReimuParser.ProgramContext;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.NativeMethod;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.expressions.BlockExpression;
-import com.git.ganksquad.expressions.Expression.ReimuType;
 import com.git.ganksquad.expressions.FunctionDefinitionExpression;
 import com.git.ganksquad.expressions.InvokeNativeExpression;
 
@@ -47,9 +48,10 @@ public class App
 	public static BlockExpression injectGlobal() throws ReimuRuntimeException {
 		
 		return BlockExpression.fromList(Arrays.asList(
-				FunctionDefinitionExpression.from(ReimuType.NONE,
+				FunctionDefinitionExpression.from(SpecialType.VOID,
 						"print",
 						Arrays.asList("a"), 
+						Arrays.asList(AggregateType.STRING_TYPE), 
 						new BlockExpression(Arrays.asList(
 								new InvokeNativeExpression(new NativeMethod<Data>() {
 
@@ -67,9 +69,10 @@ public class App
 								)
 								)
 						),
-				FunctionDefinitionExpression.from(ReimuType.NONE,
+				FunctionDefinitionExpression.from(SpecialType.VOID,
 						"println",
 						Arrays.asList("a"), 
+						Arrays.asList(AggregateType.STRING_TYPE), 
 						new BlockExpression(Arrays.asList(
 								new InvokeNativeExpression(new NativeMethod<Data>() {
 

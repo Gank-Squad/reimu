@@ -8,13 +8,14 @@ import java.util.Map;
 
 import org.tinylog.Logger;
 
-import com.git.ganksquad.data.impl.FunctionData;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.FunctionType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.ReimuException;
 import com.git.ganksquad.exceptions.compiler.NoneTypeException;
 import com.git.ganksquad.exceptions.compiler.RedeclarationException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.SymbolNotFoundException;
-import com.git.ganksquad.expressions.Expression.ReimuType;
 
 public class ReimuTypeResolver {
 
@@ -56,6 +57,9 @@ public class ReimuTypeResolver {
     	return r;
     }
 
+    public void declareFunction(String name, FunctionType t) throws ReimuCompileException {
+    	declare(ReimuNameResolver.getFunctionName(name, t.argumentTypes), t);
+    }
     public void declare(String name, ReimuType type) throws ReimuCompileException {
     	
     	if(type == null) {
@@ -63,7 +67,7 @@ public class ReimuTypeResolver {
     		throw ReimuException.nullPtrFromVariableDeclaration(name);
     	}
     	
-    	if(type == ReimuType.NONE) {
+    	if(type == SpecialType.VOID) {
     		
     		throw new NoneTypeException(String.format("Tried to declare variable %s with None type", name));
     	}
@@ -79,8 +83,8 @@ public class ReimuTypeResolver {
     }
 
 
-    public ReimuType  resolveFunction(String name, int args) throws ReimuCompileException {
-    	return resolve(FunctionData.resolveName(name, args));
+    public ReimuType  resolveFunction(String name, List<ReimuType> args) throws ReimuCompileException {
+    	return resolve(ReimuNameResolver.getFunctionName(name, args));
     }
 
     public ReimuType  resolve(String name) throws ReimuCompileException {
@@ -91,6 +95,8 @@ public class ReimuTypeResolver {
     	}
     	
     	if(this.parent == null) {
+    		
+    		Logger.debug(this.symbolTable);
     		throw new SymbolNotFoundException(String.format("Cannot resolve type from variable %s because it has not been declared", name) );
     	}
     

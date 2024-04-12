@@ -6,6 +6,9 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IndexKeyData;
 import com.git.ganksquad.data.IndexableData;
+import com.git.ganksquad.data.types.ArrayType;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.CannotIndexException;
@@ -32,15 +35,19 @@ public class ArrayIndexExpression implements Expression {
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		
-		switch(right.typeCheck(resolver)) {
+		if(right.typeCheck(resolver) == SpecialType.VOID) {
 			
-		case NONE:
-			throw new TypeException("Cannot index with unknown type");
-
-		default:
-			return left.typeCheck(resolver);
+			throw new TypeException("Cannot index with void type");
+		}
+		
+		ReimuType t =  left.typeCheck(resolver);
+		
+		if(t instanceof ArrayType) {
+			
+			return ((ArrayType)t).getContainedType();
 		}
 
+		throw new TypeException("Cannot index non-array type: %s", t);
 	}
 
 	@Override

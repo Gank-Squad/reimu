@@ -10,6 +10,7 @@ import java.util.Map;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.SymbolNotFoundException;
 import com.git.ganksquad.exceptions.runtime.NullAssignmentExpression;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -219,9 +220,9 @@ public class ReimuRuntime {
      * @return The function data
      * @throws SymbolNotFoundException If the function was not found
      */
-    public FunctionData derefFunction(String name, int paramCount) throws ReimuRuntimeException {
+    public FunctionData derefFunction(String name, List<ReimuType> argTypes) throws ReimuRuntimeException {
     	
-    	Object d = this.symbolTable.get(FunctionData.resolveName(name, paramCount));
+    	Object d = this.symbolTable.get(ReimuNameResolver.getFunctionName(name, argTypes));
     	
     	if(d != null) {
     		
@@ -233,7 +234,7 @@ public class ReimuRuntime {
     		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", name));
     	}
     	
-    	return (FunctionData)parent.derefFunction(name, paramCount);
+    	return (FunctionData)parent.derefFunction(name, argTypes);
     }
 
     @Override

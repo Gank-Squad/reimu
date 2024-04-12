@@ -6,6 +6,8 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -32,20 +34,13 @@ public class WhileExpression implements Expression {
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
 		ReimuType t = this.condExpression.typeCheck(resolver);	
-
-		switch(t) {
-
-		case NONE:
-			throw new TypeException("While loop condition must not be None type");
-
-		default:
-
-			if(!t.evalAsBool()) 
-				throw new TypeException("While loop condition must be BooleanEvaluable type");
-
-			return this.bodyExpression.typeCheck(resolver);
 		
+		if(t == SpecialType.VOID) {
+			
+			throw new TypeException("While loop condition must not be VOID condition");
 		}
+
+		return this.bodyExpression.typeCheck(resolver);
 	}
 
 	@Override

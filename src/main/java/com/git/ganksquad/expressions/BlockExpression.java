@@ -10,6 +10,8 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
@@ -48,7 +50,7 @@ public class BlockExpression implements Expression {
 
 	public ReimuType typeCheckPartial(ReimuTypeResolver resolver) throws ReimuCompileException {
 	
-		ReimuType t = ReimuType.NONE;
+		ReimuType t = SpecialType.VOID;
 		
 		for(Expression e : this.expressions) {
 

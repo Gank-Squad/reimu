@@ -8,6 +8,8 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -34,18 +36,12 @@ public class IfExpression implements Expression {
 		
 		ReimuType t = this.condition.typeCheck(resolver);
 		
-		switch (t) {
-
-		case NONE:
-			throw new TypeException("condition must be a boolean type");
-
-		default:
-
-			if(!t.evalAsBool())
-				throw new TypeException("condition must be a boolean type");
-
-			return this.body.typeCheck(resolver);
+		if(t == SpecialType.VOID) {
+			
+			throw new TypeException("If statement cannot work with VOID condition");
 		}
+		
+		return this.body.typeCheck(resolver);
 	}
 	
 	public static IfExpression from(Expression cond, BlockExpression body) {

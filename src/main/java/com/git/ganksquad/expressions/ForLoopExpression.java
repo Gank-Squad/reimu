@@ -8,6 +8,8 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
@@ -54,20 +56,13 @@ public class ForLoopExpression implements Expression {
 		this.update.typeCheckPartial(scope);
 		
 		ReimuType t = this.condition.typeCheck(scope);
-
-		switch (t) {
-
-		case NONE:
-			throw new ReimuCompileException("Cannot have none expression in for loop");
-
-		default:
+		
+		if(t == SpecialType.VOID) {
 			
-			if(!t.evalAsBool()) {
-				throw new ReimuCompileException("For llop condition must be BooleanEvaluable type");
-			}
-
-			return this.body.typeCheckPartial(scope);
+			throw new ReimuCompileException("Cannot have void expression in for loop");
 		}
+
+		return this.body.typeCheckPartial(scope);
 	}
 
 	@Override

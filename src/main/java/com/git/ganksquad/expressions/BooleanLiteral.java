@@ -5,7 +5,8 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.BooleanData;
-import com.git.ganksquad.data.types.TestReimuType;
+import com.git.ganksquad.data.types.PrimitiveType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public class BooleanLiteral implements Expression {
@@ -28,7 +29,7 @@ public class BooleanLiteral implements Expression {
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
-		return ReimuType.BOOLEAN;
+		return PrimitiveType.BOOLEAN;
 	}
 
 	@Override
