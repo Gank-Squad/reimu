@@ -1,7 +1,6 @@
 
 
-import "./math.rei";
-import "./function_def.rei";
+import "function_def.rei";
 
 i32[] a = [1, 2, 3, 4, 5];
 

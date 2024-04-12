@@ -50,8 +50,11 @@ public class ImportExpression implements Expression {
 		
 		if(this.path.startsWith("./")) {
 			
-			Logger.debug("Handling starting relative path");
 			this.path = new File(cur, this.path.substring(2)).getPath();
+		}
+		else if (!this.path.startsWith("/")) {
+			
+			this.path = new File(cur, this.path).getPath();
 		}
 		
 		Logger.debug("CWD {}", cur);
