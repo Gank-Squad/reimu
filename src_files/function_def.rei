@@ -1,4 +1,3 @@
-
 var x = 10;
 
 i32 one(){
@@ -13,4 +12,5 @@ i32 square(i32 x) {
 
 var y = square(5);
 
-println(y)
+println(y);
+

@@ -4,6 +4,11 @@
               (#match? @constant "^[A-Z][A-Z\\d_]*$"))
 
 [
+ (boolean)
+ ]
+@constant
+
+[
  "var"
  ; "func"
  "in"
@@ -51,9 +56,14 @@
 (hex_integer) @number
 (bin_integer) @number
 
-[
-  (type)
-] @type
+(type
+    array_type: (type) @type)
+
+(primitive_type) @type.builtin
+
+
+(function_definition
+  name: (identifier) @function)
 
 (call_expression
   function: (identifier) @function.call)

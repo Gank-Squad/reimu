@@ -38,6 +38,11 @@ const PREC = {
 module.exports = grammar({
     name: 'reimu',
 
+    extras: $ => [
+        /\s|\\\r?\n/,
+        $.comment,
+    ],
+
     rules: {
         source_file: $ => repeat(choice(
             $.function_definition,
@@ -47,15 +52,16 @@ module.exports = grammar({
 
 
         function_definition: $ => seq(
-            $.type,
-            $.identifier,
+            field("return_type", $.type),
+            field("name", $.identifier),
             seq( '(', commaSep(seq($.type, $.identifier)), ')'),
-            $.block
+            field("body", $.block)
         ),
 
         statement: $ => choice(
             $.statement_end,
             seq($.expression, $.statement_end),
+            seq($.declare, $.statement_end),
             $.block,
             $.ifelse,
             $.while,
@@ -134,8 +140,7 @@ module.exports = grammar({
         ),
 
         declare: $=> choice(
-            seq($.type, $.identifier),
-            seq($.type, $.identifier, '=', $.expression),
+            seq($.type, $.identifier, optional(seq('=', $.expression))),
         ),
 
         declare_or_expression: $=> choice(
@@ -165,6 +170,7 @@ module.exports = grammar({
         expression: $ => choice(
             $.unary_expression,
             prec.left(PREC.PAREN_DECLARATOR, seq('(', $.expression ,')')),
+            prec.left(PREC.PAREN_DECLARATOR, seq('[', commaSep($.expression) ,']')),
             prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
             prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
             prec.left(PREC.MULTIPLY, seq($.expression, '%', $.expression)),
@@ -191,9 +197,9 @@ module.exports = grammar({
         ),
 
         type: $ => choice(
-            seq($.type, '[]'),
-            'var',
-            $.primitive_type
+            seq(field("array_type", $.type), '[]'),
+            $.primitive_type,
+            'var'
         ),
 
         primitive_type: $ => choice(

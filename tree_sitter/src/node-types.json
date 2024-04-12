@@ -92,7 +92,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "bin_integer",
@@ -186,15 +186,42 @@
   {
     "type": "function_definition",
     "named": true,
-    "fields": {},
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "return_type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
-        {
-          "type": "block",
-          "named": true
-        },
         {
           "type": "identifier",
           "named": true
@@ -262,6 +289,10 @@
           "named": true
         },
         {
+          "type": "declare",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
@@ -291,17 +322,24 @@
   {
     "type": "type",
     "named": true,
-    "fields": {},
+    "fields": {
+      "array_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": false,
       "types": [
         {
           "type": "primitive_type",
-          "named": true
-        },
-        {
-          "type": "type",
           "named": true
         }
       ]
@@ -422,7 +460,15 @@
     "named": false
   },
   {
+    "type": "[",
+    "named": false
+  },
+  {
     "type": "[]",
+    "named": false
+  },
+  {
+    "type": "]",
     "named": false
   },
   {
@@ -444,6 +490,10 @@
   {
     "type": "char",
     "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
   },
   {
     "type": "el",

@@ -1,6 +1,7 @@
 
 
 
+i32[] ca = [1, 2, 3, 4, 5];
 
 bool iseven(i32 i) {
 
@@ -13,11 +14,17 @@ bool iseven(i32 i) {
 }
 
 
-i32 i = 4;
+for(i32 c = 1, var b = 4; c < b; c = c+1, b = b + (b%2)) {
 
-if(iseven(i)) {
-    println("is even");
+    print("hello");
 }
-el {
-    println("not even");
+
+for(i in a) {
+
+    if(iseven(i)) {
+        println("is even");
+    }
+    el {
+        println("not even");
+    }
 }
