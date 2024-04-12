@@ -4,8 +4,8 @@ import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IterableData;
 import com.git.ganksquad.data.impl.iterable.CounterIterState;
-import com.git.ganksquad.exceptions.InvalidIterStateException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.exceptions.runtime.InvalidIterStateException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.expressions.IntegerLiteral;
 
 public class RangeData implements Data, IterableData {

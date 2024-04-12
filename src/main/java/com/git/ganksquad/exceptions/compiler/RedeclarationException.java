@@ -1,6 +1,6 @@
-package com.git.ganksquad.exceptions;
+package com.git.ganksquad.exceptions.compiler;
 
-public class RedeclarationException extends ReimuRuntimeException {
+public class RedeclarationException extends ReimuCompileException {
 
 	private static final long serialVersionUID = 1966509911218594514L;
 

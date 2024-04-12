@@ -1,6 +1,6 @@
 package com.git.ganksquad.data;
 
-import com.git.ganksquad.exceptions.CannotCompareException;
+import com.git.ganksquad.exceptions.runtime.CannotCompareException;
 
 /**
  * Represents a generic data which can be compared to other data.

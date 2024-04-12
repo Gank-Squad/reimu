@@ -10,10 +10,10 @@ import java.util.Map;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.FunctionData;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.NullAssignmentExpression;
-import com.git.ganksquad.exceptions.RedeclarationException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
-import com.git.ganksquad.exceptions.SymbolNotFoundException;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.SymbolNotFoundException;
+import com.git.ganksquad.exceptions.runtime.NullAssignmentExpression;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 
 /**
@@ -26,7 +26,7 @@ public class ReimuRuntime {
 	/**
 	 * Runtime history, used for debugging
 	 */
-	public static List<ReimuRuntime> runtimes = new ArrayList<>();
+	public List<ReimuRuntime> children = new ArrayList<>();
     
 	/**
 	 * The parent runtime used by sub-scopes
@@ -38,9 +38,19 @@ public class ReimuRuntime {
 	 */
     private Map<String, Data> symbolTable = new HashMap<>();
 
+//    private Map<String, TypeSignature> typeSignatures = new HashMap<>();
+//    
+//    public static class TypeSignature {
+//    	
+//    	String type;
+//
+//    	public VariableData() {
+//    		// TODO Auto-generated constructor stub
+//    	}
+//    	}
+
     public ReimuRuntime() {
     	
-    	runtimes.add(this);
     }
 
     public ReimuRuntime(ReimuRuntime parent) {
@@ -58,6 +68,8 @@ public class ReimuRuntime {
     public ReimuRuntime subScope() {
     	
     	ReimuRuntime r = new ReimuRuntime(this);
+    	
+    	this.children.add(r);
     	
     	return r;
     }
@@ -116,7 +128,8 @@ public class ReimuRuntime {
     	
     	if(this.symbolTable.containsKey(name)) { 
     		
-    		throw RedeclarationException.fromVariableDeclaration(name);
+    		throw new ReimuRuntimeException(String.format("%s is already defined, this should be impossible!!!", this.symbolTable));
+//    		throw RedeclarationException.fromVariableDeclaration(name);
     	}
     
     	this.symbolTable.put(name, value);
@@ -172,7 +185,7 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new SymbolNotFoundException(String.format("Cannot assgin to symbol with name %s, since it does not exist", name));
+    		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", name));
     	}
 
     	this.parent.assign(name, value);
@@ -184,7 +197,7 @@ public class ReimuRuntime {
      * @return The data held by the symbol
      * @throws SymbolNotFoundException thrown if the symbol cannot be found
      */
-    public Data deref(String name) throws SymbolNotFoundException {
+    public Data deref(String name) throws ReimuRuntimeException {
     	
     	if(this.symbolTable.containsKey(name)) {
     		
@@ -193,7 +206,7 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new SymbolNotFoundException(String.format("Cannot deref symbol with name %s, since it does not exist", name));
+    		throw new ReimuRuntimeException(String.format("Cannot deref Symbol %s because it was not defined, this should be impossible!!!", name));
     	}
     	
     	return parent.deref(name);
@@ -207,9 +220,9 @@ public class ReimuRuntime {
      * @return The function data
      * @throws SymbolNotFoundException If the function was not found
      */
-    public FunctionData derefFunction(String name, int paramCount) throws SymbolNotFoundException {
+    public FunctionData derefFunction(String name, List<ReimuType> argTypes) throws ReimuRuntimeException {
     	
-    	Object d = this.symbolTable.get(FunctionData.resolveName(name, paramCount));
+    	Object d = this.symbolTable.get(ReimuNameResolver.getFunctionName(name, argTypes));
     	
     	if(d != null) {
     		
@@ -218,10 +231,10 @@ public class ReimuRuntime {
     	
     	if(this.parent == null) {
     		
-    		throw new SymbolNotFoundException(String.format("Cannot deref symbol with name %s, since it does not exist", name));
+    		throw new ReimuRuntimeException(String.format("Symbol %s was not defined, this should be impossible!!!", name));
     	}
     	
-    	return (FunctionData)parent.derefFunction(name, paramCount);
+    	return (FunctionData)parent.derefFunction(name, argTypes);
     }
 
     @Override
@@ -230,6 +243,23 @@ public class ReimuRuntime {
     	String t = "Runtime" + Arrays.asList(this.symbolTable).toString();
 
     	return t;
+    }
+
+    public String toTreeString(int depth) {
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(int i = 0; i < depth; i++) 
+    		sb.append("\t");
+
+    	sb.append(this.toString()).append('\n');
+    	
+    	for(ReimuRuntime rt : this.children) {
+    		
+    		sb.append(rt.toTreeString(depth+1)).append('\n');
+    	}
+
+    	return sb.toString();
     }
 }
 

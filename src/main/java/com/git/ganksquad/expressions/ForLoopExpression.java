@@ -4,10 +4,14 @@ import java.util.List;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ForLoopExpression implements Expression {
 	
@@ -40,6 +44,25 @@ public class ForLoopExpression implements Expression {
 		ParseChecks.RequiredNotNull(as, con, up, body);
 
 		return new ForLoopExpression(as, con, up, body);
+	}
+
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuTypeResolver scope = resolver.subScope();
+
+		this.assignment.typeCheckPartial(scope);
+		this.update.typeCheckPartial(scope);
+		
+		ReimuType t = this.condition.typeCheck(scope);
+		
+		if(t == SpecialType.VOID) {
+			
+			throw new ReimuCompileException("Cannot have void expression in for loop");
+		}
+
+		return this.body.typeCheckPartial(scope);
 	}
 
 	@Override

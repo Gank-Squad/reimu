@@ -2,12 +2,15 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IterableData;
 import com.git.ganksquad.data.IterableData.IterState;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.data.impl.iterable.TestIterState;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.traits.IterableTrait;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ForeachLoopExpression implements Expression {
 	
@@ -27,6 +30,23 @@ public class ForeachLoopExpression implements Expression {
 		ParseChecks.RequiredNotNull(variable, it, body);
 
 		return new ForeachLoopExpression(variable, it, body);
+	}
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		
+		ReimuType t = this.iterable.typeCheck(resolver);
+		
+		if(!(t instanceof IterableTrait)) {
+			
+			throw new ReimuCompileException("Cannot iterate non-iterable type");
+		}
+
+		ReimuTypeResolver scope = resolver.subScope();
+
+		resolver.declare(this.variable, ((IterableTrait)t).produces());
+
+		return this.body.typeCheck(scope);
 	}
 
 	@Override

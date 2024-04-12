@@ -4,11 +4,15 @@ import java.util.List;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.InvalidBooleanException;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class IfExpression implements Expression {
 	
@@ -25,6 +29,19 @@ public class IfExpression implements Expression {
 		
 		this.condition = cond;
 		this.body = body;
+	}
+	
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException  {
+		
+		ReimuType t = this.condition.typeCheck(resolver);
+		
+		if(t == SpecialType.VOID) {
+			
+			throw new TypeException("If statement cannot work with VOID condition");
+		}
+		
+		return this.body.typeCheck(resolver);
 	}
 	
 	public static IfExpression from(Expression cond, BlockExpression body) {
@@ -65,7 +82,7 @@ public class IfExpression implements Expression {
 			
 			this.wasTrue = TRUE_EVAL;
 			
-			return body.evalPartial(reimuRuntime);
+			return body.eval(reimuRuntime);
 		}
 
 		this.wasTrue = FALSE_EVAL;

@@ -1,15 +1,27 @@
 
 
+var wasFound = "hello world";
 
-var a = 0..10;
+char[] x = "hello";
 
-for i in a {
+for(i32 i = 0; i < 10; i = i + 1) {
 
-    for j in a {
-        print(i);
+
+    if(i % 2 == 0) {
+        wasFound = "true";
+    } 
+    el(i % 3 == 0) {
+        wasFound = "false";
     }
-    println("");
+    el(i % 4 == 0) {
+        wasFound = "nyah";
+    }
+    el {
+        wasFound = "uwu";
+    }
+
+    println(x);
 }
 
-
+println(wasFound);
 

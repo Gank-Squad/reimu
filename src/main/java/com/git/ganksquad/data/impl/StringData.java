@@ -4,7 +4,7 @@ import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.exceptions.CannotCompareException;
+import com.git.ganksquad.exceptions.runtime.CannotCompareException;
 
 /**
  * Represents a string value.

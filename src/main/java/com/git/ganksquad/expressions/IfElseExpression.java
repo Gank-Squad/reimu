@@ -1,13 +1,18 @@
 package com.git.ganksquad.expressions;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class IfElseExpression implements Expression {
 	
@@ -20,18 +25,46 @@ public class IfElseExpression implements Expression {
 		this.elseBody = elseBody;
 	}
 	
-	public static IfElseExpression from(List<IfExpression> ifstatements, BlockExpression elseBody) {
-		
+	public static Expression fromAndOptimize(List<IfExpression> ifstatements, BlockExpression elseBody) {
+
 		ParseChecks.RequiredNotNull(ifstatements, elseBody);
+
+		if(ifstatements.size() == 0) {
+			
+			throw new NullPointerException("IfElseExpression created with empty list of IfExpression");
+		}
+
+		if(ifstatements.size() == 1 && elseBody.isEmpty()) {
+			
+			return ifstatements.get(0);
+		}
 		
 		return new IfElseExpression(ifstatements, elseBody);
 	}
 
-	public static IfElseExpression from(List<IfExpression> ifstatements, List<Expression> elseBody) {
-		
-		ParseChecks.RequiredNotNull(ifstatements, elseBody);
 
-		return new IfElseExpression(ifstatements, BlockExpression.fromList(elseBody));
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuType r = this.ifstatements.get(0).typeCheck(resolver);
+		ReimuType t;
+		
+		for(Expression e : this.ifstatements) {
+
+			t = e.typeCheck(resolver);
+
+			if(r != SpecialType.VOID && !t.equals(r)) {
+				r = SpecialType.VOID;
+			}
+		}
+		
+		t = this.elseBody.typeCheck(resolver);
+
+		if(r != SpecialType.VOID && !t.equals(r)) {
+			r = SpecialType.VOID;
+		}
+		
+		return r;
 	}
 
 	@Override
@@ -55,7 +88,7 @@ public class IfElseExpression implements Expression {
 
 		if(elseShouldRun) {
 			
-			r = this.elseBody.evalPartial(reimuRuntime);
+			r = this.elseBody.eval(reimuRuntime);
 		}
 		
 		return r;
@@ -63,6 +96,10 @@ public class IfElseExpression implements Expression {
 	
 	@Override
 	public String toString() {
-		return this.formatToString(this.ifstatements, this.elseBody);
+
+		return this.formatToString(
+				this.ifstatements.stream()
+				.map(x -> x.toString())
+				.collect(Collectors.joining(", ")), this.elseBody);
 	}
 }

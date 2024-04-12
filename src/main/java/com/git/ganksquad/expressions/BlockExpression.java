@@ -7,9 +7,13 @@ import java.util.stream.Collectors;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class BlockExpression implements Expression {
 
@@ -27,6 +31,10 @@ public class BlockExpression implements Expression {
 				toList();
 	}
 	
+	public boolean isEmpty() {
+		return this.expressions.isEmpty();
+	}
+	
 	public static BlockExpression empty() {
 		
 		return new BlockExpression();
@@ -37,6 +45,27 @@ public class BlockExpression implements Expression {
 		ParseChecks.RequiredNotNull(expr);
 		
 		return new BlockExpression(expr);
+	}
+
+
+	public ReimuType typeCheckPartial(ReimuTypeResolver resolver) throws ReimuCompileException {
+	
+		ReimuType t = SpecialType.VOID;
+		
+		for(Expression e : this.expressions) {
+
+			t = e.typeCheck(resolver);
+		}
+
+		return t;
+	}
+
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuTypeResolver scope = resolver.subScope();
+
+		return this.typeCheckPartial(scope);
 	}
 
 	/**
@@ -59,6 +88,9 @@ public class BlockExpression implements Expression {
 	@Override
 	public Data eval(ReimuRuntime runtime) throws ReimuRuntimeException {
 		
+		if(this.expressions.size() == 0) 
+			return NoneData.instance;
+
 		ReimuRuntime scope = runtime.subScope();
 		
 		return this.evalPartial(scope);

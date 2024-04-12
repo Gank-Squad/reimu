@@ -2,8 +2,12 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.IntegerData;
+import com.git.ganksquad.data.types.PrimitiveType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public class IntegerLiteral implements Expression {
 	
@@ -42,6 +46,11 @@ public class IntegerLiteral implements Expression {
 		return new IntegerLiteral(0);
 	}
 	
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+		return PrimitiveType.INT;
+	}
+
 	@Override
 	public Data eval(ReimuRuntime runtime) {
 

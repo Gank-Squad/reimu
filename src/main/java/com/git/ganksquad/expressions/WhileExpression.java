@@ -2,10 +2,15 @@ package com.git.ganksquad.expressions;
 
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.exceptions.ReimuRuntimeException;
+import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class WhileExpression implements Expression {
 	
@@ -23,6 +28,19 @@ public class WhileExpression implements Expression {
 		ParseChecks.RequiredNotNull(cond, body);
 
 		return new WhileExpression(cond, body);
+	}
+	
+	@Override
+	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuType t = this.condExpression.typeCheck(resolver);	
+		
+		if(t == SpecialType.VOID) {
+			
+			throw new TypeException("While loop condition must not be VOID condition");
+		}
+
+		return this.bodyExpression.typeCheck(resolver);
 	}
 
 	@Override
