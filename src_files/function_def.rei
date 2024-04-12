@@ -1,11 +1,11 @@
 
 var x = 10;
 
-func one(){
+i32 one(){
     1;
 }
 
-func square(x) {
+i32 square(i32 x) {
     x * x * one();
 }
 

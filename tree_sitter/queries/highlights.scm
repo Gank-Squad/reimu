@@ -5,7 +5,7 @@
 
 [
  "var"
- "func"
+ ; "func"
  "in"
  ] @keyword
 
@@ -51,8 +51,12 @@
 (hex_integer) @number
 (bin_integer) @number
 
-(call_expression
-  function: (identifier) @function)
+[
+  (type)
+] @type
 
+(call_expression
+  function: (identifier) @function.call)
 
 (comment) @comment
+

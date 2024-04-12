@@ -2,12 +2,14 @@
 Empty Function Definition
 ==================
 
-func x() {
+void x() {
 }
 
 ---
 (source_file
  (function_definition
+ (type
+    (primitive_type))
   (identifier)
   (block)))
 
@@ -17,14 +19,22 @@ func x() {
 Param Function Definition
 ==================
 
-func x(a, b, c) {
+void x(i32 a, i32 b, i32 c) {
 }
 
 ---
 (source_file
  (function_definition
+ (type
+    (primitive_type))
   (identifier)
+ (type
+    (primitive_type))
   (identifier)
+ (type
+    (primitive_type))
   (identifier)
+ (type
+    (primitive_type))
   (identifier)
   (block)))

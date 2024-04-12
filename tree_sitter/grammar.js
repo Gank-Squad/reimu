@@ -47,9 +47,9 @@ module.exports = grammar({
 
 
         function_definition: $ => seq(
-            'func',
+            $.type,
             $.identifier,
-            seq( '(', commaSep($.identifier), ')'),
+            seq( '(', commaSep(seq($.type, $.identifier)), ')'),
             $.block
         ),
 
@@ -85,11 +85,11 @@ module.exports = grammar({
 
         for: $ => seq(
             'for', '(',
-            $.expression,
+            commaSep($.declare_or_expression),
             $.statement_end,
             $.expression,
             $.statement_end,
-            $.expression,
+            commaSep($.expression),
             ')',
             $.block
         ),
@@ -133,6 +133,16 @@ module.exports = grammar({
                     $.block)),
         ),
 
+        declare: $=> choice(
+            seq($.type, $.identifier),
+            seq($.type, $.identifier, '=', $.expression),
+        ),
+
+        declare_or_expression: $=> choice(
+            $.expression,
+            $.declare,
+        ),
+
         unary_expression: $ => prec.left(PREC.UNARY,
             seq(
                 choice(
@@ -170,7 +180,6 @@ module.exports = grammar({
             prec.left(PREC.RELATIONAL, seq($.expression, '>', $.expression)),
             prec.left(PREC.RELATIONAL, seq($.expression, '>=', $.expression)),
             prec.left(PREC.ASSIGNMENT, seq($.identifier, '=', $.expression)),
-            prec.left(PREC.ASSIGNMENT, seq('var', $.identifier, '=', $.expression)),
             $.call_expression,
             $.integer,
             $.hex_integer,
@@ -179,6 +188,24 @@ module.exports = grammar({
             $.boolean,
             $.identifier,
             seq($.integer, '..', $.integer),
+        ),
+
+        type: $ => choice(
+            seq($.type, '[]'),
+            'var',
+            $.primitive_type
+        ),
+
+        primitive_type: $ => choice(
+            'i64',
+            'i32'  ,
+            'i16'  ,
+            'i8'   ,
+            'f64'  ,
+            'f32'  ,
+            'bool' ,
+            'char' ,
+            'void'
         ),
 
         string: $ => /"(\\(u[0-9a-fA-F]{4}|.)|[^\\\"])*"/,
