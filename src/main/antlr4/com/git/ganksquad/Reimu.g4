@@ -80,6 +80,14 @@ g_expr returns [Expression value]
     | e1=g_expr '>' e2=g_expr       { $value = CompareExpression.gt($e1.value, $e2.value); }
     | e1=g_expr '>=' e2=g_expr      { $value = CompareExpression.gteq($e1.value, $e2.value); }
     | e1=g_expr '=' e2=g_expr       { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, $e2.value); }
+    | e1=g_expr '+=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.add($e1.value, $e2.value)); }
+    | e1=g_expr '-=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.sub($e1.value, $e2.value)); }
+    | e1=g_expr '*=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.mul($e1.value, $e2.value)); }
+    | e1=g_expr '/=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.div($e1.value, $e2.value)); }
+    | e1=g_expr '%=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.mod($e1.value, $e2.value)); }
+    | e1=g_expr '^=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.xor($e1.value, $e2.value)); }
+    | e1=g_expr '|=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.or($e1.value, $e2.value)); }
+    | e1=g_expr '&=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.and($e1.value, $e2.value)); }
     | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
