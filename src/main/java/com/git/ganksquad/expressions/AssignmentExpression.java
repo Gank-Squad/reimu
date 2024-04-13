@@ -64,6 +64,10 @@ public class AssignmentExpression implements Expression {
 
 				this.type = t;
 			}
+			else if(!(this.value instanceof NoneExpression) && !this.type.isAssignableFrom(t)) {
+				
+				throw new TypeException(String.format("Cannot assign type %s to type %s", t, this.type));
+			}
 			
 			resolver.declare(this.symbolName, this.type);
 			
