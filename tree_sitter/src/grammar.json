@@ -1085,7 +1085,43 @@
         },
         {
           "type": "SYMBOL",
+          "name": "short"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "hex_short"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bin_short"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "long"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "hex_long"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bin_long"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "float"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "double"
+        },
+        {
+          "type": "SYMBOL",
           "name": "string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "char"
         },
         {
           "type": "SYMBOL",
@@ -1153,7 +1189,15 @@
         },
         {
           "type": "STRING",
+          "value": "long"
+        },
+        {
+          "type": "STRING",
           "value": "i32"
+        },
+        {
+          "type": "STRING",
+          "value": "int"
         },
         {
           "type": "STRING",
@@ -1161,7 +1205,15 @@
         },
         {
           "type": "STRING",
+          "value": "short"
+        },
+        {
+          "type": "STRING",
           "value": "i8"
+        },
+        {
+          "type": "STRING",
+          "value": "byte"
         },
         {
           "type": "STRING",
@@ -1169,7 +1221,15 @@
         },
         {
           "type": "STRING",
+          "value": "double"
+        },
+        {
+          "type": "STRING",
           "value": "f32"
+        },
+        {
+          "type": "STRING",
+          "value": "float"
         },
         {
           "type": "STRING",
@@ -1200,6 +1260,126 @@
     "bin_integer": {
       "type": "PATTERN",
       "value": "0b[01][01_]*"
+    },
+    "char": {
+      "type": "PATTERN",
+      "value": "['].[']"
+    },
+    "short": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        },
+        {
+          "type": "STRING",
+          "value": "s"
+        }
+      ]
+    },
+    "hex_short": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "hex_integer"
+        },
+        {
+          "type": "STRING",
+          "value": "s"
+        }
+      ]
+    },
+    "bin_short": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "bin_integer"
+        },
+        {
+          "type": "STRING",
+          "value": "s"
+        }
+      ]
+    },
+    "long": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        },
+        {
+          "type": "STRING",
+          "value": "L"
+        }
+      ]
+    },
+    "hex_long": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "hex_integer"
+        },
+        {
+          "type": "STRING",
+          "value": "L"
+        }
+      ]
+    },
+    "bin_long": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "bin_integer"
+        },
+        {
+          "type": "STRING",
+          "value": "L"
+        }
+      ]
+    },
+    "float": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        },
+        {
+          "type": "STRING",
+          "value": "f"
+        }
+      ]
+    },
+    "double": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        }
+      ]
     },
     "boolean": {
       "type": "PATTERN",

@@ -51,13 +51,25 @@
 ; ";" @delimiter
 
 (string) @string
+(char) @character
 
-(integer) @number
-(hex_integer) @number
-(bin_integer) @number
+[
+ (integer)
+ (hex_integer)
+ (bin_integer)
+ (short)
+ (hex_short)
+ (bin_short)
+ (long)
+ (hex_long)
+ (bin_long)
+ (float)
+ (double)
+
+ ] @number
 
 (type
-    array_type: (type) @type)
+  array_type: (type) @type)
 
 (primitive_type) @type.builtin
 

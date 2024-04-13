@@ -190,7 +190,16 @@ module.exports = grammar({
             $.integer,
             $.hex_integer,
             $.bin_integer,
+            $.short,
+            $.hex_short,
+            $.bin_short,
+            $.long,
+            $.hex_long,
+            $.bin_long,
+            $.float,
+            $.double,
             $.string,
+            $.char,
             $.boolean,
             $.identifier,
             seq($.integer, '..', $.integer),
@@ -204,11 +213,17 @@ module.exports = grammar({
 
         primitive_type: $ => choice(
             'i64',
+            'long',
             'i32'  ,
+            'int'  ,
             'i16'  ,
+            'short'  ,
             'i8'   ,
+            'byte'  ,
             'f64'  ,
+            'double'  ,
             'f32'  ,
+            'float'  ,
             'bool' ,
             'char' ,
             'void'
@@ -219,6 +234,19 @@ module.exports = grammar({
         integer: $ => /(0|[1-9])[0-9_]*/,
         hex_integer: $ => /0x[0-9a-fA-F][0-9a-fA-F_]*/,
         bin_integer: $ => /0b[01][01_]*/,
+
+        char        : $=> /['].[']/,
+
+        short        : $=> seq($.integer, 's'),
+        hex_short    : $=> seq($.hex_integer,'s'),
+        bin_short    : $=> seq($.bin_integer, 's'),
+
+        long         : $=> seq($.integer,'L'),
+        hex_long     : $=> seq($.hex_integer,'L'),
+        bin_long     : $=> seq($.bin_integer,'L'),
+
+        float  : $=> seq($.integer, '.', $.integer,'f'),
+        double : $=> seq($.integer ,'.', $.integer),
 
         boolean: $=> /(true|false)/,
 
