@@ -156,6 +156,7 @@ module.exports = grammar({
                     '--',
                     '++',
                     '~',
+                    seq('(', $.type, ')'),
                 ),
                 $.expression)
         ),
