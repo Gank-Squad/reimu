@@ -53,6 +53,7 @@ g_expr_list returns [List<Expression> value]
 
 g_expr returns [Expression value]
     : '(' g_expr ')'                { $value = $g_expr.value; }
+    | '(' g_type ')' e2=g_expr      { $value = CastExpression.from($g_type.value, $e2.value);}
     | '-' e2=g_expr                 { $value = ArithmeticExpression.sub(IntegerLiteral.zero(), $e2.value);}
     | e1=g_expr '[' e2=g_expr ']'   { $value = ArrayIndexExpression.from($e1.value, $e2.value); }
     | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
