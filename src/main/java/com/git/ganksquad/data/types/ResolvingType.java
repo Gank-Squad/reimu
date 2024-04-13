@@ -32,6 +32,19 @@ public class ResolvingType implements ReimuType {
 		if(other instanceof ResolvingType) {
 			return this.resolvesTo.equals(((ResolvingType)other).resolvesTo);
 		}
+		
+		if(other instanceof UserDefinedType) {
+
+			UserDefinedType t = (UserDefinedType)other;
+
+			if(t.getName().equals(this.resolvesTo)) {
+				this.resolved = t;
+
+				return true;
+			}
+
+			return false;
+		}
 
 		if(this.resolved != null) {
 			return this.resolved.isAssignableFrom(other);
@@ -46,6 +59,20 @@ public class ResolvingType implements ReimuType {
 		if(other instanceof ResolvingType) {
 			return this.resolvesTo.equals(((ResolvingType)other).resolvesTo);
 		}
+
+		if(other instanceof UserDefinedType) {
+
+			UserDefinedType t = (UserDefinedType)other;
+
+			if(t.getName().equals(this.resolvesTo)) {
+				this.resolved = t;
+
+				return true;
+			}
+
+			return false;
+		}
+
 		if(this.resolved != null) {
 			return this.resolved.isEqualType(other);
 		}

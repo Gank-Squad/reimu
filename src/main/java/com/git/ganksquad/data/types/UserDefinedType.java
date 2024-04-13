@@ -40,6 +40,17 @@ public class UserDefinedType implements ReimuType {
 	@Override
 	public boolean isAssignableFrom(ReimuType other) {
 
+		if(other instanceof ResolvingType) {
+
+			ResolvingType t = ((ResolvingType)other);
+
+			if(t.getResolved() != null) {
+				return  this.isAssignableFrom(t.getResolved());
+			}
+
+			return t.getResolveName().equals(this.name);
+		}
+
 		if(!(other instanceof UserDefinedType)) {
 			return false;
 		}
@@ -69,6 +80,17 @@ public class UserDefinedType implements ReimuType {
 
 	@Override
 	public boolean isEqualType(ReimuType other) {
+		
+		if(other instanceof ResolvingType) {
+
+			ResolvingType t = ((ResolvingType)other);
+
+			if(t.getResolved() != null) {
+				return  this.isEqualType(t.getResolved());
+			}
+
+			return t.getResolveName().equals(this.name);
+		}
 
 		if(!(other instanceof UserDefinedType)) {
 			return false;
