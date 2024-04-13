@@ -15,7 +15,7 @@ import com.git.ganksquad.exceptions.runtime.CannotIndexException;
 import com.git.ganksquad.exceptions.runtime.InvalidIndexKeyException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
-public class ArrayIndexExpression implements Expression {
+public class ArrayIndexExpression implements Expression, AssignableExpression {
 	
 	public Expression left;
 	public Expression right;
@@ -50,6 +50,29 @@ public class ArrayIndexExpression implements Expression {
 		}
 
 		throw new TypeException("Cannot index non-array type: %s", t);
+	}
+
+
+	@Override
+	public Data evalAssign(ReimuRuntime reimuRuntime, Data assign) throws ReimuRuntimeException {
+
+		Data l = this.left.eval(reimuRuntime);
+		
+		if(!(l instanceof IndexableData)) {
+			
+			throw CannotIndexException.typeNotIndexable(l.getClass());
+		}
+		
+		Data r = this.right.eval(reimuRuntime);
+		
+		if(!(r instanceof IndexKeyData)) {
+			
+			throw InvalidIndexKeyException.invalidType(r.getClass());
+		}
+
+		((IndexableData<Data>)l).set((IndexKeyData)r, assign);
+
+		return assign;
 	}
 
 	@Override

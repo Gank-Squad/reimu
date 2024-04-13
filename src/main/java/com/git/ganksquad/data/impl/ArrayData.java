@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IndexKeyData;
@@ -54,6 +56,7 @@ public class ArrayData<T extends Data> implements Data, IterableData, IndexableD
 		if(index instanceof IntegerData) {
 			
 			this.set(((IntegerData)index).value, value);
+			return;
 		}
 
 		throw CannotIndexException.typeNotIndexableBy(getClass(), index.getClass());

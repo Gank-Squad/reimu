@@ -1,12 +1,16 @@
 package com.git.ganksquad.expressions;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.data.types.SpecialType;
+import com.git.ganksquad.data.types.UserDefinedType;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.ResolvingType;
 import com.git.ganksquad.exceptions.compiler.NoneTypeException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
@@ -16,12 +20,14 @@ public class AssignmentExpression implements Expression {
 	
 	public ReimuType type;
 	public String symbolName;
+	public Expression symbolExpr;
 	public Expression value;
 	public boolean declare;
 
-	public AssignmentExpression(ReimuType t, String name, Expression value, boolean declare) {
+	public AssignmentExpression(ReimuType t, String name, Expression symbolExpr, Expression value, boolean declare) {
 		
 		this.type = t;
+		this.symbolExpr = symbolExpr;
 		this.symbolName = name;
 		this.value = value;
 		this.declare = declare;
@@ -31,59 +37,88 @@ public class AssignmentExpression implements Expression {
 		
 		ParseChecks.RequiredNotNull(t, name, value);
 		
-		return new AssignmentExpression(t, name, value, true);
+		return new AssignmentExpression(t, name, null, value, true);
 	}
 
-	public static AssignmentExpression assign(ReimuType t, String name, Expression value) {
+	public static AssignmentExpression assign(ReimuType t, Expression sym, Expression value) {
 		
-		ParseChecks.RequiredNotNull(t, name, value);
+		ParseChecks.RequiredNotNull(t, sym, value);
 
-		return new AssignmentExpression(t, name, value, false);
+		return new AssignmentExpression(t, null, sym, value, false);
 	}
 
+	public ReimuType typeCheckWhenLeftIsExpr(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuType rightT = this.value.typeCheck(resolver);
+
+		if(this.symbolExpr instanceof AssignableExpression) {
+			
+			ReimuType leftT = this.symbolExpr.typeCheck(resolver);
+
+			this.type = leftT;
+		}
+		else {
+			
+			throw new TypeException(String.format("Left side of assignment is not an assignable expression since it is %s", this.symbolExpr));
+		}
+
+		if(!this.type.isAssignableFrom(rightT)) {
+
+			throw new TypeException(String.format("Cannot assign type %s from type %s", this.type, rightT));
+		}
+
+		return this.type;
+	}
+
+
+	public ReimuType typeCheckWhenLeftIsSymbol(ReimuTypeResolver resolver) throws ReimuCompileException {
+
+		ReimuType t = this.value.typeCheck(resolver);
+
+		if(this.type instanceof ResolvingType) {
+
+			this.type = resolver.resolve(((ResolvingType)this.type).getResolveName());
+
+			Logger.debug("Resolved type {}", this.type);
+		}
+
+		if(this.type == SpecialType.UNKNOWN) {
+
+			if(t == SpecialType.UNKNOWN) {
+				throw new TypeException(String.format("Could not resolve the type of variable %s", this.symbolName));
+			}
+
+			if(t == SpecialType.VOID) {
+
+				throw new NoneTypeException(String.format("Tried to declare variable %s with None type",  this.symbolName));
+			} 
+
+			this.type = t;
+		}
+		else if(!(this.value instanceof NoneExpression) && !this.type.isAssignableFrom(t)) {
+
+			throw new TypeException(String.format("Cannot assign type %s to type %s", t, this.type));
+		}
+
+		resolver.declare(this.symbolName, this.type);
+
+		return SpecialType.VOID;
+	}
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
 		this.trace();
 
-		ReimuType t = this.value.typeCheck(resolver);
 		
 		if(this.declare) {
 
-			if(this.type == SpecialType.UNKNOWN) {
-
-				if(t == SpecialType.UNKNOWN) {
-					throw new TypeException(String.format("Could not resolve the type of variable %s", this.symbolName));
-				}
-
-				if(t == SpecialType.VOID) {
-
-					throw new NoneTypeException(String.format("Tried to declare variable %s with None type",  this.symbolName));
-				} 
-
-				this.type = t;
-			}
-			else if(!(this.value instanceof NoneExpression) && !this.type.isAssignableFrom(t)) {
-				
-				throw new TypeException(String.format("Cannot assign type %s to type %s", t, this.type));
-			}
-			
-			resolver.declare(this.symbolName, this.type);
-			
-			return SpecialType.VOID;
+			return this.typeCheckWhenLeftIsSymbol(resolver);
 		}
 		else {
 			
-			this.type = resolver.resolve(this.symbolName);
-
-			if(!this.type.isAssignableFrom(t)) {
-				
-				throw new TypeException(String.format("Cannot assign type %s from type %s", this.type, t));
-			}
+			return this.typeCheckWhenLeftIsExpr(resolver);
 		}
-
-		return this.type;
 	}
 
 	@Override
@@ -99,9 +134,14 @@ public class AssignmentExpression implements Expression {
 
 		}
 
-		reimuRuntime.assign(this.symbolName, r);	
+		if(this.symbolExpr instanceof AssignableExpression){
 
-		return r;
+			return ((AssignableExpression)this.symbolExpr).evalAssign(reimuRuntime, r);
+		}
+		else {
+
+			throw new ReimuRuntimeException(String.format("THIS SHOUUD BE UNREACHABLE. Left side of assignment is not an assignable expression"));
+		}
 	}
 
 	@Override

@@ -1,10 +1,16 @@
 
 
+char[] a = "hello world";
 
+for(i in a){
+    println((string)i);
+}
 
-char a = (char)1000L;
+for(int i = 0 ;i < 10; i = i + 1){
 
-print((char[])a);
+    a[i] = 'h';
 
+}
 
+println((string)a);
 

@@ -8,7 +8,7 @@ import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
-public class DerefExpression implements Expression {
+public class DerefExpression implements Expression, AssignableExpression {
 	
 	public String symbol;
 	
@@ -30,6 +30,14 @@ public class DerefExpression implements Expression {
 		this.trace();
 
 		return resolver.resolve(this.symbol);
+	}
+
+	@Override
+	public Data evalAssign(ReimuRuntime reimuRuntime, Data d) throws ReimuRuntimeException {
+
+		reimuRuntime.assign(this.symbol, d);
+
+		return d;
 	}
 
 	@Override

@@ -17,12 +17,18 @@ g_program
     : (   g_statement  { $value.add($g_statement.value); }
         | g_funcdef    { $value.add($g_funcdef.value); } 
         | g_import     { $value.add($g_import.value); }
+        | g_struct     { $value.add($g_struct.value); }
       )+
     ;
     
 g_funcdef returns [FunctionDefinitionExpression value]
     : g_type s1=SYMBOL '(' s2=g_typed_symbol_list ')' s3=g_block 
       { $value = FunctionDefinitionExpression.from($g_type.value, $s1.text, $s2.valueNames, $s2.valueTypes, $s3.value); }
+    ;
+
+g_struct returns [StructDefinitionExpression value]
+    : 'struct' s1=SYMBOL '(' s2=g_typed_symbol_list ')'  ENDL
+      { $value = StructDefinitionExpression.from($s1.text, $s2.valueNames, $s2.valueTypes); }
     ;
 
 g_import returns [ImportExpression value]
@@ -52,10 +58,11 @@ g_expr_list returns [List<Expression> value]
     ;
 
 g_expr returns [Expression value]
-    : '(' g_expr ')'                { $value = $g_expr.value; }
+    : e1=g_expr '.' SYMBOL          { $value = new MemberDerefExpression($e1.value, $SYMBOL.text); }
+    | e1=g_expr '[' e2=g_expr ']'   { $value = ArrayIndexExpression.from($e1.value, $e2.value); }
+    | '(' g_expr ')'                { $value = $g_expr.value; }
     | '(' g_type ')' e2=g_expr      { $value = CastExpression.from($g_type.value, $e2.value);}
     | '-' e2=g_expr                 { $value = ArithmeticExpression.sub(IntegerLiteral.zero(), $e2.value);}
-    | e1=g_expr '[' e2=g_expr ']'   { $value = ArrayIndexExpression.from($e1.value, $e2.value); }
     | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
     | e1=g_expr '*' e2=g_expr       { $value = ArithmeticExpression.mul($e1.value, $e2.value); }
     | e1=g_expr '%' e2=g_expr       { $value = ArithmeticExpression.mod($e1.value, $e2.value); }
@@ -70,7 +77,7 @@ g_expr returns [Expression value]
     | e1=g_expr '<=' e2=g_expr      { $value = CompareExpression.lteq($e1.value, $e2.value); }
     | e1=g_expr '>' e2=g_expr       { $value = CompareExpression.gt($e1.value, $e2.value); }
     | e1=g_expr '>=' e2=g_expr      { $value = CompareExpression.gteq($e1.value, $e2.value); }
-    | SYMBOL '=' e1=g_expr          { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $SYMBOL.text, $e1.value); }
+    | e1=g_expr '=' e2=g_expr       { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, $e2.value); }
     | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
@@ -93,6 +100,7 @@ g_value returns [Expression value]
     | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
     | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
     | '[' e=g_expr_list ']'      { $value = ArrayLiteral.from($g_expr_list.value); }
+    | 'new' SYMBOL '{' e=g_expr_list '}'      { $value = CreateUserDefinedDataExpression.from($SYMBOL.text, $g_expr_list.value); }
     ;
 
 
@@ -101,6 +109,7 @@ g_type returns [ReimuType value]
     | 'iter' '[' e=g_type  ']' { $value = new IterableType($e.value); }
     | 'var'                    { $value = SpecialType.UNKNOWN; }
     | 'string'                 { $value = AggregateType.STRING_TYPE; }
+    | SYMBOL                   { $value = new ResolvingType($SYMBOL.text); }
     | g_primative_type         { $value = $g_primative_type.value; }
     ;
 
