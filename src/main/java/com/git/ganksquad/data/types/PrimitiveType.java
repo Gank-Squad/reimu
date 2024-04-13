@@ -1,5 +1,7 @@
 package com.git.ganksquad.data.types;
 
+import org.tinylog.Logger;
+
 public enum PrimitiveType implements ReimuType {
 
 //	https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html

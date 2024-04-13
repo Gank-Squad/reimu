@@ -60,14 +60,14 @@ public class IfElseExpression implements Expression {
 
 			t = it.next().typeCheck(resolver);
 
-			if(r != SpecialType.VOID && !t.equals(r)) {
+			if(r != SpecialType.VOID && !t.isEqualType(r)) {
 				r = SpecialType.VOID;
 			}
 		}
 		
 		t = this.elseBody.typeCheck(resolver);
 
-		if(r != SpecialType.VOID && !t.equals(r)) {
+		if(r != SpecialType.VOID && !t.isEqualType(r)) {
 			r = SpecialType.VOID;
 		}
 		

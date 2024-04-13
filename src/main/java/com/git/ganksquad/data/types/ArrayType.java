@@ -1,5 +1,7 @@
 package com.git.ganksquad.data.types;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.data.types.traits.IterableTrait;
 
 public class ArrayType implements AggregateType, SingleTypeContainer, IterableTrait {
@@ -18,19 +20,15 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 
 	@Override
 	public boolean isEqualType(ReimuType other) {
-
-		return other instanceof ArrayType && 
-			this.containedType.isAssignableFrom(((ArrayType)other).containedType);
+		return (other instanceof ArrayType) && 
+			this.containedType.isEqualType(((ArrayType)other).containedType);
 	}
 
 	@Override
 	public boolean isAssignableFrom(ReimuType other) {
 		
-		if(other instanceof ArrayType) {
-			return this.containedType.isAssignableFrom(((ArrayType)other).containedType);
-		}
-
-		return false;
+		return(other instanceof ArrayType) &&
+			this.containedType.isAssignableFrom(((ArrayType)other).containedType);
 	}
 
 	@Override

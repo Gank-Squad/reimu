@@ -1188,12 +1188,50 @@
           ]
         },
         {
+          "type": "FIELD",
+          "name": "aggregate",
+          "content": {
+            "type": "SYMBOL",
+            "name": "aggregate_type"
+          }
+        },
+        {
           "type": "SYMBOL",
           "name": "primitive_type"
         },
         {
           "type": "STRING",
           "value": "var"
+        }
+      ]
+    },
+    "aggregate_type": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "string"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "iter"
+            },
+            {
+              "type": "STRING",
+              "value": "["
+            },
+            {
+              "type": "SYMBOL",
+              "name": "type"
+            },
+            {
+              "type": "STRING",
+              "value": "]"
+            }
+          ]
         }
       ]
     },

@@ -68,8 +68,10 @@
 
  ] @number
 
-(type
-  array_type: (type) @type)
+[
+ (type
+   aggregate: (aggregate_type))
+ ]@type
 
 (primitive_type) @type.builtin
 

@@ -208,8 +208,14 @@ module.exports = grammar({
 
         type: $ => choice(
             seq(field("array_type", $.type), '[]'),
+            field("aggregate", $.aggregate_type),
             $.primitive_type,
             'var'
+        ),
+
+        aggregate_type: $=> choice(
+            'string',
+            seq( 'iter', '[', $.type, ']'),
         ),
 
         primitive_type: $ => choice(

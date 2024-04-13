@@ -97,8 +97,10 @@ g_value returns [Expression value]
 
 
 g_type returns [ReimuType value]
-    : e=g_type '[]'              { $value = new ArrayType($e.value); }
+    : e=g_type '[]'            { $value = new ArrayType($e.value); }
+    | 'iter' '[' e=g_type  ']' { $value = new IterableType($e.value); }
     | 'var'                    { $value = SpecialType.UNKNOWN; }
+    | 'string'                 { $value = AggregateType.STRING_TYPE; }
     | g_primative_type         { $value = $g_primative_type.value; }
     ;
 

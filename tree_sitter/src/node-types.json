@@ -1,5 +1,20 @@
 [
   {
+    "type": "aggregate_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "bin_long",
     "named": true,
     "fields": {},
@@ -479,6 +494,16 @@
     "type": "type",
     "named": true,
     "fields": {
+      "aggregate": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "aggregate_type",
+            "named": true
+          }
+        ]
+      },
       "array_type": {
         "multiple": false,
         "required": false,
@@ -661,11 +686,11 @@
   },
   {
     "type": "char",
-    "named": true
+    "named": false
   },
   {
     "type": "char",
-    "named": false
+    "named": true
   },
   {
     "type": "comment",
@@ -740,6 +765,10 @@
     "named": true
   },
   {
+    "type": "iter",
+    "named": false
+  },
+  {
     "type": "long",
     "named": false
   },
@@ -754,6 +783,10 @@
   {
     "type": "statement_end",
     "named": true
+  },
+  {
+    "type": "string",
+    "named": false
   },
   {
     "type": "string",

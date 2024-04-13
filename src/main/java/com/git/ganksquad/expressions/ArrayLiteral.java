@@ -10,6 +10,7 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.ArrayData;
 import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.ArrayType;
 import com.git.ganksquad.data.types.PrimitiveType;
 import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.data.types.ReimuType;
@@ -60,12 +61,12 @@ public class ArrayLiteral implements Expression {
 
 			ReimuType e = it.next().typeCheck(resolver);
 			
-			if(r != e) {
+			if(!r.isEqualType(e)) {
 				throw new TypeException("Array cannot be created with different types: %s and %s", r, e);
 			}
 		}
 		
-		return r;
+		return new ArrayType(r);
 	}
 
 	@Override
