@@ -75,11 +75,20 @@ g_expr returns [Expression value]
     ;
 
 g_value returns [Expression value]
-    : INTEGER      { $value = IntegerLiteral.fromString($INTEGER.text); } 
-    | HEX_INTEGER  { $value = IntegerLiteral.fromHexString($HEX_INTEGER.text); } 
-    | BIN_INTEGER  { $value = IntegerLiteral.fromBinString($BIN_INTEGER.text); } 
+    : INTEGER      { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $INTEGER.text); } 
+    | HEX_INTEGER  { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $HEX_INTEGER.text, 16); } 
+    | BIN_INTEGER  { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $BIN_INTEGER.text, 2); } 
+    | SHORT        { $value = PrimitiveLiteral.fromString(PrimitiveType.SHORT, $SHORT.text); }
+    | HEX_SHORT    { $value = PrimitiveLiteral.fromString(PrimitiveType.SHORT, $HEX_SHORT.text, 16); }
+    | BIN_SHORT    { $value = PrimitiveLiteral.fromString(PrimitiveType.SHORT, $BIN_SHORT.text, 2); }
+    | LONG         { $value = PrimitiveLiteral.fromString(PrimitiveType.LONG, $LONG.text); }
+    | HEX_LONG     { $value = PrimitiveLiteral.fromString(PrimitiveType.LONG, $HEX_LONG.text, 16); }
+    | BIN_LONG     { $value = PrimitiveLiteral.fromString(PrimitiveType.LONG, $BIN_LONG.text, 2); }
+    | FLOAT        { $value = PrimitiveLiteral.fromString(PrimitiveType.FLOAT, $FLOAT.text); } 
+    | DOUBLE       { $value = PrimitiveLiteral.fromString(PrimitiveType.DOUBLE, $DOUBLE.text); } 
+    | BOOLEAN      { $value = PrimitiveLiteral.fromString(PrimitiveType.BOOLEAN, $BOOLEAN.text); }
+    | CHAR         { $value = PrimitiveLiteral.fromString(PrimitiveType.CHAR, $CHAR.text); }
     | STRING       { $value = StringLiteral.fromQuotedString($STRING.text); }
-    | BOOLEAN      { $value = BooleanLiteral.fromString($BOOLEAN.text); }
     | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
     | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
     | '[' e=g_expr_list ']'      { $value = ArrayLiteral.from($g_expr_list.value); }
@@ -94,11 +103,17 @@ g_type returns [ReimuType value]
 
 g_primative_type returns [ReimuType value]
     : 'i64'    { $value = PrimitiveType.LONG; }
+    | 'long'   { $value = PrimitiveType.LONG; }
     | 'i32'    { $value = PrimitiveType.INT; }
+    | 'int'    { $value = PrimitiveType.INT; }
     | 'i16'    { $value = PrimitiveType.SHORT; }
+    | 'short'  { $value = PrimitiveType.SHORT; }
     | 'i8'     { $value = PrimitiveType.BYTE; }
+    | 'byte'   { $value = PrimitiveType.BYTE; }
     | 'f64'    { $value = PrimitiveType.DOUBLE; }
+    | 'double' { $value = PrimitiveType.DOUBLE; }
     | 'f32'    { $value = PrimitiveType.FLOAT; }
+    | 'float'  { $value = PrimitiveType.FLOAT; }
     | 'bool'   { $value = PrimitiveType.BOOLEAN; }
     | 'char'   { $value = PrimitiveType.CHAR; }
     | 'void'   { $value = SpecialType.VOID; }
@@ -194,13 +209,24 @@ ENDL : ( ';' )+ ;
 
 
 STRING                : '"' ( ESCAPED_CHAR | ~["\\] )* '"' ;
-fragment ESCAPED_CHAR : '\\' ( UNICODE | . ) ;
-fragment UNICODE      : 'u' HEX HEX HEX HEX ;
+CHAR                  : '\'' . '\'';
+fragment ESCAPED_CHAR : '\\' ( . ) ;
 fragment HEX          : [0-9a-fA-F] ;
 
 INTEGER      : '0' | [1-9] [0-9_]*    { setText(getText().replace("_","")); };
 HEX_INTEGER  : '0x' HEX (HEX | '_')*  { setText(getText().replace("_","")); };
 BIN_INTEGER  : '0b' [01] [01_]*       { setText(getText().replace("_","")); };
+
+SHORT        : INTEGER 's'            { setText(getText().substring(0, getText().length() - 1)); };
+HEX_SHORT    : HEX_INTEGER 's'        { setText(getText().substring(0, getText().length() - 1)); };
+BIN_SHORT    : BIN_INTEGER 's'        { setText(getText().substring(0, getText().length() - 1)); };
+
+LONG         : INTEGER 'L'            { setText(getText().substring(0, getText().length() - 1)); };
+HEX_LONG     : HEX_INTEGER 'L'        { setText(getText().substring(0, getText().length() - 1)); };
+BIN_LONG     : BIN_INTEGER 'L'        { setText(getText().substring(0, getText().length() - 1)); };
+
+FLOAT : INTEGER '.' INTEGER 'f'       { setText(getText().substring(0, getText().length() - 1)); };
+DOUBLE: INTEGER '.' INTEGER    ;
 
 BOOLEAN: ( 'true' | 'false' ) ;
 

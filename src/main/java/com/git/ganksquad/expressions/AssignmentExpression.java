@@ -107,7 +107,7 @@ public class AssignmentExpression implements Expression {
 				this.type,
 				this.symbolName,
 				this.value,
-				this.declare
+				"declaration: " + this.declare
 			);
 	}
 }

@@ -14,4 +14,5 @@ public interface ClassKeys {
 	public static final int FUNCTION_DATA = 4;
 	public static final int RANGE_DATA = 5;
 	public static final int ARRAY_DATA = 6;
+	public static final int FLOAT_DATA = 7;
 }
