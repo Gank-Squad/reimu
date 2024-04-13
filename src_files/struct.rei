@@ -7,7 +7,7 @@ struct test2(test a, int b);
 
 
 
-test2 a = new test2{ new test {0, 1}, 5 };
+test2 a = test2{ test {0, 1}, 5 };
 
 a.a.a = 5;
 

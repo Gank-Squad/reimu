@@ -54,6 +54,9 @@ public class ResolvingType implements ReimuType {
 
 	@Override
 	public String toString() {
+		if(this.resolved!=null) {
+			return this.resolved.toString();
+		}
 		return this.formatToString(this.resolvesTo);
 	}
 }

@@ -3,6 +3,7 @@ package com.git.ganksquad.data.types;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserDefinedType implements ReimuType {
 	
@@ -12,6 +13,7 @@ public class UserDefinedType implements ReimuType {
 	public UserDefinedType(String name) {
 
 		this.name = name;
+		this.members = new LinkedHashMap<>();
 	}
 	
 	public void populateTypes(List<String> members, List<ReimuType> memberTypes) {
@@ -20,8 +22,6 @@ public class UserDefinedType implements ReimuType {
 			
 			throw new IllegalArgumentException("list size missmatch");
 		}
-
-		this.members = new LinkedHashMap<>();
 
 		Iterator<String> s1 = members.iterator();
 		Iterator<ReimuType> s2 = memberTypes.iterator();
@@ -46,6 +46,10 @@ public class UserDefinedType implements ReimuType {
 		
 		UserDefinedType t = (UserDefinedType)other;
 		
+		if(t.name.equals(this.name)) {
+			return true;
+		}
+
 		if(this.members.size() != t.members.size()) {
 			return false;
 		}
@@ -71,6 +75,10 @@ public class UserDefinedType implements ReimuType {
 		}
 		
 		UserDefinedType t = (UserDefinedType)other;
+
+		if(t.name.equals(this.name)) {
+			return true;
+		}
 		
 		if(this.members.size() != t.members.size()) {
 			return false;
@@ -90,15 +98,24 @@ public class UserDefinedType implements ReimuType {
 	}
 
 
-	private static boolean preventOverflow = false;
 	@Override
 	public String toString() {
-		if(preventOverflow) {
-			return this.getClass().getName();
-		}
-		preventOverflow = true;
-		String s = this.formatToString(this.name, members);
-		preventOverflow = false;
-		return s;
+		return this.formatToString(
+				this.name, 
+				members.entrySet()
+					.stream()
+					.map(x -> {
+						
+						if(x.getValue() instanceof UserDefinedType) {
+
+							String y = ((UserDefinedType)x.getValue()).name;
+
+							return y + ":" + x.getKey();
+						}
+						
+						return x.getValue() + ":" + x.getKey();
+					})
+					.collect(Collectors.joining(", "))
+				);
 	}
 }

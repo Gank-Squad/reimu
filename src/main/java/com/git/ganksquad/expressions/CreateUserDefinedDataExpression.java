@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
@@ -94,6 +96,11 @@ public class CreateUserDefinedDataExpression implements Expression {
 			namesToExp.put(et1.getKey(), e);
 		}
 		
+		for(String s : ((UserDefinedType)t).members.keySet()) {
+			if(!this.namesToExp.containsKey(s))
+				this.namesToExp.put(s, NoneExpression.get());
+		}
+		
 		return t;
 	}
 
@@ -107,6 +114,8 @@ public class CreateUserDefinedDataExpression implements Expression {
 			dat.setMember(entry.getKey(), entry.getValue().eval(reimuRuntime));
 		}
 		
+		Logger.debug(dat);
+
 		return dat;
 	}
 	

@@ -40,6 +40,8 @@ public class StructDefinitionExpression implements Expression {
 
 		UserDefinedType type = new UserDefinedType(name);
 
+		resolver.declare(name, type);
+
 		for(int i = 0; i < this.memberTypes.size(); i++) {
 
 			if(memberTypes.get(i) instanceof ResolvingType) {
@@ -57,7 +59,6 @@ public class StructDefinitionExpression implements Expression {
 			}
 		}
 
-		resolver.declare(name, type);
 
 		type.populateTypes(members, memberTypes);
 		
