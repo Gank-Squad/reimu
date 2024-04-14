@@ -1,5 +1,5 @@
 
-
+int entionallyInvalid = "code";
 
 int newArr(){
 
