@@ -42,6 +42,10 @@ public enum PrimitiveType implements ReimuType {
 				return  false;
 			}
 		}
+		@Override
+		public int getBitSize() {
+			return 8;
+		}
 	},
 
 	SHORT{
@@ -77,6 +81,10 @@ public enum PrimitiveType implements ReimuType {
 			default:
 				return  false;
 			}
+		}
+		@Override
+		public int getBitSize() {
+			return 16;
 		}
 	},
 
@@ -114,6 +122,10 @@ public enum PrimitiveType implements ReimuType {
 			default:
 				return  false;
 			}
+		}
+		@Override
+		public int getBitSize() {
+			return 32;
 		}
 	},
 
@@ -153,6 +165,10 @@ public enum PrimitiveType implements ReimuType {
 				return  false;
 			}
 		}
+		@Override
+		public int getBitSize() {
+			return 64;
+		}
 	},
 
 	FLOAT{
@@ -189,6 +205,10 @@ public enum PrimitiveType implements ReimuType {
 			default:
 				return  false;
 			}
+		}
+		@Override
+		public int getBitSize() {
+			return 32;
 		}
 	},
 
@@ -228,6 +248,10 @@ public enum PrimitiveType implements ReimuType {
 				return  false;
 			}
 		}
+		@Override
+		public int getBitSize() {
+			return 64;
+		}
 	},
 
 	BOOLEAN{
@@ -266,6 +290,10 @@ public enum PrimitiveType implements ReimuType {
 				return  false;
 			}
 		}
+		@Override
+		public int getBitSize() {
+			return 1;
+		}
 	},
 
 	CHAR{
@@ -303,6 +331,11 @@ public enum PrimitiveType implements ReimuType {
 				return  false;
 			}
 		}
+		
+		@Override
+		public int getBitSize() {
+			return 16;
+		}
 	};
 
 	public boolean isEqualType(ReimuType other) {
@@ -320,4 +353,5 @@ public enum PrimitiveType implements ReimuType {
 	public abstract Class<?> getJavaPrimitiveClass();
 	public abstract Object getValueFromString(String value);
 	public abstract Object getValueFromString(String value, int radix);
+	public abstract int getBitSize();
 }
