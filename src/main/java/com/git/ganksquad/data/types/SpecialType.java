@@ -1,5 +1,7 @@
 package com.git.ganksquad.data.types;
 
+import com.git.ganksquad.ReimuTypeResolver;
+
 public enum SpecialType implements ReimuType{
 
 	VOID{
@@ -13,6 +15,10 @@ public enum SpecialType implements ReimuType{
 		public boolean isAssignableFrom(ReimuType other) {
 			return other == VOID;
 		}
+
+		@Override
+		public void resolve(ReimuTypeResolver resolver) {
+		}
 	},
 
 	UNKNOWN {
@@ -25,6 +31,10 @@ public enum SpecialType implements ReimuType{
 		@Override
 		public boolean isAssignableFrom(ReimuType other) {
 			return true;
+		}
+
+		@Override
+		public void resolve(ReimuTypeResolver resolver) {
 		}
 	};
 

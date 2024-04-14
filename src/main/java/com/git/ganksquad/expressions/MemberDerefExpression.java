@@ -7,6 +7,7 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.UserDefinedData;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.ResolvingType;
 import com.git.ganksquad.data.types.UserDefinedType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.compiler.TypeException;
@@ -28,6 +29,15 @@ public class MemberDerefExpression implements Expression, AssignableExpression {
 		
 		ReimuType t = this.object.typeCheck(resolver);
 		
+		if(t instanceof ResolvingType) {
+
+			ResolvingType r = (ResolvingType)t;
+
+			r.resolve(resolver);
+
+			t = r.getResolved();
+		}
+
 		if(!(t instanceof UserDefinedType)) {
 			
 			throw new TypeException("Expression does not have any members since it is type %s", t);

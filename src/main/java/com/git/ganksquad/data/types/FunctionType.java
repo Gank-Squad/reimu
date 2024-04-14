@@ -3,6 +3,9 @@ package com.git.ganksquad.data.types;
 import java.util.Iterator;
 import java.util.List;
 
+import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+
 
 public class FunctionType implements AggregateType {
 	
@@ -50,6 +53,10 @@ public class FunctionType implements AggregateType {
 		}
 
 		return true;
+	}
+
+	@Override
+	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
 
 	@Override

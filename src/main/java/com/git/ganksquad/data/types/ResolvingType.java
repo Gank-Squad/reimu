@@ -1,5 +1,7 @@
 package com.git.ganksquad.data.types;
 
+import org.tinylog.Logger;
+
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
@@ -23,7 +25,9 @@ public class ResolvingType implements ReimuType {
 
 	public void resolve(ReimuTypeResolver resoler) throws ReimuCompileException {
 		
-		this.resolved = resoler.resolve(resolvesTo);
+		if(this.resolved == null)
+			
+			this.resolved = resoler.resolve(resolvesTo);
 	}
 
 	@Override

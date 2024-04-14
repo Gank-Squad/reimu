@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.git.ganksquad.ReimuTypeResolver;
+
 public class UserDefinedType implements ReimuType {
 	
 	private String name;
@@ -139,5 +141,10 @@ public class UserDefinedType implements ReimuType {
 					})
 					.collect(Collectors.joining(", "))
 				);
+	}
+
+	@Override
+	public void resolve(ReimuTypeResolver resolver) {
+		
 	}
 }

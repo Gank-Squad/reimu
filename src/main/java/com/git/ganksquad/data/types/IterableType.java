@@ -1,6 +1,8 @@
 package com.git.ganksquad.data.types;
 
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.types.traits.IterableTrait;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public class IterableType implements AggregateType, SingleTypeContainer, IterableTrait {
 
@@ -38,6 +40,10 @@ public class IterableType implements AggregateType, SingleTypeContainer, Iterabl
 		
 		return other instanceof IterableType &&
 			 this.containedType.isEqualType(((IterableType)other).containedType);
+	}
+
+	@Override
+	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
 
 	@Override

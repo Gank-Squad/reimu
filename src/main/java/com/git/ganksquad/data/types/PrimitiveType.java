@@ -2,6 +2,9 @@ package com.git.ganksquad.data.types;
 
 import org.tinylog.Logger;
 
+import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+
 public enum PrimitiveType implements ReimuType {
 
 //	https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
@@ -304,6 +307,10 @@ public enum PrimitiveType implements ReimuType {
 
 	public boolean isEqualType(ReimuType other) {
 		return this == other;
+	}
+	
+	@Override
+	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
 
 	public abstract Class<?> getJavaPrimitiveClass();

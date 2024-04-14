@@ -54,7 +54,9 @@ public class StructDefinitionExpression implements Expression {
 				}
 				else {
 				
-					memberTypes.set(i, resolver.resolve(t.getResolveName()));
+					t.resolve(resolver);
+
+					memberTypes.set(i, t.getResolved());
 				}
 			}
 		}

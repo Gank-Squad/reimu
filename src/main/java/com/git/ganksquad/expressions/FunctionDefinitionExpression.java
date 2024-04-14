@@ -44,6 +44,11 @@ public class FunctionDefinitionExpression implements Expression {
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 
 		this.trace();
+		
+		this.type.resolve(resolver);
+		
+		for(ReimuType t : this.argTypes)
+			t.resolve(resolver);
 
 		resolver.declareFunction(name, new FunctionType(type, argTypes));
 		
@@ -51,7 +56,7 @@ public class FunctionDefinitionExpression implements Expression {
 
 		ReimuType t = this.body.typeCheckPartial(scope);
 		
-		if(!this.type.isAssignableFrom(t)) {
+		if(this.type != SpecialType.VOID && !this.type.isAssignableFrom(t)) {
 			
 			throw new TypeException("Function %s expects return type %s but it's body returns type %s", name, type, t);
 		}

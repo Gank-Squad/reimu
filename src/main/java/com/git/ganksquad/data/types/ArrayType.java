@@ -1,8 +1,8 @@
 package com.git.ganksquad.data.types;
 
-import org.tinylog.Logger;
-
+import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.types.traits.IterableTrait;
+import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public class ArrayType implements AggregateType, SingleTypeContainer, IterableTrait {
 	
@@ -34,6 +34,10 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 	@Override
 	public ReimuType produces() {
 		return this.containedType;
+	}
+
+	@Override
+	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
 	
 	@Override
