@@ -25,6 +25,7 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
  */
 public class ReimuRuntime {
 	
+	Data returnValue = null;
 	/**
 	 * Runtime history, used for debugging
 	 */
@@ -103,6 +104,19 @@ public class ReimuRuntime {
     	
     	return r;
     
+    }
+    
+    public void setReturnValue(Data r) {
+    	Logger.debug("RETURNING WITH VALUE {}", r);
+    	this.returnValue = r;
+    }
+    
+    public boolean hasReturnValue() {
+    	return this.returnValue != null;
+    }
+
+    public Data getReturnValue() {
+    	return this.returnValue;
     }
     
     /**

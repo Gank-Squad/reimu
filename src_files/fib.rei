@@ -15,7 +15,7 @@ int fib(int i){
         hist[2] = hist[0] + hist[1];
     }
 
-    hist[2];
+    return hist[2];
 }
 
 

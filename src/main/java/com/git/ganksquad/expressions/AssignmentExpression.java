@@ -181,9 +181,16 @@ public class AssignmentExpression implements Expression {
 	@Override
 	public String toString() {
 		
+		if(this.symbolName != null)
 		return this.formatToString( 
 				this.type,
 				this.symbolName,
+				this.value,
+				"declaration: " + this.declare
+			);
+		return this.formatToString( 
+				this.type,
+				this.symbolExpr,
 				this.value,
 				"declaration: " + this.declare
 			);

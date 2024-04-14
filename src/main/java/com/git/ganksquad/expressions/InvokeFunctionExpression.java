@@ -103,7 +103,7 @@ public class InvokeFunctionExpression implements Expression {
 				data.params.iterator(),
 				argData.iterator());
 		
-		return data.body.eval(rt).castTo(data.getType().returnType);
+		return data.body.evalPartial(rt).castTo(data.getType().returnType);
 	}
 
 	@Override

@@ -19,6 +19,8 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class BlockExpression implements Expression {
 
+	public boolean explicitReturn = false;
+
 	public List<Expression> expressions;
 	
 	public BlockExpression() {
@@ -54,11 +56,25 @@ public class BlockExpression implements Expression {
 		
 		this.trace();
 
+		boolean doesReturn = false;
+
 		ReimuType t = SpecialType.VOID;
 		
 		for(Expression e : this.expressions) {
 
 			t = e.typeCheck(resolver);
+			
+			if(e instanceof ReturnExpression) {
+				
+				doesReturn = true;
+			}
+		}
+		
+		if(this.explicitReturn) {
+
+			if( doesReturn)
+				return t;
+			return SpecialType.VOID;
 		}
 
 		return t;
@@ -84,8 +100,24 @@ public class BlockExpression implements Expression {
 		for(Expression e : this.expressions) {
 			
 			result = e.eval(runtime);
+			
+			if(runtime.hasReturnValue()) {
+				return runtime.getReturnValue();
+			}
+
+			if(e instanceof ReturnExpression) {
+				
+				runtime.setReturnValue(result);
+				
+				return result;
+			}
 		}
 		
+		if(this.explicitReturn) {
+
+			return NoneData.instance;
+		}
+
 		return result;
 	}
 
@@ -97,7 +129,13 @@ public class BlockExpression implements Expression {
 
 		ReimuRuntime scope = runtime.subScope();
 		
-		return this.evalPartial(scope);
+		Data r = this.evalPartial(scope);
+		
+		if(scope.hasReturnValue()) {
+			runtime.setReturnValue(scope.getReturnValue());
+			return runtime.getReturnValue();
+		}
+		return r;
 	}
 	
 	@Override

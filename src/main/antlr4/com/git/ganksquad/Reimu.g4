@@ -45,6 +45,7 @@ g_statement returns [Expression value]
     : ENDL                               { $value = NoneExpression.get(); }
     | g_expr ENDL                        { $value = $g_expr.value; }
     | g_declare ENDL                     { $value = $g_declare.value; }
+    | 'return' g_expr ENDL               { $value = new ReturnExpression($g_expr.value); }
     | g_block                            { $value = $g_block.value; }
     | g_ifelse                           { $value = $g_ifelse.value; }
     | g_while                            { $value = $g_while.value; }

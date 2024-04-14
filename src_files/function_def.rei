@@ -1,5 +1,7 @@
 
 string square(i32 x) {
-    (string)(x * x);
+    return (string)(x * x);
 }
+
+
 

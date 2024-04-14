@@ -59,6 +59,11 @@ public class WhileExpression implements Expression {
 			if(BooleanEvaluable.throwOrEval(c)) {
 
 				r = this.bodyExpression.evalPartial(scope);
+
+				if(scope.hasReturnValue()) {
+					reimuRuntime.setReturnValue(scope.getReturnValue());
+					return scope.getReturnValue();
+				}
 				
 				continue;
 			}

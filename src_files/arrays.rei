@@ -6,10 +6,10 @@ var c = 7;
 
 var g = [1 ,2 ,3 ,4,  5];
 
-println(g);
+println((string)g);
 
 for(i in g){
 
-    println(i);
+    println((string)i);
 }
 

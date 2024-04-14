@@ -85,6 +85,11 @@ public class ForLoopExpression implements Expression {
 			
 			this.body.evalPartial(scope);
 
+			if(scope.hasReturnValue()) {
+				reimuRuntime.setReturnValue(scope.getReturnValue());
+				return reimuRuntime.getReturnValue();
+			}
+
 			this.update.evalPartial(scope);
 			
 			c = condition.eval(scope);

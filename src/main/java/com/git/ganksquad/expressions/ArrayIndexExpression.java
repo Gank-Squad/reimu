@@ -75,7 +75,9 @@ public class ArrayIndexExpression implements Expression, AssignableExpression {
 
 		Data old = index.get((IndexKeyData)r);
 
-		index.set((IndexKeyData)r, assign.castTo(old.getType()));
+		assign = assign.castTo(old.getType());
+
+		index.set((IndexKeyData)r, assign);
 
 		return assign;
 	}

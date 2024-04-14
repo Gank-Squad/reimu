@@ -1,19 +1,23 @@
 
+
+
+
+
 BlockExpression[
 
-    IfElseExpression[
+    FunctionDefinitionExpression[INT, newArr, [], [], 
+
+    BlockExpression[
 
         IfExpression[
 
-            IntegerLiteral[1], 
+            CompareExpression[op.EQ, PrimitiveLiteral[INT, 1], PrimitiveLiteral[INT, 1]], 
 
-            BlockExpression[
+            BlockExpression[PrimitiveLiteral[INT, 5]]
 
-            InvokeFunctionExpression[
-                println, [StringLiteral["hello"]]]
-            ]
         ], 
-
-        BlockExpression[IntegerLiteral[1]]
+        PrimitiveLiteral[INT, 9]
     ]
+    ], 
+    InvokeFunctionExpression[newArr, []]
 ]

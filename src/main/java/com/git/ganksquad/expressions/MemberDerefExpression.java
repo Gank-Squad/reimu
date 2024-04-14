@@ -1,6 +1,6 @@
 package com.git.ganksquad.expressions;
 
-import javax.xml.crypto.AlgorithmMethod;
+import org.tinylog.Logger;
 
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
@@ -53,9 +53,9 @@ public class MemberDerefExpression implements Expression, AssignableExpression {
 
 		UserDefinedData udata = (UserDefinedData)this.object.eval(reimuRuntime);
 		
-		Data d = udata.getMember(member);
+		data = data.castTo(udata.getType().members.get(member));
 
-		udata.setMember(member, data.castTo(d.getType()));
+		udata.setMember(member, data);
 
 		return data;
 	}
@@ -66,4 +66,8 @@ public class MemberDerefExpression implements Expression, AssignableExpression {
 		return ((UserDefinedData)this.object.eval(reimuRuntime)).getMember(member);
 	}
 
+	@Override
+	public String toString() {
+		return this.formatToString(this.object, this.member);
+	}
 }

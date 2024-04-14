@@ -86,6 +86,11 @@ public class ForeachLoopExpression implements Expression {
 			scope.assign(variable, s.value);
 			
 			this.body.evalPartial(scope);
+
+			if(scope.hasReturnValue()) {
+				reimuRuntime.setReturnValue(scope.getReturnValue());
+				return reimuRuntime.getReturnValue();
+			}
 		}
 		
 		return NoneData.instance;

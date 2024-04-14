@@ -85,12 +85,20 @@ public class IfElseExpression implements Expression {
 			
 			r = i.eval(reimuRuntime);
 			
+			if(reimuRuntime.hasReturnValue()) {
+				return reimuRuntime.getReturnValue();
+			}
+
 			if(i.conditionWasTrue()) {
 				
 				elseShouldRun = false;
 
 				break;
 			}
+		}
+
+		if(reimuRuntime.hasReturnValue()) {
+			return reimuRuntime.getReturnValue();
 		}
 
 		if(elseShouldRun) {

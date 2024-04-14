@@ -68,7 +68,7 @@ public class UserDefinedData implements Data, BooleanEvaluable {
 	}
 
 	@Override
-	public ReimuType getType() {
+	public UserDefinedType getType() {
 		return this.type;
 	}
 

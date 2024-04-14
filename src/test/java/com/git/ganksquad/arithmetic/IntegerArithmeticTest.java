@@ -14,6 +14,7 @@ public class IntegerArithmeticTest {
 
 	public boolean codePassed(String code) {
 
+//    	App.IS_DEBUG = true;
 		try {
 			App.eval(code);
 			return true;

@@ -17,7 +17,7 @@ public class ScopTest {
     @Test
     public void testForLoopScopes() throws IOException, ReimuRuntimeException, ReimuCompileException
     {
-
+//    	App.IS_DEBUG = true;
     	try {
     		// using i after the loop should throw an error
     		App.eval("for(i32 i = 0; i < 10; i = i + 1) {"
@@ -48,6 +48,7 @@ public class ScopTest {
     @Test
     public void testBlockExpressionScopes() throws IOException, ReimuRuntimeException, ReimuCompileException
     {
+//    	App.IS_DEBUG = true;
     	try {
     		// cannot declare a twice
     		App.eval("i32 a; i32 a;");

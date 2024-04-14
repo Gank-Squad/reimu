@@ -14,6 +14,7 @@ public class ForLoopTest {
     public void testForLoop() throws IOException, ReimuRuntimeException, ReimuCompileException
     {
 
+//    	App.IS_DEBUG = true;
     	// basic c for loop
     	App.eval("for(var i = 0; i < 10; i = i + 1) {"
     			+ "    i;"

@@ -1,15 +1,14 @@
 
 
 
-void newArr(){
+int newArr(){
 
-    int[10] a;
-    a;
+    if(1 == 1){
+        return 5;
+    }
+    return newArr();
 }
 
-println((string)newArr());
 
-
-println((string)(1 / 0));
-
+newArr();
 

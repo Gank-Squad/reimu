@@ -52,6 +52,8 @@ public class FunctionDefinitionExpression implements Expression {
 		
 		ReimuTypeResolver scope = resolver.subScope(this.argNames.iterator(), this.funcType.argumentTypes.iterator());
 
+		this.body.explicitReturn = true;
+
 		ReimuType t = this.body.typeCheckPartial(scope);
 		
 		if(this.funcType.returnType != SpecialType.VOID && !this.funcType.returnType.isAssignableFrom(t)) {
