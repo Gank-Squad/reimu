@@ -1,13 +1,24 @@
 
 
-void test(char[5] a, int b){
 
-    println((string)a);
+
+
+int a = 5;
+int b = 5;
+
+
+if(a && b) {
+
+    println("a && b");
 
 }
 
-string a = "hello world";
+if(a || b) {
 
-test(a, 1);
+    println("a || b");
+
+}
+
+
 
 

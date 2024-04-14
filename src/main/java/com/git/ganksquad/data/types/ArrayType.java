@@ -9,6 +9,7 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.ArrayData;
 import com.git.ganksquad.data.types.traits.IterableTrait;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
 
 public class ArrayType implements AggregateType, SingleTypeContainer, IterableTrait {
 	
@@ -101,11 +102,45 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 	}
 	
 	@Override
+	public boolean canBeBool() {
+		return true;
+	}
+	
+	@Override
 	public String toString() {
 		return this.formatToString(this.containedType, "size: " + this.size);
 	}
 	@Override
 	public String getLookupName() {
 		return this.formatToString(this.containedType);
+	}
+	
+
+	public void inferSizes(ArrayType other) throws ReimuCompileException {
+		
+		ArrayType tType = this;
+		ArrayType oType = other;
+
+		while(true) {
+
+			if(tType.size == -1) {
+
+				tType.size = oType.size;
+			}
+			else if(tType.size != oType.size) {
+
+				throw new TypeException("Cannot infer size from %s and %s", tType, oType);
+			}
+			
+			if(tType.containedType instanceof ArrayType && oType instanceof ArrayType) {
+				
+				tType = (ArrayType)tType.containedType;
+				oType = (ArrayType)oType.containedType;
+				
+				continue;
+			}
+
+			return;
+		}
 	}
 }

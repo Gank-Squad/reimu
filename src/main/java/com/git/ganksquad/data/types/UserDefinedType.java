@@ -176,6 +176,11 @@ public class UserDefinedType implements ReimuType {
 	}
 	
 	@Override
+	public boolean canBeBool() {
+		return true;
+	}
+	
+	@Override
 	public String getLookupName() {
 		return this.toString();
 	}

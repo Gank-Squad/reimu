@@ -63,6 +63,11 @@ public class FunctionType implements AggregateType {
 	}
 	
 	@Override
+	public boolean canBeBool() {
+		return false;
+	}
+	
+	@Override
 	public Data getDefaultEmptyValue() {
 		return NoneData.instance;
 	}
