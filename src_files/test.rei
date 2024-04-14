@@ -8,6 +8,13 @@ void test(char[5] a, int b){
 
 string a = "hello world";
 
-test(a, 1);
+
+int[3][] b = [ 
+    [1, 2, 3],
+    [1, 2, 3],
+    [1, 2, 3]
+];
+
+println((string)b);
 
 
