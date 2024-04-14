@@ -1,6 +1,7 @@
 package com.git.ganksquad.expressions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.tinylog.Logger;
@@ -14,6 +15,7 @@ import com.git.ganksquad.data.types.FunctionType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.NotAFunctionException;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.compiler.TypeException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class InvokeFunctionExpression implements Expression {
@@ -57,6 +59,23 @@ public class InvokeFunctionExpression implements Expression {
 			throw new NotAFunctionException(this.symbol);
 		}
 
+		FunctionType func = (FunctionType)t;
+
+		if(func.argumentTypes.size() != this.args.size()) {
+			
+			throw new TypeException("Argument number missmatch trying to invoke %s", func);
+		}
+
+		Iterator<ReimuType> myTypes = this.argTypes.iterator();
+		Iterator<ReimuType> funcTypes = func.argumentTypes.iterator();
+
+		while(myTypes.hasNext()) {
+			
+			if(!funcTypes.next().isAssignableFrom(myTypes.next())) {
+				
+				throw new TypeException("Argument type missmatch");
+			}
+		}
 
 		return ((FunctionType)t).returnType;
 	}

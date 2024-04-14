@@ -54,4 +54,8 @@ public class IterableType implements AggregateType, SingleTypeContainer, Iterabl
 	public String toString() {
 		return this.formatToString(this.containedType);
 	}
+	@Override
+	public String getLookupName() {
+		return this.toString();
+	}
 }

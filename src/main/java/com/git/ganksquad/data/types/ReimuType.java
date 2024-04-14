@@ -12,6 +12,8 @@ public interface ReimuType {
 
 	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException;
 
+	public String getLookupName();
+
 	public default String formatToString(Object... param) {
 		return ReimuNameResolver.getFormatedName(this, param);
 	}

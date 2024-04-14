@@ -38,4 +38,8 @@ public enum SpecialType implements ReimuType{
 		}
 	};
 
+	@Override
+	public String getLookupName() {
+		return this.toString();
+	}
 }

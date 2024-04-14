@@ -312,6 +312,10 @@ public enum PrimitiveType implements ReimuType {
 	@Override
 	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
+	@Override
+	public String getLookupName() {
+		return this.toString();
+	}
 
 	public abstract Class<?> getJavaPrimitiveClass();
 	public abstract Object getValueFromString(String value);

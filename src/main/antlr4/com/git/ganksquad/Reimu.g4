@@ -108,14 +108,15 @@ g_value returns [Expression value]
     | CHAR         { $value = PrimitiveLiteral.fromString(PrimitiveType.CHAR, $CHAR.text); }
     | STRING       { $value = StringLiteral.fromQuotedString($STRING.text); }
     | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
-    | e1=INTEGER '..' e2=INTEGER      { $value = RangeLiteral.fromString($e1.text, $e2.text); }
-    | '[' e=g_expr_list ']'      { $value = ArrayLiteral.from($g_expr_list.value); }
+    | e1=INTEGER '..' e2=INTEGER        { $value = RangeLiteral.fromString($e1.text, $e2.text); }
+    | '[' e=g_expr_list ']'             { $value = ArrayLiteral.from($g_expr_list.value); }
     | SYMBOL '{' e=g_expr_list '}'      { $value = CreateUserDefinedDataExpression.from($SYMBOL.text, $g_expr_list.value); }
     ;
 
 
 g_type returns [ReimuType value]
     : e=g_type '[]'            { $value = new ArrayType($e.value); }
+    | e=g_type '[' INTEGER ']' { $value = new ArrayType($e.value, $INTEGER.text); }
     | 'iter' '[' e=g_type  ']' { $value = new IterableType($e.value); }
     | 'var'                    { $value = SpecialType.UNKNOWN; }
     | 'string'                 { $value = AggregateType.STRING_TYPE; }

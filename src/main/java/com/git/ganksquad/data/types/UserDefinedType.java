@@ -142,9 +142,13 @@ public class UserDefinedType implements ReimuType {
 					.collect(Collectors.joining(", "))
 				);
 	}
+	
+	@Override
+	public String getLookupName() {
+		return this.toString();
+	}
 
 	@Override
 	public void resolve(ReimuTypeResolver resolver) {
-		
 	}
 }

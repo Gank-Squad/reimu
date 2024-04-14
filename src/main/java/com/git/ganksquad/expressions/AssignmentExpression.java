@@ -9,6 +9,7 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.data.types.UserDefinedType;
+import com.git.ganksquad.data.types.ArrayType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.data.types.ResolvingType;
 import com.git.ganksquad.exceptions.compiler.NoneTypeException;
@@ -128,7 +129,13 @@ public class AssignmentExpression implements Expression {
 		
 		if(this.declare) {
 			
-			reimuRuntime.declare(this.symbolName, r);	
+//			if(this.type instanceof ArrayType && r instanceof NoneExpression) {
+//
+//				reimuRuntime.declare(this.symbolName, r);	
+//			}
+//			else {
+				reimuRuntime.declare(this.symbolName, r);	
+//			}
 
 			return NoneData.instance;
 

@@ -58,6 +58,10 @@ public class FunctionType implements AggregateType {
 	@Override
 	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
+	@Override
+	public String getLookupName() {
+		return this.toString();
+	}
 
 	@Override
 	public String toString() {

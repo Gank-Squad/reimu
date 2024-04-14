@@ -1,22 +1,13 @@
 
 
-struct Node(int a, int b);
+void test(char[5] a, int b){
 
+    println((string)a);
 
-void add(Node a, Node b) {
-
-    a.a += b.a;
-    a.b += b.b;
 }
 
+string a = "hello world";
 
-Node a = Node{5, 10};
-Node b = Node{5, 10};
+test(a, 1);
 
-println((string)a);
-println((string)b);
-
-add(a, b);
-
-println((string)a);
 

@@ -90,4 +90,8 @@ public class ResolvingType implements ReimuType {
 		}
 		return this.formatToString(this.resolvesTo);
 	}
+	@Override
+	public String getLookupName() {
+		return this.toString();
+	}
 }
