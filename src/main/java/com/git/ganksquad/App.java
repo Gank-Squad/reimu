@@ -142,7 +142,7 @@ public class App
     	
     	result.expr.typeCheckPartial(r);
     	
-    	result.expr.evalPartial(rt);
+    	System.err.println( result.expr.evalPartial(rt));
 //    	System.out.println(r);
 //    	System.out.println(rt);
     	
@@ -238,6 +238,14 @@ public class App
     			
     			if (line.equals("exit()")) {
     				break;
+    			}
+    			if (line.equals("rt")) {
+    				System.out.println(rt);
+    				continue;
+    			}
+    			if (line.equals("tc")) {
+    				System.out.println(r);
+    				continue;
     			}
     			if (line.isEmpty()) {
     				continue;
