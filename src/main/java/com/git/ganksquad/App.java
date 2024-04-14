@@ -140,9 +140,11 @@ public class App
 //    	BlockExpression globalScope = injectGlobal();
     	
     	
-    	result.expr.typeCheck(r);
+    	result.expr.typeCheckPartial(r);
     	
     	result.expr.evalPartial(rt);
+//    	System.out.println(r);
+//    	System.out.println(rt);
     	
     }
     
@@ -244,6 +246,13 @@ public class App
     			eval(line, r, rt, globalScope);
     			
     		}
+    	}
+    	else {
+    		
+        	for(String fpath : args) {
+
+        		eval( Path.of(fpath) );
+        	}
     	}
 
     	
