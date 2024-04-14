@@ -20,18 +20,18 @@ import com.git.ganksquad.exceptions.runtime.arithmetic.CannotXORException;
 /**
  * Represents integer data, which can hold a 32bit integer.
  */
-public class FloatData extends PrimitiveData {
+public class CharData extends PrimitiveData {
 	
-	public double value = 0;
+	public char value = 0;
 	
-	public FloatData(double value) {
+	public CharData(char l) {
 		
-		this.value = value;
+		this.value = l;
 	}
-
-	public FloatData(float value) {
-		
-		this.value = value;
+	
+	@Override
+	public Number getValue() {
+		return (int)this.value;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 			return this.value == ((PrimitiveData)other).getValue().intValue();
 		case CHAR:
-			return this.value == ((PrimitiveData)other).getValue().intValue();
+			return this.value == ((CharData)other).value;
 		case BYTE:
 			return this.value == ((PrimitiveData)other).getValue().byteValue();
 		case INT:
@@ -74,7 +74,7 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 			return this.value < ((PrimitiveData)other).getValue().intValue();
 		case CHAR:
-			return this.value < ((PrimitiveData)other).getValue().intValue();
+			return this.value < ((CharData)other).value;
 		case BYTE:
 			return this.value < ((PrimitiveData)other).getValue().byteValue();
 		case INT:
@@ -103,7 +103,7 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 			return this.value > ((PrimitiveData)other).getValue().intValue();
 		case CHAR:
-			return this.value > ((PrimitiveData)other).getValue().intValue();
+			return this.value > ((CharData)other).value;
 		case BYTE:
 			return this.value > ((PrimitiveData)other).getValue().byteValue();
 		case INT:
@@ -121,6 +121,7 @@ public class FloatData extends PrimitiveData {
 		}
 	}
 
+
 	@Override
 	public Data add(Data other) throws CannotAddException {
 
@@ -132,13 +133,17 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 		case CHAR:
 		case BYTE:
+			return new ByteData((byte)(this.value + ((PrimitiveData)other).getValue().byteValue()));
 		case INT:
+			return new IntegerData(this.value + ((PrimitiveData)other).getValue().intValue());
 		case SHORT:
+			return new ShortData(this.value + ((PrimitiveData)other).getValue().shortValue());
 		case LONG:
+			return new LongData(this.value + ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+			return new DoubleData(this.value + ((PrimitiveData)other).getValue().doubleValue());
 		case FLOAT:
 			return new FloatData(this.value + ((PrimitiveData)other).getValue().floatValue());
-		case DOUBLE:
-			return new DoubleData(this.value - ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotAddException(this, other);
 		}
@@ -155,13 +160,17 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 		case CHAR:
 		case BYTE:
+			return new ByteData(this.value - ((PrimitiveData)other).getValue().byteValue());
 		case INT:
+			return new IntegerData(this.value - ((PrimitiveData)other).getValue().intValue());
 		case SHORT:
+			return new ShortData(this.value - ((PrimitiveData)other).getValue().shortValue());
 		case LONG:
-		case FLOAT:
-			return new FloatData(this.value - ((PrimitiveData)other).getValue().floatValue());
+			return new LongData(this.value - ((PrimitiveData)other).getValue().longValue());
 		case DOUBLE:
 			return new DoubleData(this.value - ((PrimitiveData)other).getValue().doubleValue());
+		case FLOAT:
+			return new FloatData(this.value - ((PrimitiveData)other).getValue().floatValue());
 		default:
 			throw new CannotSubtractException(this, other);
 		}
@@ -178,13 +187,17 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 		case CHAR:
 		case BYTE:
+			return new ByteData(this.value * ((PrimitiveData)other).getValue().byteValue());
 		case INT:
+			return new IntegerData(this.value * ((PrimitiveData)other).getValue().intValue());
 		case SHORT:
+			return new ShortData(this.value * ((PrimitiveData)other).getValue().shortValue());
 		case LONG:
-		case FLOAT:
-			return new FloatData(this.value * ((PrimitiveData)other).getValue().floatValue());
+			return new LongData(this.value * ((PrimitiveData)other).getValue().longValue());
 		case DOUBLE:
 			return new DoubleData(this.value * ((PrimitiveData)other).getValue().doubleValue());
+		case FLOAT:
+			return new FloatData(this.value * ((PrimitiveData)other).getValue().floatValue());
 		default:
 			throw new CannotMultiplyException(this, other);
 		}
@@ -201,9 +214,13 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 		case CHAR:
 		case BYTE:
+			return new ByteData(this.value / ((PrimitiveData)other).getValue().byteValue());
 		case INT:
+			return new IntegerData(this.value / ((PrimitiveData)other).getValue().intValue());
 		case SHORT:
+			return new ShortData(this.value / ((PrimitiveData)other).getValue().shortValue());
 		case LONG:
+			return new LongData(this.value / ((PrimitiveData)other).getValue().longValue());
 		case FLOAT:
 			return new FloatData(this.value / ((PrimitiveData)other).getValue().floatValue());
 		case DOUBLE:
@@ -224,18 +241,95 @@ public class FloatData extends PrimitiveData {
 		case BOOLEAN:
 		case CHAR:
 		case BYTE:
+			return new ByteData(this.value % ((PrimitiveData)other).getValue().byteValue());
 		case INT:
+			return new IntegerData(this.value % ((PrimitiveData)other).getValue().intValue());
 		case SHORT:
+			return new ShortData(this.value % ((PrimitiveData)other).getValue().shortValue());
 		case LONG:
-		case FLOAT:
-			return new FloatData((double)this.value % ((PrimitiveData)other).getValue().floatValue());
+			return new LongData(this.value % ((PrimitiveData)other).getValue().longValue());
 		case DOUBLE:
-			return new DoubleData((double)this.value % ((PrimitiveData)other).getValue().doubleValue());
+		case FLOAT:
+			return new DoubleData(this.value % ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotModulusException(this, other);
 		}
 	}
 
+	@Override
+	public Data xor(Data other) throws CannotXORException {
+
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotXORException(this, other);
+		}
+
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+			return new ByteData(this.value ^ ((PrimitiveData)other).getValue().byteValue());
+		case INT:
+			return new IntegerData(this.value ^ ((PrimitiveData)other).getValue().intValue());
+		case SHORT:
+			return new ShortData(this.value ^ ((PrimitiveData)other).getValue().shortValue());
+		case LONG:
+			return new LongData(this.value ^ ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+		case FLOAT:
+		default:
+			throw new CannotXORException(this, other);
+		}
+	}
+
+	@Override
+	public Data or(Data other) throws CannotORException {
+
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotORException(this, other);
+		}
+
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+			return new ByteData(this.value | ((PrimitiveData)other).getValue().byteValue());
+		case INT:
+			return new IntegerData(this.value | ((PrimitiveData)other).getValue().intValue());
+		case SHORT:
+			return new ShortData(this.value | ((PrimitiveData)other).getValue().shortValue());
+		case LONG:
+			return new LongData(this.value | ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+		case FLOAT:
+		default:
+			throw new CannotORException(this, other);
+		}
+	}
+
+	@Override
+	public Data and(Data other) throws CannotANDException {
+
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotANDException(this, other);
+		}
+
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+			return new ByteData(this.value & ((PrimitiveData)other).getValue().byteValue());
+		case SHORT:
+			return new ShortData(this.value & ((PrimitiveData)other).getValue().shortValue());
+		case INT:
+			return new IntegerData(this.value & ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value & ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+		case FLOAT:
+		default:
+			throw new CannotANDException(this, other);
+		}
+	}
 
 	@Override
 	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
@@ -251,7 +345,7 @@ public class FloatData extends PrimitiveData {
 		case BYTE:
 			return new ByteData((byte)this.value);
 		case CHAR:
-			return new CharData((char)this.value);
+			return new CharData(this.value);
 		case DOUBLE:
 			return new DoubleData((double)this.value);
 		case FLOAT:
@@ -259,27 +353,12 @@ public class FloatData extends PrimitiveData {
 		case INT:
 			return new IntegerData((int)this.value);
 		case LONG:
-			return new LongData((long)this.value);
+			return new LongData(this.value);
 		case SHORT:
 			return new ShortData((short)this.value);
 		default:
 			throw new CannotCastException(this.getType(), newType);
 		}
-	}
-
-	@Override
-	public Data xor(Data other) throws CannotXORException {
-		throw new CannotXORException(this, other);
-	}
-
-	@Override
-	public Data or(Data other) throws CannotORException {
-		throw new CannotORException(this, other);
-	}
-
-	@Override
-	public Data and(Data other) throws CannotANDException {
-		throw new CannotANDException(this, other);
 	}
 
 	@Override
@@ -290,21 +369,16 @@ public class FloatData extends PrimitiveData {
 	@Override
 	public int getClassKey() {
 		
-		return ClassKeys.FLOAT_DATA;
+		return ClassKeys.INTEGER_DATA;
 	}
 	
 	@Override
 	public String toString() {
-		return Double.toString(this.value);
+		return Long.toString(this.value);
 	}
 
 	@Override
 	public ReimuType getType() {
-		return PrimitiveType.FLOAT;
-	}
-
-	@Override
-	public Number getValue() {
-		return this.value;
+		return PrimitiveType.LONG;
 	}
 }

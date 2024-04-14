@@ -21,6 +21,7 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ArrayLiteral implements Expression {
 	
+	ArrayType type;
 	List<Expression> arr;
 	
 	public ArrayLiteral(List<Expression> l) {
@@ -66,7 +67,8 @@ public class ArrayLiteral implements Expression {
 			}
 		}
 		
-		return new ArrayType(r, this.arr.size());
+		this.type = new ArrayType(r, this.arr.size());
+		return this.type;
 	}
 
 	@Override
@@ -81,7 +83,7 @@ public class ArrayLiteral implements Expression {
 			l.add(d);
 		}
 		
-		return new ArrayData<Data>(l);
+		return new ArrayData<Data>(l, this.type);
 	}
 
 	@Override

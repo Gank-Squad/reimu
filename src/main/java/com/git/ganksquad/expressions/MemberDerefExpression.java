@@ -51,7 +51,11 @@ public class MemberDerefExpression implements Expression, AssignableExpression {
 	@Override
 	public Data evalAssign(ReimuRuntime reimuRuntime, Data data) throws ReimuRuntimeException {
 
-		((UserDefinedData)this.object.eval(reimuRuntime)).setMember(member, data);
+		UserDefinedData udata = (UserDefinedData)this.object.eval(reimuRuntime);
+		
+		Data d = udata.getMember(member);
+
+		udata.setMember(member, data.castTo(d.getType()));
 
 		return data;
 	}

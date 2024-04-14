@@ -1,24 +1,15 @@
 
 
 
+void newArr(){
 
-
-int a = 5;
-int b = 5;
-
-
-if(a && b) {
-
-    println("a && b");
-
+    int[10] a;
+    a;
 }
 
-if(a || b) {
-
-    println("a || b");
-
-}
+println((string)newArr());
 
 
+println((string)(1 / 0));
 
 

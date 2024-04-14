@@ -90,7 +90,7 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 		
 		if(this.size == -1) {
 			
-			return new ArrayData<Data>(a);
+			return new ArrayData<Data>(a, this);
 		}
 
 		for(int i = 0; i < this.size; i++) {
@@ -98,7 +98,7 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 			a.add(this.containedType.getDefaultEmptyValue());
 		}
 
-		return new ArrayData<Data>(a);
+		return new ArrayData<Data>(a, this);
 	}
 	
 	@Override

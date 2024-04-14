@@ -47,6 +47,7 @@ if((3 + 5 * 2) / (7 - 1) == 2) {
     println("(3 + 5 * 2) / (7 - 1) == 2");
 }
 el {
+    println((string)((3 + 5 * 2) / (7 - 1)));
     println("expression f is invalid");
 }
 

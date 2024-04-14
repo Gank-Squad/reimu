@@ -18,6 +18,9 @@ public interface Operator {
 	public static final byte GT = 13;
 	public static final byte GTEQ = 14;
 
+	public static final byte BOOL_OR = 15;
+	public static final byte BOOL_AND = 16;
+
 	public static String opString(byte op) {
 		
 		switch (op) {
@@ -49,6 +52,10 @@ public interface Operator {
 			return "op.GT";
 		case GTEQ:
 			return "op.GTEQ";
+		case BOOL_AND:
+			return "op.BOOL_AND";
+		case BOOL_OR:
+			return "op.BOOL_OR";
 		}
 
 		return "op.UNKNOWN";

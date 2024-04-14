@@ -6,6 +6,7 @@ import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.RangeData;
 import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.IterableType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -21,12 +22,12 @@ public class RangeLiteral implements Expression {
 	
 	public static RangeLiteral from(int start, int stop, int step) {
 		
-		return new RangeLiteral(new RangeData(start, stop, step));
+		return new RangeLiteral(new RangeData(AggregateType.NUMERIC_ITERATOR_TYPE, start, stop, step));
 	}
 
 	public static RangeLiteral from(int start, int stop) {
 		
-		return new RangeLiteral(new RangeData(start, stop));
+		return new RangeLiteral(new RangeData(AggregateType.NUMERIC_ITERATOR_TYPE, start, stop));
 	}
 
 	public static RangeLiteral fromString(String start, String  stop) {
@@ -35,6 +36,7 @@ public class RangeLiteral implements Expression {
 
 		return new RangeLiteral(
 				new RangeData(
+						AggregateType.NUMERIC_ITERATOR_TYPE,
 						Integer.parseInt(start),
 						Integer.parseInt(stop)));
 	}

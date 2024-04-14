@@ -153,7 +153,7 @@ public class UserDefinedType implements ReimuType {
 	@Override
 	public Data getDefaultEmptyValue() {
 
-		UserDefinedData d = new UserDefinedData(name);
+		UserDefinedData d = new UserDefinedData(this, name);
 		
 		try {
 			for(Entry<String, ReimuType> e : this.members.entrySet()) {

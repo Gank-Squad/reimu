@@ -36,6 +36,7 @@ public class CastExpression implements Expression {
 
 	@Override
 	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
+//		return this.expr.eval(reimuRuntime).castTo(resolveTo);
 		return this.expr.eval(reimuRuntime);
 	}
 

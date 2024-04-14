@@ -2,7 +2,14 @@ package com.git.ganksquad.data.types;
 
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.data.impl.PrimitiveData;
+import com.git.ganksquad.data.impl.BooleanData;
+import com.git.ganksquad.data.impl.ByteData;
+import com.git.ganksquad.data.impl.CharData;
+import com.git.ganksquad.data.impl.DoubleData;
+import com.git.ganksquad.data.impl.FloatData;
+import com.git.ganksquad.data.impl.IntegerData;
+import com.git.ganksquad.data.impl.LongData;
+import com.git.ganksquad.data.impl.ShortData;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public enum PrimitiveType implements ReimuType { 
@@ -20,36 +27,10 @@ public enum PrimitiveType implements ReimuType {
 		public Object getValueFromString(String value, int radix) {
 			return Byte.parseByte(value, radix);
 		}
-		
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Byte.class;
-		}
-
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 8;
-		}
 
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData((byte)0);
+			return new ByteData((byte)0);
 		}
 	},
 
@@ -57,7 +38,7 @@ public enum PrimitiveType implements ReimuType {
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData((short)0);
+			return new ShortData((byte)0);
 		}
 		@Override
 		public Object getValueFromString(String value) {
@@ -68,40 +49,13 @@ public enum PrimitiveType implements ReimuType {
 		public Object getValueFromString(String value, int radix) {
 			return Short.parseShort(value, radix);
 		}
-		
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Short.class;
-		}
-		
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-			case SHORT:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 16;
-		}
 	},
 
 	INT{
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData((int)0);
+			return new IntegerData((byte)0);
 		}
 		@Override
 		public Object getValueFromString(String value) {
@@ -112,41 +66,13 @@ public enum PrimitiveType implements ReimuType {
 		public Object getValueFromString(String value, int radix) {
 			return Integer.parseInt(value, radix);
 		}
-		
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Integer.class;
-		}
-		
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-			case FLOAT:
-			case INT:
-			case SHORT:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 32;
-		}
 	},
 
 	LONG{
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData(0L);
+			return new LongData(0);
 		}
 
 		@Override
@@ -158,42 +84,13 @@ public enum PrimitiveType implements ReimuType {
 		public Object getValueFromString(String value, int ordinal) {
 			return Long.parseLong(value, ordinal);
 		}
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Long.class;
-		}
-
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-			case FLOAT:
-			case INT:
-			case SHORT:
-			case LONG:
-			case DOUBLE:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 64;
-		}
 	},
 
 	FLOAT{
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData(0f);
+			return new FloatData(0f);
 		}
 
 		@Override
@@ -205,41 +102,13 @@ public enum PrimitiveType implements ReimuType {
 		public Object getValueFromString(String value, int ordinal) {
 			return getValueFromString(value);
 		}
-		
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Float.class;
-		}
-		
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-			case FLOAT:
-			case INT:
-			case SHORT:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 32;
-		}
 	},
 
 	DOUBLE{
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData(0.0);
+			return new DoubleData(0.0);
 		}
 
 		@Override
@@ -251,81 +120,23 @@ public enum PrimitiveType implements ReimuType {
 		public Object getValueFromString(String value) {
 			return Double.parseDouble(value);
 		}
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Double.class;
-		}
-		
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-			case FLOAT:
-			case INT:
-			case SHORT:
-			case LONG:
-			case DOUBLE:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 64;
-		}
 	},
 
 	BOOLEAN{
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData(false);
+			return new BooleanData(false);
 		}
 
 		@Override
 		public Object getValueFromString(String value, int ordinal) {
 			return getValueFromString(value);
 		}
+
 		@Override
 		public Object getValueFromString(String value) {
 			return Boolean.parseBoolean(value);
-		}
-		
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Boolean.class;
-		}
-		
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-			case FLOAT:
-			case INT:
-			case SHORT:
-			case LONG:
-			case DOUBLE:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		@Override
-		public int getBitSize() {
-			return 1;
 		}
 	},
 
@@ -333,7 +144,7 @@ public enum PrimitiveType implements ReimuType {
 		
 		@Override
 		public Data getDefaultEmptyValue() {
-			return new PrimitiveData('0');
+			return new CharData((char)0);
 		}
 
 		@Override
@@ -346,33 +157,6 @@ public enum PrimitiveType implements ReimuType {
 			if(value.length()==3)
 				return value.charAt(1);
 			return value.charAt(0);
-		}
-
-		@Override
-		public Class<?> getJavaPrimitiveClass() {
-			return Character.class;
-		}
-		
-		@Override
-		public boolean isAssignableFrom(ReimuType other) {
-
-			if(!(other instanceof PrimitiveType)) {
-				return false;
-			}
-
-			switch ((PrimitiveType)other) {
-			case BOOLEAN:
-			case BYTE:
-			case CHAR:
-				return true;
-			default:
-				return  false;
-			}
-		}
-		
-		@Override
-		public int getBitSize() {
-			return 16;
 		}
 	};
 	
@@ -393,8 +177,15 @@ public enum PrimitiveType implements ReimuType {
 		return this.toString();
 	}
 
-	public abstract Class<?> getJavaPrimitiveClass();
+	@Override
+	public boolean isAssignableFrom(ReimuType other) {
+
+		if(!(other instanceof PrimitiveType)) {
+			return false;
+		}
+		return true;
+		}
+
 	public abstract Object getValueFromString(String value);
 	public abstract Object getValueFromString(String value, int radix);
-	public abstract int getBitSize();
 }

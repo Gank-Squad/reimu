@@ -22,6 +22,7 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class CreateUserDefinedDataExpression implements Expression {
 
+	private UserDefinedType type;
 	private HashMap<String, Expression> namesToExp;
 	public String name;
 	public List<Expression> values;
@@ -52,6 +53,7 @@ public class CreateUserDefinedDataExpression implements Expression {
 		}
 		
 		UserDefinedType udt = (UserDefinedType)t;
+		type = udt;
 		
 
 		if(this.values.size() > udt.members.size()) {
@@ -107,7 +109,7 @@ public class CreateUserDefinedDataExpression implements Expression {
 	@Override
 	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
 		
-		UserDefinedData dat = new UserDefinedData(this.name);
+		UserDefinedData dat = new UserDefinedData(this.type, this.name);
 		
 		for (Map.Entry<String, Expression> entry : namesToExp.entrySet())  {
 			

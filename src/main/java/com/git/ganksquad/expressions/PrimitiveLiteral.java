@@ -5,8 +5,12 @@ import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.impl.BooleanData;
+import com.git.ganksquad.data.impl.ByteData;
+import com.git.ganksquad.data.impl.CharData;
+import com.git.ganksquad.data.impl.DoubleData;
 import com.git.ganksquad.data.impl.FloatData;
-import com.git.ganksquad.data.impl.IntegerData;
+import com.git.ganksquad.data.impl.LongData;
+import com.git.ganksquad.data.impl.ShortData;
 import com.git.ganksquad.data.types.PrimitiveType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
@@ -67,15 +71,19 @@ public class PrimitiveLiteral<T> implements Expression {
 		case BOOLEAN:
 			return new BooleanData(((Boolean)this.value).booleanValue());
 		case CHAR:
-			return new IntegerData(((Character)this.value).charValue());
+			return new CharData(((Character)this.value).charValue());
 		case LONG:
+			return new LongData(((Number)this.value).longValue());
 		case BYTE:
+			return new ByteData(((Number)this.value).byteValue());
 		case SHORT:
+			return new ShortData(((Number)this.value).shortValue());
 		case INT:
-			return new IntegerData(((Number)this.value).intValue());
+			return new LongData(((Number)this.value).intValue());
 		case DOUBLE:
+			return new DoubleData(((Number)this.value).doubleValue());
 		case FLOAT:
-			return new FloatData(((Number)this.value).doubleValue());
+			return new FloatData(((Number)this.value).floatValue());
 		default:
 			throw new IllegalArgumentException("value passed was not in the switch case");
 		}

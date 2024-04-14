@@ -35,7 +35,9 @@ public class DerefExpression implements Expression, AssignableExpression {
 	@Override
 	public Data evalAssign(ReimuRuntime reimuRuntime, Data d) throws ReimuRuntimeException {
 
-		reimuRuntime.assign(this.symbol, d);
+		Data old = reimuRuntime.deref(this.symbol);
+
+		reimuRuntime.assign(this.symbol, d.castTo(old.getType()));
 
 		return d;
 	}

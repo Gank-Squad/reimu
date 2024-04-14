@@ -70,7 +70,12 @@ public class ArrayIndexExpression implements Expression, AssignableExpression {
 			throw InvalidIndexKeyException.invalidType(r.getClass());
 		}
 
-		((IndexableData<Data>)l).set((IndexKeyData)r, assign);
+		@SuppressWarnings("unchecked")
+		IndexableData<Data> index = (IndexableData<Data>)l;
+
+		Data old = index.get((IndexKeyData)r);
+
+		index.set((IndexKeyData)r, assign.castTo(old.getType()));
 
 		return assign;
 	}

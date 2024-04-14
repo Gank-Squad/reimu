@@ -6,12 +6,20 @@ import java.util.stream.Collectors;
 
 import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.UserDefinedType;
+import com.git.ganksquad.exceptions.runtime.CannotCastException;
 import com.git.ganksquad.exceptions.runtime.CannotIndexException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class UserDefinedData implements Data, BooleanEvaluable {
 	
+	public UserDefinedType type;
 	public String name;
-	public UserDefinedData(String name) {
+
+	public UserDefinedData(UserDefinedType type, String name) {
+		this.type = type;
 		this.name = name;
 	}
 	private Map<String, Data> members = new HashMap<>();
@@ -57,5 +65,21 @@ public class UserDefinedData implements Data, BooleanEvaluable {
 					.collect(Collectors.joining(", "))
 					+ ']'
 				;
+	}
+
+	@Override
+	public ReimuType getType() {
+		return this.type;
+	}
+
+	@Override
+	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
+		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
+			return new StringData(this.toString());
+		}
+		if(this.getType().isAssignableFrom(newType)) {
+			return this;
+		}
+		throw new CannotCastException(this.getType(), newType);
 	}
 }

@@ -20,16 +20,16 @@ import com.git.ganksquad.exceptions.runtime.arithmetic.CannotXORException;
 /**
  * Represents integer data, which can hold a 32bit integer.
  */
-public class FloatData extends PrimitiveData {
+public class DoubleData extends PrimitiveData {
 	
 	public double value = 0;
 	
-	public FloatData(double value) {
+	public DoubleData(double value) {
 		
 		this.value = value;
 	}
 
-	public FloatData(float value) {
+	public DoubleData(float value) {
 		
 		this.value = value;
 	}
@@ -130,15 +130,14 @@ public class FloatData extends PrimitiveData {
 
 		switch ((PrimitiveType)other.getType()) {
 		case BOOLEAN:
-		case CHAR:
 		case BYTE:
 		case INT:
 		case SHORT:
 		case LONG:
-		case FLOAT:
-			return new FloatData(this.value + ((PrimitiveData)other).getValue().floatValue());
 		case DOUBLE:
-			return new DoubleData(this.value - ((PrimitiveData)other).getValue().doubleValue());
+		case FLOAT:
+			return new DoubleData(this.value + ((PrimitiveData)other).getValue().doubleValue());
+		case CHAR:
 		default:
 			throw new CannotAddException(this, other);
 		}
@@ -158,9 +157,8 @@ public class FloatData extends PrimitiveData {
 		case INT:
 		case SHORT:
 		case LONG:
-		case FLOAT:
-			return new FloatData(this.value - ((PrimitiveData)other).getValue().floatValue());
 		case DOUBLE:
+		case FLOAT:
 			return new DoubleData(this.value - ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotSubtractException(this, other);
@@ -181,9 +179,8 @@ public class FloatData extends PrimitiveData {
 		case INT:
 		case SHORT:
 		case LONG:
-		case FLOAT:
-			return new FloatData(this.value * ((PrimitiveData)other).getValue().floatValue());
 		case DOUBLE:
+		case FLOAT:
 			return new DoubleData(this.value * ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotMultiplyException(this, other);
@@ -199,15 +196,14 @@ public class FloatData extends PrimitiveData {
 
 		switch ((PrimitiveType)other.getType()) {
 		case BOOLEAN:
-		case CHAR:
 		case BYTE:
+		case CHAR:
 		case INT:
 		case SHORT:
 		case LONG:
 		case FLOAT:
-			return new FloatData(this.value / ((PrimitiveData)other).getValue().floatValue());
 		case DOUBLE:
-			return new DoubleData(this.value / ((PrimitiveData)other).getValue().doubleValue());
+			return new DoubleData((double)this.value / ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotDivideException(this, other);
 		}
@@ -221,15 +217,14 @@ public class FloatData extends PrimitiveData {
 		}
 
 		switch ((PrimitiveType)other.getType()) {
-		case BOOLEAN:
 		case CHAR:
+		case BOOLEAN:
 		case BYTE:
 		case INT:
 		case SHORT:
 		case LONG:
-		case FLOAT:
-			return new FloatData((double)this.value % ((PrimitiveData)other).getValue().floatValue());
 		case DOUBLE:
+		case FLOAT:
 			return new DoubleData((double)this.value % ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotModulusException(this, other);
@@ -255,7 +250,7 @@ public class FloatData extends PrimitiveData {
 		case DOUBLE:
 			return new DoubleData((double)this.value);
 		case FLOAT:
-			return new FloatData((float)this.value);
+			return new DoubleData((float)this.value);
 		case INT:
 			return new IntegerData((int)this.value);
 		case LONG:

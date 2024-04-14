@@ -92,9 +92,9 @@ public class InvokeFunctionExpression implements Expression {
 		
 		List<Data> argData = new ArrayList<>(this.args.size());
 		
-		for(Expression e : this.args) {
+		for(int i = 0; i < this.args.size(); i++) {
 
-			argData.add(e.eval(reimuRuntime));
+			argData.add(this.args.get(i).eval(reimuRuntime).castTo(data.getType().argumentTypes.get(i)));
 		}
 		
 		// data.scope holds the runtime from when the function was declared
@@ -103,7 +103,7 @@ public class InvokeFunctionExpression implements Expression {
 				data.params.iterator(),
 				argData.iterator());
 		
-		return data.body.eval(rt);
+		return data.body.eval(rt).castTo(data.getType().returnType);
 	}
 
 	@Override

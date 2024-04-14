@@ -4,28 +4,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.tinylog.Logger;
-
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.IndexKeyData;
 import com.git.ganksquad.data.IndexableData;
 import com.git.ganksquad.data.IterableData;
 import com.git.ganksquad.data.impl.iterable.CounterIterState;
+import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.ArrayType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.runtime.CannotCastException;
 import com.git.ganksquad.exceptions.runtime.CannotIndexException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class ArrayData<T extends Data> implements Data, IterableData, IndexableData<T> {
 	
+	private ArrayType type;
 	protected ArrayList<T> arr;
 	
-	public ArrayData(T[] arr){
+	public ArrayData(T[] arr, ArrayType type){
 		
+		this.type = type;
 		this.arr = new ArrayList<T>(Arrays.asList(arr));
 	}
 
-	public ArrayData(List<T> lis){
+	public ArrayData(List<T> lis, ArrayType type){
 		
+		this.type = type;
 		this.arr = new ArrayList<T>(lis);
 	}
 
@@ -52,9 +57,9 @@ public class ArrayData<T extends Data> implements Data, IterableData, IndexableD
 	@Override
 	public T get(IndexKeyData index) throws CannotIndexException {
 		
-		if(index instanceof IntegerData) {
+		if(index instanceof PrimitiveData) {
 			
-			return this.get(((IntegerData)index).value);
+			return this.get(((PrimitiveData)index).getValue().intValue());
 		}
 
 		throw CannotIndexException.typeNotIndexableBy(getClass(), index.getClass());
@@ -63,9 +68,9 @@ public class ArrayData<T extends Data> implements Data, IterableData, IndexableD
 	@Override
 	public void set(IndexKeyData index, T value) throws CannotIndexException {
 
-		if(index instanceof IntegerData) {
+		if(index instanceof LongData) {
 			
-			this.set(((IntegerData)index).value, value);
+			this.set(((PrimitiveData)index).getValue().intValue(), value);
 			return;
 		}
 
@@ -110,5 +115,21 @@ public class ArrayData<T extends Data> implements Data, IterableData, IndexableD
 	@Override
 	public String toString() {
 		return this.arr.toString();
+	}
+
+	@Override
+	public ReimuType getType() {
+		return this.type;
+	}
+
+	@Override
+	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
+		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
+			return new StringData(this.toString());
+		}
+		if(this.getType().isEqualType(newType)) {
+			return this;
+		}
+		throw new CannotCastException(this.getType(), newType);
 	}
 }

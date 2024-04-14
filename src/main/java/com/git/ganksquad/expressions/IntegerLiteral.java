@@ -4,7 +4,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.data.impl.IntegerData;
+import com.git.ganksquad.data.impl.LongData;
 import com.git.ganksquad.data.types.PrimitiveType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
@@ -55,7 +55,7 @@ public class IntegerLiteral implements Expression {
 	@Override
 	public Data eval(ReimuRuntime runtime) {
 
-		return new IntegerData(this.value);
+		return new LongData(this.value);
 	}
 	
 	@Override

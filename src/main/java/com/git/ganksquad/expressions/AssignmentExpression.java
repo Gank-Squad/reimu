@@ -172,7 +172,7 @@ public class AssignmentExpression implements Expression {
 			reimuRuntime.declare(this.symbolName, fillwith);	
 		}
 		else {
-			reimuRuntime.declare(this.symbolName, r);	
+			reimuRuntime.declare(this.symbolName, r.castTo(this.type));	
 		}
 
 		return NoneData.instance;

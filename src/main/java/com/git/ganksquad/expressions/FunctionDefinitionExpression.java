@@ -18,19 +18,17 @@ import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class FunctionDefinitionExpression implements Expression {
 	
-	public ReimuType type;
 	public String name;
+	public FunctionType funcType;
 	public List<String> argNames;
-	public List<ReimuType> argTypes;
 	public BlockExpression body;
 	
 	public FunctionDefinitionExpression( ReimuType type, String name, List<String> argNames, List<ReimuType> argTypes, BlockExpression body) {
 		
-		this.type = type;
 		this.name = name;
 		this.argNames = argNames;
-		this.argTypes = argTypes;
 		this.body = body;
+		this.funcType = new FunctionType(type, argTypes);
 	}
 	
 	public static FunctionDefinitionExpression from( ReimuType type, String name, List<String> argNames, List<ReimuType> argTypes, BlockExpression body) {
@@ -45,20 +43,20 @@ public class FunctionDefinitionExpression implements Expression {
 
 		this.trace();
 		
-		this.type.resolve(resolver);
+		this.funcType.returnType.resolve(resolver);
 		
-		for(ReimuType t : this.argTypes)
+		for(ReimuType t : this.funcType.argumentTypes)
 			t.resolve(resolver);
 
-		resolver.declareFunction(name, new FunctionType(type, argTypes));
+		resolver.declareFunction(name, this.funcType);
 		
-		ReimuTypeResolver scope = resolver.subScope(this.argNames.iterator(), this.argTypes.iterator());
+		ReimuTypeResolver scope = resolver.subScope(this.argNames.iterator(), this.funcType.argumentTypes.iterator());
 
 		ReimuType t = this.body.typeCheckPartial(scope);
 		
-		if(this.type != SpecialType.VOID && !this.type.isAssignableFrom(t)) {
+		if(this.funcType.returnType != SpecialType.VOID && !this.funcType.returnType.isAssignableFrom(t)) {
 			
-			throw new TypeException("Function %s expects return type %s but it's body returns type %s", name, type, t);
+			throw new TypeException("Function %s expects return type %s but it's body returns type %s", name, this.funcType.returnType, t);
 		}
 
 		return SpecialType.VOID;
@@ -67,7 +65,7 @@ public class FunctionDefinitionExpression implements Expression {
 	@Override
 	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
 		
-		FunctionData f = new FunctionData(reimuRuntime, name, argNames, argTypes, body);
+		FunctionData f = new FunctionData(reimuRuntime, name, this.funcType, argNames, body);
 
 		reimuRuntime.declareFunction(f);
 
@@ -76,6 +74,6 @@ public class FunctionDefinitionExpression implements Expression {
 
 	@Override
 	public String toString() {
-		return this.formatToString(type, name, argNames, argTypes, body);
+		return this.formatToString(this.funcType.returnType, name, argNames, funcType.argumentTypes, body);
 	}
 }

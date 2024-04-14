@@ -1,5 +1,6 @@
 package com.git.ganksquad.exceptions.runtime;
 
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.exceptions.ReimuException;
 
 /**
@@ -19,5 +20,9 @@ public class ReimuRuntimeException extends ReimuException {
 	public ReimuRuntimeException(String message) {
 
 		super(message);
+	}
+	public ReimuRuntimeException(String message, ReimuType a, ReimuType fmt) {
+
+		super(String.format(message, a, fmt));
 	}
 }

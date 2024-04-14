@@ -1,12 +1,13 @@
 package com.git.ganksquad.data.impl;
 
-import com.git.ganksquad.data.ArithmeticData;
-import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
-import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
-import com.git.ganksquad.data.IndexKeyData;
+import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.PrimitiveType;
+import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.exceptions.runtime.CannotCastException;
 import com.git.ganksquad.exceptions.runtime.CannotCompareException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.exceptions.runtime.arithmetic.CannotANDException;
 import com.git.ganksquad.exceptions.runtime.arithmetic.CannotAddException;
 import com.git.ganksquad.exceptions.runtime.arithmetic.CannotDivideException;
@@ -19,26 +20,44 @@ import com.git.ganksquad.exceptions.runtime.arithmetic.CannotXORException;
 /**
  * Represents integer data, which can hold a 32bit integer.
  */
-public class IntegerData implements Data, ArithmeticData, ComparableData, BooleanEvaluable, IndexKeyData {
+public class IntegerData extends PrimitiveData {
 	
 	public int value = 0;
 	
-	public IntegerData(int value) {
+	public IntegerData(int l) {
 		
-		this.value = value;
+		this.value = l;
+	}
+	
+	@Override
+	public Number getValue() {
+		return this.value;
 	}
 
 	@Override
 	public boolean eq(Data other) throws CannotCompareException {
-		
-		switch (other.getClassKey()) {
 
-		case ClassKeys.INTEGER_DATA:
-			return this.value == ((IntegerData)other).value;
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotCompareException(this, other);
+		}
 
-		case ClassKeys.BOOLEAN_DATA:
-			return this.value == ((BooleanData)other).valueAsInt();
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+			return this.value == ((PrimitiveData)other).getValue().intValue();
+		case CHAR:
+			return this.value == ((PrimitiveData)other).getValue().intValue();
+		case BYTE:
+			return this.value == ((PrimitiveData)other).getValue().byteValue();
+		case INT:
+			return this.value == ((PrimitiveData)other).getValue().intValue();
+		case SHORT:
+			return this.value == ((PrimitiveData)other).getValue().shortValue();
+		case LONG:
+			return this.value == ((PrimitiveData)other).getValue().longValue();
+		case DOUBLE:
+			return this.value == ((PrimitiveData)other).getValue().doubleValue();
+		case FLOAT:
+			return this.value == ((PrimitiveData)other).getValue().floatValue();
 		default:
 			throw new CannotCompareException(this, other);
 		}
@@ -46,15 +65,28 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 
 	@Override
 	public boolean lt(Data other) throws CannotCompareException {
-		
-		switch (other.getClassKey()) {
 
-		case ClassKeys.INTEGER_DATA:
-			return this.value < ((IntegerData)other).value;
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotCompareException(this, other);
+		}
 
-		case ClassKeys.BOOLEAN_DATA:
-			return this.value < ((BooleanData)other).valueAsInt();
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+			return this.value < ((PrimitiveData)other).getValue().intValue();
+		case CHAR:
+			return this.value < ((PrimitiveData)other).getValue().intValue();
+		case BYTE:
+			return this.value < ((PrimitiveData)other).getValue().byteValue();
+		case INT:
+			return this.value < ((PrimitiveData)other).getValue().intValue();
+		case SHORT:
+			return this.value < ((PrimitiveData)other).getValue().shortValue();
+		case LONG:
+			return this.value < ((PrimitiveData)other).getValue().longValue();
+		case DOUBLE:
+			return this.value < ((PrimitiveData)other).getValue().doubleValue();
+		case FLOAT:
+			return this.value < ((PrimitiveData)other).getValue().floatValue();
 		default:
 			throw new CannotCompareException(this, other);
 		}
@@ -63,14 +95,27 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public boolean gt(Data other) throws CannotCompareException {
 		
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotCompareException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return this.value > ((IntegerData)other).value;
-
-		case ClassKeys.BOOLEAN_DATA:
-			return this.value > ((BooleanData)other).valueAsInt();
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+			return this.value > ((PrimitiveData)other).getValue().intValue();
+		case CHAR:
+			return this.value > ((PrimitiveData)other).getValue().intValue();
+		case BYTE:
+			return this.value > ((PrimitiveData)other).getValue().byteValue();
+		case INT:
+			return this.value > ((PrimitiveData)other).getValue().intValue();
+		case SHORT:
+			return this.value > ((PrimitiveData)other).getValue().shortValue();
+		case LONG:
+			return this.value > ((PrimitiveData)other).getValue().longValue();
+		case DOUBLE:
+			return this.value > ((PrimitiveData)other).getValue().doubleValue();
+		case FLOAT:
+			return this.value > ((PrimitiveData)other).getValue().floatValue();
 		default:
 			throw new CannotCompareException(this, other);
 		}
@@ -79,14 +124,23 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data add(Data other) throws CannotAddException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotAddException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value + ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value + ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value + ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value + ((PrimitiveData)other).getValue().longValue());
+		case FLOAT:
+			return new FloatData(this.value + ((PrimitiveData)other).getValue().floatValue());
+		case DOUBLE:
+			return new DoubleData(this.value + ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotAddException(this, other);
 		}
@@ -95,14 +149,23 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data sub(Data other) throws CannotSubtractException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotSubtractException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value - ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value - ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value - ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value - ((PrimitiveData)other).getValue().longValue());
+		case FLOAT:
+			return new FloatData(this.value - ((PrimitiveData)other).getValue().floatValue());
+		case DOUBLE:
+			return new DoubleData(this.value - ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotSubtractException(this, other);
 		}
@@ -111,14 +174,23 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data mul(Data other) throws CannotMultiplyException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotMultiplyException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value * ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value * ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value * ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value * ((PrimitiveData)other).getValue().longValue());
+		case FLOAT:
+			return new FloatData(this.value * ((PrimitiveData)other).getValue().floatValue());
+		case DOUBLE:
+			return new DoubleData(this.value * ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotMultiplyException(this, other);
 		}
@@ -127,14 +199,23 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data div(Data other) throws CannotDivideException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotDivideException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value / ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value / ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value / ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value / ((PrimitiveData)other).getValue().longValue());
+		case FLOAT:
+			return new DoubleData((double)this.value / ((PrimitiveData)other).getValue().floatValue());
+		case DOUBLE:
+			return new DoubleData((double)this.value / ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotDivideException(this, other);
 		}
@@ -143,14 +224,23 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data mod(Data other) throws CannotModulusException{
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotModulusException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value % ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value % ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case BYTE:
+		case CHAR:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value % ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value % ((PrimitiveData)other).getValue().longValue());
+		case FLOAT:
+			return new FloatData((double)this.value % ((PrimitiveData)other).getValue().floatValue());
+		case DOUBLE:
+			return new DoubleData((double)this.value % ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotModulusException(this, other);
 		}
@@ -159,14 +249,21 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data xor(Data other) throws CannotXORException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotXORException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value ^ ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value ^ ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value ^ ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value ^ ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+		case FLOAT:
 		default:
 			throw new CannotXORException(this, other);
 		}
@@ -175,14 +272,21 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data or(Data other) throws CannotORException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotORException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value | ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value | ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case SHORT:
+		case INT:
+			return new IntegerData(this.value | ((PrimitiveData)other).getValue().intValue());
+		case LONG:
+			return new LongData(this.value | ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+		case FLOAT:
 		default:
 			throw new CannotORException(this, other);
 		}
@@ -191,16 +295,53 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	@Override
 	public Data and(Data other) throws CannotANDException {
 
-		switch (other.getClassKey()) {
+		if(!(other.getType() instanceof PrimitiveType)) {
+			throw new CannotANDException(this, other);
+		}
 
-		case ClassKeys.INTEGER_DATA:
-			return new IntegerData(this.value & ((IntegerData)other).value);
-
-		case ClassKeys.BOOLEAN_DATA:
-			return new IntegerData(this.value & ((BooleanData)other).valueAsInt());
-
+		switch ((PrimitiveType)other.getType()) {
+		case BOOLEAN:
+		case CHAR:
+		case BYTE:
+		case INT:
+			return new IntegerData(this.value & ((PrimitiveData)other).getValue().intValue());
+		case SHORT:
+		case LONG:
+			return new LongData(this.value & ((PrimitiveData)other).getValue().longValue());
+		case DOUBLE:
+		case FLOAT:
 		default:
 			throw new CannotANDException(this, other);
+		}
+	}
+
+	@Override
+	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
+		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
+			return new StringData(this.toString());
+		}
+		if(!(newType instanceof PrimitiveType)) {
+			throw new CannotCastException(this.getType(), newType);
+		}
+		switch ((PrimitiveType)newType) {
+		case BOOLEAN:
+			return new BooleanData(this.value != 0);
+		case BYTE:
+			return new ByteData((byte)this.value);
+		case CHAR:
+			return new CharData((char)this.value);
+		case DOUBLE:
+			return new DoubleData((double)this.value);
+		case FLOAT:
+			return new FloatData((float)this.value);
+		case INT:
+			return new IntegerData(this.value);
+		case LONG:
+			return new LongData(this.value);
+		case SHORT:
+			return new ShortData(this.value);
+		default:
+			throw new CannotCastException(this.getType(), newType);
 		}
 	}
 
@@ -217,7 +358,11 @@ public class IntegerData implements Data, ArithmeticData, ComparableData, Boolea
 	
 	@Override
 	public String toString() {
-		return Integer.toString(this.value);
+		return Long.toString(this.value);
 	}
 
+	@Override
+	public ReimuType getType() {
+		return PrimitiveType.LONG;
+	}
 }
