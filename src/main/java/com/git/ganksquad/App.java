@@ -1,6 +1,8 @@
 package com.git.ganksquad;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -118,6 +120,32 @@ public class App
     	result.expr.eval(rt);
     	
     }
+    
+    public static void eval(String srcCode, ReimuTypeResolver r, ReimuRuntime rt, BlockExpression globalScope) throws ReimuRuntimeException, IOException, ReimuCompileException {
+
+    	CharStream input = CharStreams.fromString(srcCode);
+    	
+    	ReimuLexer pl = new ReimuLexer(input);
+    	
+    	CommonTokenStream tokens = new CommonTokenStream(pl);
+    	
+    	ReimuParser parser = new ReimuParser(tokens);
+    	
+    	ProgramContext result = parser.program();
+
+
+//    	ReimuTypeResolver r = new ReimuTypeResolver();
+//    	ReimuRuntime rt = getGlobalRuntime();
+
+//    	BlockExpression globalScope = injectGlobal();
+    	
+    	
+    	result.expr.typeCheck(r);
+    	
+    	result.expr.evalPartial(rt);
+    	
+    }
+    
     public static void eval(Path sourceFile) throws ReimuRuntimeException, IOException, ReimuCompileException {
 
     	CharStream input = CharStreams.fromPath(sourceFile);
@@ -163,7 +191,14 @@ public class App
 //    	}
     }
 
-
+    public static void readSourceFiles(String[] args) throws ReimuRuntimeException, IOException, ReimuCompileException {
+    	
+    	for(String fpath : args) {
+    		
+    		eval( Path.of(fpath) );
+    	}
+    }
+    
     public static void main( String[] args ) throws ReimuRuntimeException, IOException, ReimuCompileException
     {
 		Thread.setDefaultUncaughtExceptionHandler(new TinylogHandler());
@@ -182,16 +217,35 @@ public class App
 
 
     	if(args.length < 1) {
+    		
+    		System.out.println("Entering shell:");
 
-    		System.err.println("Provide source files...");
-
-    		return;
+    		BufferedReader reader = new BufferedReader( new InputStreamReader(System.in));
+    		
+    		String line = "";
+    		
+    		ReimuRuntime rt = getGlobalRuntime();
+    		ReimuTypeResolver r = new ReimuTypeResolver();
+    		BlockExpression globalScope = injectGlobal();
+    		globalScope.typeCheckPartial(r);
+    		globalScope.evalPartial(rt);
+    		
+    		while (true) {
+    			
+    			line = reader.readLine().trim();
+    			
+    			if (line.equals("exit()")) {
+    				break;
+    			}
+    			if (line.isEmpty()) {
+    				continue;
+    			}
+    			
+    			eval(line, r, rt, globalScope);
+    			
+    		}
     	}
 
-    	for(String fpath : args) {
-    		
-    		eval( Path.of(fpath) );
-    		
-    	}
+    	
     }
 }
