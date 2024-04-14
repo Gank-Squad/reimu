@@ -1,20 +1,24 @@
 
 
-void test(char[5] a, int b){
 
-    println((string)a);
+
+
+int a = 5;
+int b = 5;
+
+
+if(a && b) {
+
+    println("a && b");
 
 }
 
-string a = "hello world";
+if(a || b) {
+
+    println("a || b");
+
+}
 
 
-int[3][] b = [ 
-    [1, 2, 3],
-    [1, 2, 3],
-    [1, 2, 3]
-];
-
-println((string)b);
 
 

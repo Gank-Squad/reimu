@@ -21,6 +21,11 @@ public enum SpecialType implements ReimuType{
 		@Override
 		public void resolve(ReimuTypeResolver resolver) {
 		}
+		
+		@Override
+		public boolean canBeBool() {
+			return false;
+		}
 	},
 
 	UNKNOWN {
@@ -37,6 +42,11 @@ public enum SpecialType implements ReimuType{
 
 		@Override
 		public void resolve(ReimuTypeResolver resolver) {
+		}
+		
+		@Override
+		public boolean canBeBool() {
+			return true;
 		}
 	};
 

@@ -65,4 +65,9 @@ public class IterableType implements AggregateType, SingleTypeContainer, Iterabl
 	public Data getDefaultEmptyValue() {
 		return NoneData.instance;
 	}
+	
+	@Override
+	public boolean canBeBool() {
+		return false;
+	}
 }

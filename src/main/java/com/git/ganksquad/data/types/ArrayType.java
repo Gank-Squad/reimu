@@ -102,6 +102,11 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 	}
 	
 	@Override
+	public boolean canBeBool() {
+		return true;
+	}
+	
+	@Override
 	public String toString() {
 		return this.formatToString(this.containedType, "size: " + this.size);
 	}

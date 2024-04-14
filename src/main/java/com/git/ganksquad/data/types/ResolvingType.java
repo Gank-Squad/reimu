@@ -97,6 +97,10 @@ public class ResolvingType implements ReimuType {
 		return this.toString();
 	}
 	
+	@Override
+	public boolean canBeBool() {
+		return true;
+	}
 
 	@Override
 	public Data getDefaultEmptyValue() {

@@ -7,6 +7,8 @@ import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public interface ReimuType {
 	
+	public boolean canBeBool();
+
 	public boolean isAssignableFrom(ReimuType other);
 
 	public boolean isEqualType(ReimuType other);
