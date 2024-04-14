@@ -74,8 +74,6 @@ g_expr returns [Expression value]
     | e1=g_expr '&' e2=g_expr       { $value = ArithmeticExpression.and($e1.value, $e2.value); }
     | e1=g_expr '^' e2=g_expr       { $value = ArithmeticExpression.xor($e1.value, $e2.value); }
     | e1=g_expr '|' e2=g_expr       { $value = ArithmeticExpression.or($e1.value, $e2.value); }
-    | e1=g_expr '||' e2=g_expr      { $value = BooleanArithmetic.or($e1.value, $e2.value); }
-    | e1=g_expr '&&' e2=g_expr      { $value = BooleanArithmetic.and($e1.value, $e2.value); }
     | e1=g_expr '==' e2=g_expr      { $value = CompareExpression.eq($e1.value, $e2.value); }
     | e1=g_expr '!=' e2=g_expr      { $value = CompareExpression.neq($e1.value, $e2.value); }
     | e1=g_expr '<' e2=g_expr       { $value = CompareExpression.lt($e1.value, $e2.value); }
@@ -91,6 +89,8 @@ g_expr returns [Expression value]
     | e1=g_expr '^=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.xor($e1.value, $e2.value)); }
     | e1=g_expr '|=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.or($e1.value, $e2.value)); }
     | e1=g_expr '&=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.and($e1.value, $e2.value)); }
+    | e1=g_expr '||' e2=g_expr      { $value = BooleanArithmetic.or($e1.value, $e2.value); }
+    | e1=g_expr '&&' e2=g_expr      { $value = BooleanArithmetic.and($e1.value, $e2.value); }
     | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;

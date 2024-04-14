@@ -26,4 +26,8 @@ public class ReturnExpression implements Expression {
 		return this.toReturn.eval(reimuRuntime);
 	}
 
+	@Override
+	public String toString() {
+		return this.formatToString(toReturn);
+	}
 }

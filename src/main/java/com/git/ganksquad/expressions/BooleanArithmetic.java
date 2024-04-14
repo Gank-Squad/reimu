@@ -109,5 +109,10 @@ public class BooleanArithmetic implements Expression {
 			throw new ReimuRuntimeException(String.format("Bad operator %s", Byte.toString(op)));
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return this.formatToString(this.left, this.op, this.right);
+	}
 
 }
