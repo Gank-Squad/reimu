@@ -51,6 +51,10 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		}
 	}
 	
+	public PrimitiveData(double value, PrimitiveType type) {
+		this(Double.doubleToLongBits(value), type);
+	}
+	
 	public PrimitiveData(Number value, PrimitiveType type) {
 		this.value = value;
 		this.type = type;
@@ -91,11 +95,13 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 	
 	
 	public boolean asBool() {
-		return this.value.doubleValue() != 0.0;
+		// basically just checking if there is any bits that are 1
+		return this.value.longValue() != 0;
 	}
 	
 	public int asChar() {
-		return this.value.intValue() & 0xFFFF;
+		// shorts and chars are same number of bits
+		return this.value.shortValue();
 	}
 	
 	public static PrimitiveType getLargerType(PrimitiveType a, PrimitiveType b) {
@@ -106,33 +112,35 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		return b;
 	}
 	
+	public static long getBitPreservedLongValue(PrimitiveData data) {
+		switch(data.type) {
+		case BOOLEAN:
+			return data.asBool() ? (long)1 : (long)0;
+		case BYTE:
+			return data.value.longValue() & 0xFF;
+		case CHAR:
+		case SHORT:
+			return data.value.longValue() & 0xFFFF;
+		case LONG:
+			return data.value.longValue();
+		case INT:
+			return data.value.longValue() & 0xFFFFFFFF;
+		case DOUBLE:
+			return Double.doubleToLongBits(data.value.doubleValue());
+		case FLOAT:
+			return Double.doubleToLongBits((double)data.value.floatValue());
+		}
+		// this should never be reached
+		return data.value.longValue();
+	}
+	
 	public boolean eq(Data other) throws CannotCompareException {
 		
 		if (!(other instanceof PrimitiveData)) {
 			throw new CannotCompareException(this, other);
 		}
 		
-		switch (((PrimitiveData)other).type) {
-		case BOOLEAN:
-			return asBool() == ((PrimitiveData)other).asBool();
-		case BYTE:
-			return this.value.byteValue() == ((PrimitiveData)other).value.byteValue();
-		case CHAR:
-			return asChar() == ((PrimitiveData)other).asChar();
-		case DOUBLE:
-			return this.value.doubleValue() == ((PrimitiveData)other).value.doubleValue();
-		case FLOAT:
-			return this.value.floatValue() == ((PrimitiveData)other).value.floatValue();
-		case INT:
-			return this.value.intValue() == ((PrimitiveData)other).value.intValue();
-		case LONG:
-			return this.value.longValue() == ((PrimitiveData)other).value.longValue();
-		case SHORT:
-			return this.value.shortValue() == ((PrimitiveData)other).value.shortValue();
-		default:
-			throw new CannotCompareException(this, other);
-		
-		}
+		return getBitPreservedLongValue(this) == getBitPreservedLongValue((PrimitiveData)other);
 	}
 	@Override
 	public boolean evalAsBool() {
@@ -145,7 +153,26 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 			throw new CannotCompareException(this, other);
 		}
 		
-		return this.value.doubleValue() < ((PrimitiveData)other).value.doubleValue();
+		switch(((PrimitiveData)other).type) {
+		case DOUBLE:
+		case FLOAT:
+			switch (this.type) {
+			case DOUBLE:
+			case FLOAT:
+				return this.value.doubleValue() < ((PrimitiveData)other).value.doubleValue();
+			default:
+				return getBitPreservedLongValue(this) < ((PrimitiveData)other).value.doubleValue();
+			}
+		// if other is numeric or bool
+		default:
+			switch (this.type) {
+			case DOUBLE:
+			case FLOAT:
+				return this.value.doubleValue() < getBitPreservedLongValue((PrimitiveData)other);
+			default:
+				return getBitPreservedLongValue(this) < getBitPreservedLongValue((PrimitiveData)other);
+			}	
+		}
 	}
 	
 	@Override
@@ -154,7 +181,26 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 			throw new CannotCompareException(this, other);
 		}
 		
-		return this.value.doubleValue() > ((PrimitiveData)other).value.doubleValue();
+		switch(((PrimitiveData)other).type) {
+		case DOUBLE:
+		case FLOAT:
+			switch (this.type) {
+			case DOUBLE:
+			case FLOAT:
+				return this.value.doubleValue() > ((PrimitiveData)other).value.doubleValue();
+			default:
+				return getBitPreservedLongValue(this) > ((PrimitiveData)other).value.doubleValue();
+			}
+		// if other is numeric or bool
+		default:
+			switch (this.type) {
+			case DOUBLE:
+			case FLOAT:
+				return this.value.doubleValue() > getBitPreservedLongValue((PrimitiveData)other);
+			default:
+				return getBitPreservedLongValue(this) > getBitPreservedLongValue((PrimitiveData)other);
+			}	
+		}
 	}
 	
 	// assume other is a boolean primitive to simplify code
@@ -172,11 +218,11 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(this.value.longValue() + other.value.longValue(), other.type);
+			return new PrimitiveData(getBitPreservedLongValue(this) + getBitPreservedLongValue(other), getLargerType(type, other.type));
 		
 		case DOUBLE:
 		case FLOAT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() + other.value.longValue()), this.type);
+			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() + getBitPreservedLongValue(other)), this.type);
 		}
 		// this should never be reached
 		throw new CannotAddException(this, other);
@@ -196,11 +242,11 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(this.value.longValue() + other.value.longValue(), getLargerType(this.type,  other.type));
+			return new PrimitiveData(getBitPreservedLongValue(this) + getBitPreservedLongValue(other), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() + other.value.longValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() + getBitPreservedLongValue(other)), getLargerType(this.type,  other.type));
 		}
 		// this should never be reached
 		throw new CannotAddException(this, other);
@@ -218,7 +264,7 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.longValue() + other.value.doubleValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(getBitPreservedLongValue(this) + other.value.doubleValue()), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
@@ -262,14 +308,14 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 			
 			switch (((PrimitiveData)other).type) {
 			case BOOLEAN:
-				((PrimitiveData)other).value = -1 * ((PrimitiveData)other).value.longValue();
+				((PrimitiveData)other).value = -1 * getBitPreservedLongValue((PrimitiveData)other);
 				return addBool((PrimitiveData)other);
 			case BYTE:
 			case CHAR:
 			case INT:
 			case LONG:
 			case SHORT:
-				((PrimitiveData)other).value = -1 * ((PrimitiveData)other).value.longValue();
+				((PrimitiveData)other).value = -1 * getBitPreservedLongValue((PrimitiveData)other);
 				return addNumeric((PrimitiveData)other);
 				
 			case DOUBLE:
@@ -302,11 +348,11 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(this.value.longValue() * other.value.longValue(), getLargerType(this.type,  other.type));
-		
+			return new PrimitiveData(getBitPreservedLongValue(this) * getBitPreservedLongValue(other), getLargerType(this.type,  other.type));
+			
 		case DOUBLE:
 		case FLOAT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() * other.value.longValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() * getBitPreservedLongValue(other)), getLargerType(this.type,  other.type));
 		}
 		
 		throw new CannotMultiplyException(this, other);
@@ -326,7 +372,7 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.longValue() * other.value.doubleValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(getBitPreservedLongValue(this) * other.value.doubleValue()), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
@@ -369,18 +415,18 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		switch (this.type) {
 		case BOOLEAN:
 			return ((PrimitiveData)other).asBool() ? 
-					new PrimitiveData(1 / ((PrimitiveData)other).value.longValue(), ((PrimitiveData)other).type) :
+					new PrimitiveData(1 / getBitPreservedLongValue(other), ((PrimitiveData)other).type) :
 					new PrimitiveData(0, ((PrimitiveData)other).type);
 		case BYTE:
 		case CHAR:
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(this.value.longValue() / other.value.longValue(), getLargerType(this.type,  other.type));
+			return new PrimitiveData(getBitPreservedLongValue(this) / getBitPreservedLongValue(other), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() / other.value.longValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() / getBitPreservedLongValue(other)), getLargerType(this.type,  other.type));
 		}
 		
 		throw new CannotDivideException(this, other);
@@ -402,7 +448,7 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.longValue() / other.value.doubleValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(getBitPreservedLongValue(this) / other.value.doubleValue()), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
@@ -447,18 +493,18 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		switch (this.type) {
 		case BOOLEAN:
 			return ((PrimitiveData)other).asBool() ? 
-					new PrimitiveData(1 % ((PrimitiveData)other).value.longValue(), ((PrimitiveData)other).type) :
+					new PrimitiveData(1 % getBitPreservedLongValue(other), ((PrimitiveData)other).type) :
 					new PrimitiveData(0, ((PrimitiveData)other).type);
 		case BYTE:
 		case CHAR:
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(this.value.longValue() % other.value.longValue(), getLargerType(this.type,  other.type));
+			return new PrimitiveData(getBitPreservedLongValue(this) % getBitPreservedLongValue(other), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() % other.value.longValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(this.value.doubleValue() % getBitPreservedLongValue(other)), getLargerType(this.type,  other.type));
 		}
 		
 		throw new CannotModulusException(this, other);
@@ -480,7 +526,7 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 		case INT:
 		case LONG:
 		case SHORT:
-			return new PrimitiveData(Double.doubleToLongBits(this.value.longValue() % other.value.doubleValue()), getLargerType(this.type,  other.type));
+			return new PrimitiveData(Double.doubleToLongBits(getBitPreservedLongValue(this) % other.value.doubleValue()), getLargerType(this.type,  other.type));
 		
 		case DOUBLE:
 		case FLOAT:
@@ -516,15 +562,15 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 	}
 	@Override
 	public Data xor(Data other) throws CannotXORException {
-		return new PrimitiveData(this.value.longValue() ^ ((PrimitiveData)other).value.longValue(), getLargerType(this.type, ((PrimitiveData)other).type));
+		return new PrimitiveData(getBitPreservedLongValue(this) ^ getBitPreservedLongValue((PrimitiveData)other), getLargerType(this.type, ((PrimitiveData)other).type));
 	}
 	@Override
 	public Data or(Data other) throws CannotORException {
-		return new PrimitiveData(this.value.longValue() | ((PrimitiveData)other).value.longValue(), getLargerType(this.type, ((PrimitiveData)other).type));
+		return new PrimitiveData(getBitPreservedLongValue(this) | getBitPreservedLongValue((PrimitiveData)other), getLargerType(this.type, ((PrimitiveData)other).type));
 	}
 	@Override
 	public Data and(Data other) throws CannotANDException {
-		return new PrimitiveData(this.value.longValue() & ((PrimitiveData)other).value.longValue(), getLargerType(this.type, ((PrimitiveData)other).type));
+		return new PrimitiveData(getBitPreservedLongValue(this) & getBitPreservedLongValue((PrimitiveData)other), getLargerType(this.type, ((PrimitiveData)other).type));
 	}
 	@Override
 	public int getClassKey() {
