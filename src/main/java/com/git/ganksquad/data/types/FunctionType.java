@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.FunctionData;
+import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 
@@ -58,6 +61,12 @@ public class FunctionType implements AggregateType {
 	@Override
 	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
 	}
+	
+	@Override
+	public Data getDefaultEmptyValue() {
+		return NoneData.instance;
+	}
+	
 	@Override
 	public String getLookupName() {
 		return this.toString();

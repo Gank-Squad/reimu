@@ -530,4 +530,9 @@ public class PrimitiveData implements Data, ArithmeticData, ComparableData, Bool
 	public int getClassKey() {
 		return 0;
 	}
+	
+	@Override
+	public String toString() {
+		return this.value.toString();
+	}
 }

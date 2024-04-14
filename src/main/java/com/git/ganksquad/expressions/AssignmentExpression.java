@@ -6,6 +6,7 @@ import com.git.ganksquad.ParseChecks;
 import com.git.ganksquad.ReimuRuntime;
 import com.git.ganksquad.ReimuTypeResolver;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.ArrayData;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.data.types.UserDefinedType;
@@ -127,28 +128,46 @@ public class AssignmentExpression implements Expression {
 		
 		Data r = this.value.eval(reimuRuntime);
 		
-		if(this.declare) {
+		if(!this.declare) {
+
+			if(this.symbolExpr instanceof AssignableExpression){
+
+				return ((AssignableExpression)this.symbolExpr).evalAssign(reimuRuntime, r);
+			}
+
+				throw new ReimuRuntimeException(String.format("THIS SHOUUD BE UNREACHABLE. Left side of assignment is not an assignable expression"));
+		}
 			
-//			if(this.type instanceof ArrayType && r instanceof NoneExpression) {
-//
-//				reimuRuntime.declare(this.symbolName, r);	
-//			}
-//			else {
-				reimuRuntime.declare(this.symbolName, r);	
-//			}
 
-			return NoneData.instance;
+		if(r instanceof NoneData) {
 
+			reimuRuntime.declare(this.symbolName, this.type.getDefaultEmptyValue());	
 		}
 
-		if(this.symbolExpr instanceof AssignableExpression){
+		else if(this.type instanceof ArrayType && r instanceof ArrayData) {
 
-			return ((AssignableExpression)this.symbolExpr).evalAssign(reimuRuntime, r);
+			ArrayType atype = (ArrayType)this.type;
+			ArrayData<Data> ad = (ArrayData<Data>)r;
+
+			if(ad.size() > atype.size) {
+
+				throw new ReimuRuntimeException("Cannot assign array size larger than the type says");
+			}
+
+			ArrayData<Data> fillwith = atype.getDefaultEmptyValue();
+
+			for(int i = 0; i < ad.size(); i++) {
+
+				fillwith.set(i, ad.get(i));
+			}
+
+			reimuRuntime.declare(this.symbolName, fillwith);	
 		}
 		else {
-
-			throw new ReimuRuntimeException(String.format("THIS SHOUUD BE UNREACHABLE. Left side of assignment is not an assignable expression"));
+			reimuRuntime.declare(this.symbolName, r);	
 		}
+
+		return NoneData.instance;
 	}
 
 	@Override

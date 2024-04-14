@@ -39,6 +39,16 @@ public class ArrayData<T extends Data> implements Data, IterableData, IndexableD
 		return this.arr.get(index);
 	}
 
+	public void add(T d) {
+		this.arr.add(d);
+	}
+
+	public void extend(List<T> d) {
+		for(T i : d) {
+			this.add(i);
+		}
+	}
+
 	@Override
 	public T get(IndexKeyData index) throws CannotIndexException {
 		

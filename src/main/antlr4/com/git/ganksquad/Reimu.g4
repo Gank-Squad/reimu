@@ -115,8 +115,14 @@ g_value returns [Expression value]
 
 
 g_type returns [ReimuType value]
-    : e=g_type '[]'            { $value = new ArrayType($e.value); }
-    | e=g_type '[' INTEGER ']' { $value = new ArrayType($e.value, $INTEGER.text); }
+
+    : e=g_type { List<Integer> il = new ArrayList<>(); }  
+        (
+            ( '[]'            { il.add(-1);                              } ) |
+            ( '[' INTEGER ']' { il.add(Integer.parseInt($INTEGER.text)); } )
+        )+
+        { $value = ArrayType.fromNbrackets($e.value, il); }
+
     | 'iter' '[' e=g_type  ']' { $value = new IterableType($e.value); }
     | 'var'                    { $value = SpecialType.UNKNOWN; }
     | 'string'                 { $value = AggregateType.STRING_TYPE; }

@@ -66,7 +66,7 @@ public class ArrayLiteral implements Expression {
 			}
 		}
 		
-		return new ArrayType(r);
+		return new ArrayType(r, this.arr.size());
 	}
 
 	@Override

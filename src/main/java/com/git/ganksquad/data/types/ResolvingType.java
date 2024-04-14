@@ -3,6 +3,8 @@ package com.git.ganksquad.data.types;
 import org.tinylog.Logger;
 
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public class ResolvingType implements ReimuType {
@@ -93,5 +95,16 @@ public class ResolvingType implements ReimuType {
 	@Override
 	public String getLookupName() {
 		return this.toString();
+	}
+	
+
+	@Override
+	public Data getDefaultEmptyValue() {
+
+		if(this.resolved != null) {
+			return this.resolved.getDefaultEmptyValue();
+		}
+
+		return NoneData.instance;
 	}
 }

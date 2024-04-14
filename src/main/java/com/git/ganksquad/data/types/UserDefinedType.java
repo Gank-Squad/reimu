@@ -3,9 +3,16 @@ package com.git.ganksquad.data.types;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import javax.management.RuntimeErrorException;
+
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.NoneData;
+import com.git.ganksquad.data.impl.UserDefinedData;
+import com.git.ganksquad.exceptions.runtime.CannotIndexException;
 
 public class UserDefinedType implements ReimuType {
 	
@@ -141,6 +148,31 @@ public class UserDefinedType implements ReimuType {
 					})
 					.collect(Collectors.joining(", "))
 				);
+	}
+	
+	@Override
+	public Data getDefaultEmptyValue() {
+
+		UserDefinedData d = new UserDefinedData(name);
+		
+		try {
+			for(Entry<String, ReimuType> e : this.members.entrySet()) {
+
+				if(!(e.getValue() instanceof PrimitiveType)) {
+
+					d.setMember(e.getKey(), NoneData.instance);
+				}
+				else {
+					d.setMember(e.getKey(), e.getValue().getDefaultEmptyValue());
+				}
+			}
+
+		} catch (CannotIndexException e1) {
+			throw new RuntimeException(e1);
+		}
+
+		return d;
+
 	}
 	
 	@Override

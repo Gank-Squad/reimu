@@ -1,6 +1,12 @@
 package com.git.ganksquad.data.types;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.ArrayData;
 import com.git.ganksquad.data.types.traits.IterableTrait;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
@@ -22,6 +28,29 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 	public ArrayType(ReimuType elements, String size) {
 		
 		this(elements, (int)PrimitiveType.INT.getValueFromString(size));
+	}
+
+	public static ArrayType fromNbrackets(ReimuType t, int brackets) {
+
+		brackets--;
+		ArrayType innerMost = new ArrayType(t);
+		for(int i = 0; i < brackets; i++)
+			innerMost = new ArrayType(innerMost);
+
+		return innerMost;
+	}
+	public static  ArrayType fromNbrackets(ReimuType t, List<Integer> sizes) {
+
+		ListIterator<Integer> it = sizes.listIterator(sizes.size());
+
+		ArrayType innerMost = new ArrayType(t, it.previous());
+
+		while(it.hasPrevious()) {
+			
+			innerMost = new ArrayType(innerMost, it.previous());
+		}
+
+		return innerMost;
 	}
 	
 	@Override
@@ -51,6 +80,24 @@ public class ArrayType implements AggregateType, SingleTypeContainer, IterableTr
 
 	@Override
 	public void resolve(ReimuTypeResolver resolver) throws ReimuCompileException{
+	}
+
+	@Override
+	public ArrayData<Data> getDefaultEmptyValue() {
+		
+		ArrayList<Data> a = new ArrayList<>();
+		
+		if(this.size == -1) {
+			
+			return new ArrayData<Data>(a);
+		}
+
+		for(int i = 0; i < this.size; i++) {
+
+			a.add(this.containedType.getDefaultEmptyValue());
+		}
+
+		return new ArrayData<Data>(a);
 	}
 	
 	@Override

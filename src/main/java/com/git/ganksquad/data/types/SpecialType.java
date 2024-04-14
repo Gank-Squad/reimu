@@ -1,6 +1,8 @@
 package com.git.ganksquad.data.types;
 
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.NoneData;
 
 public enum SpecialType implements ReimuType{
 
@@ -38,6 +40,10 @@ public enum SpecialType implements ReimuType{
 		}
 	};
 
+	@Override
+	public Data getDefaultEmptyValue() {
+		return NoneData.instance;
+	}
 	@Override
 	public String getLookupName() {
 		return this.toString();

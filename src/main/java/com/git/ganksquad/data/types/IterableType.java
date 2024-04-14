@@ -1,8 +1,13 @@
 package com.git.ganksquad.data.types;
 
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.IterableData;
+import com.git.ganksquad.data.IterableData.IterState;
+import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.data.types.traits.IterableTrait;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
+import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 public class IterableType implements AggregateType, SingleTypeContainer, IterableTrait {
 
@@ -57,5 +62,10 @@ public class IterableType implements AggregateType, SingleTypeContainer, Iterabl
 	@Override
 	public String getLookupName() {
 		return this.toString();
+	}
+
+	@Override
+	public Data getDefaultEmptyValue() {
+		return NoneData.instance;
 	}
 }

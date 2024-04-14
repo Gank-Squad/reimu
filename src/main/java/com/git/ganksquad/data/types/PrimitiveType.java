@@ -3,6 +3,8 @@ package com.git.ganksquad.data.types;
 import org.tinylog.Logger;
 
 import com.git.ganksquad.ReimuTypeResolver;
+import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.impl.PrimitiveData;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 
 public enum PrimitiveType implements ReimuType {
@@ -46,10 +48,19 @@ public enum PrimitiveType implements ReimuType {
 		public int getBitSize() {
 			return 8;
 		}
+
+		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData((byte)0);
+		}
 	},
 
 	SHORT{
 		
+		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData((short)0);
+		}
 		@Override
 		public Object getValueFromString(String value) {
 			return Short.parseShort(value);
@@ -91,6 +102,10 @@ public enum PrimitiveType implements ReimuType {
 	INT{
 		
 		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData((int)0);
+		}
+		@Override
 		public Object getValueFromString(String value) {
 			return Integer.parseInt(value);
 		}
@@ -131,6 +146,11 @@ public enum PrimitiveType implements ReimuType {
 
 	LONG{
 		
+		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData(0L);
+		}
+
 		@Override
 		public Object getValueFromString(String value) {
 			return Long.parseLong(value);
@@ -174,6 +194,11 @@ public enum PrimitiveType implements ReimuType {
 	FLOAT{
 		
 		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData(0f);
+		}
+
+		@Override
 		public Object getValueFromString(String value) {
 			return Float.parseFloat(value);
 		}
@@ -214,6 +239,11 @@ public enum PrimitiveType implements ReimuType {
 
 	DOUBLE{
 		
+		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData(0.0);
+		}
+
 		@Override
 		public Object getValueFromString(String value, int ordinal) {
 			return getValueFromString(value);
@@ -257,6 +287,11 @@ public enum PrimitiveType implements ReimuType {
 	BOOLEAN{
 		
 		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData(false);
+		}
+
+		@Override
 		public Object getValueFromString(String value, int ordinal) {
 			return getValueFromString(value);
 		}
@@ -298,6 +333,11 @@ public enum PrimitiveType implements ReimuType {
 
 	CHAR{
 		
+		@Override
+		public Data getDefaultEmptyValue() {
+			return new PrimitiveData('0');
+		}
+
 		@Override
 		public Object getValueFromString(String value, int ordinal) {
 			return getValueFromString(value);
