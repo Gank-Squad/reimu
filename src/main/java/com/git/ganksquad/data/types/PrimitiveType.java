@@ -188,4 +188,27 @@ public enum PrimitiveType implements ReimuType {
 
 	public abstract Object getValueFromString(String value);
 	public abstract Object getValueFromString(String value, int radix);
+	
+	public static PrimitiveType getTypeFromString(String s) {
+	    if (s.equals("b")) {
+	        return PrimitiveType.BYTE;
+	    } else if (s.equals("s")) {
+	        return PrimitiveType.SHORT;
+	    } else if (s.equals("i")) {
+	        return PrimitiveType.INT;
+	    } else if (s.equals("l")) {
+	        return PrimitiveType.LONG;
+	    } else if (s.equals("f")) {
+	        return PrimitiveType.FLOAT;
+	    } else if (s.equals("d")) {
+	        return PrimitiveType.DOUBLE;
+	    } else if (s.equals("c")) {
+	        return PrimitiveType.CHAR;
+	    } else if (s.equals("B")) {
+	        return PrimitiveType.BOOLEAN;
+	    }
+	    else {
+	        return null;
+	    }
+	}
 }
