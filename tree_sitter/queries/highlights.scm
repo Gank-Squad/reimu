@@ -10,7 +10,7 @@
 
 [
  "var"
- ; "func"
+ "struct"
  "in"
  ] @keyword
 
@@ -72,6 +72,9 @@
  (type
    aggregate: (aggregate_type))
  ]@type
+
+ (struct_definition
+   type_name: (type) @type)
 
 (primitive_type) @type.builtin
 

@@ -8,6 +8,10 @@
       "required": false,
       "types": [
         {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "type",
           "named": true
         }
@@ -443,6 +447,10 @@
         {
           "type": "statement",
           "named": true
+        },
+        {
+          "type": "struct_definition",
+          "named": true
         }
       ]
     }
@@ -485,6 +493,40 @@
         },
         {
           "type": "while",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "struct_definition",
+    "named": true,
+    "fields": {
+      "type_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "statement_end",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         }
       ]
@@ -791,6 +833,10 @@
   {
     "type": "string",
     "named": true
+  },
+  {
+    "type": "struct",
+    "named": false
   },
   {
     "type": "var",

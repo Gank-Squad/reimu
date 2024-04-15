@@ -46,10 +46,17 @@ module.exports = grammar({
     rules: {
         source_file: $ => repeat(choice(
             $.function_definition,
+            $.struct_definition,
             $.statement
             // TODO: other kinds of definitions
         )),
 
+        struct_definition: $ => seq(
+            'struct',
+            field("type_name", $.type),
+            seq( '(', commaSep(seq($.type, $.identifier)), ')'),
+            $.statement_end
+        ),
 
         function_definition: $ => seq(
             field("return_type", $.type),
@@ -172,6 +179,8 @@ module.exports = grammar({
             $.unary_expression,
             prec.left(PREC.PAREN_DECLARATOR, seq('(', $.expression ,')')),
             prec.left(PREC.PAREN_DECLARATOR, seq('[', commaSep($.expression) ,']')),
+            prec.left(PREC.PAREN_DECLARATOR, seq($.expression, '[', commaSep($.expression) ,']')),
+            prec.left(PREC.PAREN_DECLARATOR, seq($.expression, '{', commaSep($.expression) ,'}')),
             prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
             prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
             prec.left(PREC.MULTIPLY, seq($.expression, '%', $.expression)),
@@ -186,7 +195,7 @@ module.exports = grammar({
             prec.left(PREC.RELATIONAL, seq($.expression, '<=', $.expression)),
             prec.left(PREC.RELATIONAL, seq($.expression, '>', $.expression)),
             prec.left(PREC.RELATIONAL, seq($.expression, '>=', $.expression)),
-            prec.left(PREC.ASSIGNMENT, seq($.identifier, '=', $.expression)),
+            prec.left(PREC.ASSIGNMENT, seq($.expression, '=', $.expression)),
             $.call_expression,
             $.integer,
             $.hex_integer,
@@ -213,9 +222,12 @@ module.exports = grammar({
             'var'
         ),
 
-        aggregate_type: $=> choice(
-            'string',
-            seq( 'iter', '[', $.type, ']'),
+        aggregate_type: $=> prec.left(PREC.SUBSCRIPT,
+            choice(
+                'string',
+                $.identifier,
+                seq( 'iter', '[', $.type, ']'),
+            ),
         ),
 
         primitive_type: $ => choice(
