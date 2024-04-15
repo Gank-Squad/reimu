@@ -123,6 +123,11 @@ public class App
 											
 											return new IntegerData(((ArrayData)d).size());
 										}
+										if(d instanceof StringData) {
+											
+											return new IntegerData(((StringData)d).value.length());
+										}
+
 										return new IntegerData(0);
 									}
 
