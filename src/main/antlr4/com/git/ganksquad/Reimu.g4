@@ -66,11 +66,41 @@ g_expr returns [Expression value]
     | '-' e2=g_expr                 { $value = ArithmeticExpression.sub(IntegerLiteral.zero(), $e2.value);}
     | '++' e2=g_expr                { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e2.value, ArithmeticExpression.add($e2.value, new IntegerLiteral(1)));}
     | '--' e2=g_expr                { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e2.value, ArithmeticExpression.sub($e2.value, new IntegerLiteral(1)));}
-    | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
-    | e1=g_expr '*' e2=g_expr       { $value = ArithmeticExpression.mul($e1.value, $e2.value); }
-    | e1=g_expr '%' e2=g_expr       { $value = ArithmeticExpression.mod($e1.value, $e2.value); }
-    | e1=g_expr '+' e2=g_expr       { $value = ArithmeticExpression.add($e1.value, $e2.value); }
-    | e1=g_expr '-' e2=g_expr       { $value = ArithmeticExpression.sub($e1.value, $e2.value); }
+    | e1=g_expr ' / ' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }
+    | e1=g_expr DIVCAST e2=g_expr   { $value = CastExpression.from(PrimitiveType.getTypeFromString($DIVCAST.text.substring($DIVCAST.text.length() - 1)), 
+        PrimitiveType.getTypeFromString($DIVCAST.text.substring(0,1)) == null ? ArithmeticExpression.div($e1.value, $e2.value) : 
+        ArithmeticExpression.div(
+            CastExpression.from(PrimitiveType.getTypeFromString($DIVCAST.text.substring(0,1)), $e1.value),
+            CastExpression.from(PrimitiveType.getTypeFromString($DIVCAST.text.substring(0,1)), $e2.value))); }
+
+    | e1=g_expr ' * ' e2=g_expr       { $value = ArithmeticExpression.mul($e1.value, $e2.value); }
+    | e1=g_expr MULCAST e2=g_expr   { $value = CastExpression.from(PrimitiveType.getTypeFromString($MULCAST.text.substring($MULCAST.text.length() - 1)), 
+        PrimitiveType.getTypeFromString($MULCAST.text.substring(0,1)) == null ? ArithmeticExpression.mul($e1.value, $e2.value) : 
+        ArithmeticExpression.mul(
+            CastExpression.from(PrimitiveType.getTypeFromString($MULCAST.text.substring(0,1)), $e1.value),
+            CastExpression.from(PrimitiveType.getTypeFromString($MULCAST.text.substring(0,1)), $e2.value))); }
+
+    | e1=g_expr ' % ' e2=g_expr       { $value = ArithmeticExpression.mod($e1.value, $e2.value); }
+    | e1=g_expr MODCAST e2=g_expr   { $value = CastExpression.from(PrimitiveType.getTypeFromString($MODCAST.text.substring($MODCAST.text.length() - 1)), 
+        PrimitiveType.getTypeFromString($MODCAST.text.substring(0,1)) == null ? ArithmeticExpression.mod($e1.value, $e2.value) : 
+        ArithmeticExpression.mod(
+            CastExpression.from(PrimitiveType.getTypeFromString($MODCAST.text.substring(0,1)), $e1.value),
+            CastExpression.from(PrimitiveType.getTypeFromString($MODCAST.text.substring(0,1)), $e2.value))); }
+
+    | e1=g_expr ' + ' e2=g_expr     { $value = ArithmeticExpression.add($e1.value, $e2.value); }
+    | e1=g_expr ADDCAST e2=g_expr   { $value = CastExpression.from(PrimitiveType.getTypeFromString($ADDCAST.text.substring($ADDCAST.text.length() - 1)), 
+                                        PrimitiveType.getTypeFromString($ADDCAST.text.substring(0,1)) == null ? ArithmeticExpression.add($e1.value, $e2.value) : 
+                                        ArithmeticExpression.add(
+                                            CastExpression.from(PrimitiveType.getTypeFromString($ADDCAST.text.substring(0,1)), $e1.value),
+                                            CastExpression.from(PrimitiveType.getTypeFromString($ADDCAST.text.substring(0,1)), $e2.value))); }
+
+    | e1=g_expr ' - ' e2=g_expr       { $value = ArithmeticExpression.sub($e1.value, $e2.value); }
+    | e1=g_expr SUBCAST e2=g_expr   { $value = CastExpression.from(PrimitiveType.getTypeFromString($SUBCAST.text.substring($SUBCAST.text.length() - 1)), 
+        PrimitiveType.getTypeFromString($SUBCAST.text.substring(0,1)) == null ? ArithmeticExpression.sub($e1.value, $e2.value) : 
+        ArithmeticExpression.sub(
+            CastExpression.from(PrimitiveType.getTypeFromString($SUBCAST.text.substring(0,1)), $e1.value),
+            CastExpression.from(PrimitiveType.getTypeFromString($SUBCAST.text.substring(0,1)), $e2.value))); }
+
     | e1=g_expr '&' e2=g_expr       { $value = ArithmeticExpression.and($e1.value, $e2.value); }
     | e1=g_expr '^' e2=g_expr       { $value = ArithmeticExpression.xor($e1.value, $e2.value); }
     | e1=g_expr '|' e2=g_expr       { $value = ArithmeticExpression.or($e1.value, $e2.value); }
@@ -262,6 +292,12 @@ DOUBLE: INTEGER '.' INTEGER    ;
 
 BOOLEAN: ( 'true' | 'false' ) ;
 
+fragment PRIMITIVES: [bsilfdcB];
+ADDCAST : PRIMITIVES? '+' PRIMITIVES;
+SUBCAST : PRIMITIVES? '-' PRIMITIVES;
+MULCAST : PRIMITIVES? '*' PRIMITIVES;
+DIVCAST : PRIMITIVES? '/' PRIMITIVES;
+MODCAST : PRIMITIVES? '%' PRIMITIVES;
 
 // MUST COME AFTER KEYWORDS
 SYMBOL          : [a-zA-Z_][0-9a-zA-Z_]* ;

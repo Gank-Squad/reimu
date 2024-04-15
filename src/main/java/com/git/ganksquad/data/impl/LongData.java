@@ -138,7 +138,7 @@ public class LongData extends PrimitiveData {
 			return new LongData(this.value + ((PrimitiveData)other).getValue().longValue());
 		case DOUBLE:
 		case FLOAT:
-			return new DoubleData(this.value * ((PrimitiveData)other).getValue().doubleValue());
+			return new DoubleData(this.value + ((PrimitiveData)other).getValue().doubleValue());
 		default:
 			throw new CannotAddException(this, other);
 		}
