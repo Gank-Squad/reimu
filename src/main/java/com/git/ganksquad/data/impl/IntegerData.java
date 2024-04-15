@@ -124,7 +124,7 @@ public class IntegerData extends PrimitiveData {
 
 	@Override
 	public Data add(Data other) throws CannotAddException {
-
+		
 		if(!(other.getType() instanceof PrimitiveType)) {
 			throw new CannotAddException(this, other);
 		}
