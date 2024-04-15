@@ -4,7 +4,7 @@
 
 int fib(int i){
 
-    int[] hist = [0, 1, 1];
+    int[] hist = [0, 0, 1];
 
     for(int j = 0; j < i; ++j) {
 
