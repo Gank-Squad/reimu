@@ -86,12 +86,6 @@ public class RangeData implements Data, IterableData {
 
 	@Override
 	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
-		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
-			return new StringData(this.toString());
-		}
-		if(this.getType().isAssignableFrom(newType)) {
-			return this;
-		}
-		throw new CannotCastException(this.getType(), newType);
+		return Data.commonCast(this, newType);
 	}
 }

@@ -63,7 +63,7 @@ public class InvokeFunctionExpression implements Expression {
 
 		if(func.argumentTypes.size() != this.args.size()) {
 			
-			throw new TypeException("Argument number missmatch trying to invoke %s", func);
+			throw new TypeException("Argument number missmatch trying to invoke %s       %s", func, this);
 		}
 
 		Iterator<ReimuType> myTypes = this.argTypes.iterator();

@@ -16,14 +16,19 @@ import org.tinylog.configuration.Configuration;
 import com.git.ganksquad.ReimuParser.ProgramContext;
 import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.NativeMethod;
+import com.git.ganksquad.data.impl.ArrayData;
+import com.git.ganksquad.data.impl.IntegerData;
 import com.git.ganksquad.data.impl.NoneData;
 import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.types.PrimitiveType;
+import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.compiler.ReimuCompileException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.expressions.BlockExpression;
 import com.git.ganksquad.expressions.FunctionDefinitionExpression;
 import com.git.ganksquad.expressions.InvokeNativeExpression;
+import com.git.ganksquad.expressions.ReturnExpression;
 
 public class App 
 {
@@ -53,7 +58,7 @@ public class App
 				FunctionDefinitionExpression.from(SpecialType.VOID,
 						"print",
 						Arrays.asList("a"), 
-						Arrays.asList(AggregateType.STRING_TYPE), 
+						Arrays.asList(SpecialType.ANY), 
 						new BlockExpression(Arrays.asList(
 								new InvokeNativeExpression(new NativeMethod<Data>() {
 
@@ -67,6 +72,11 @@ public class App
 									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
 										return NoneData.instance;
 									}
+
+									@Override
+									public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
+										return SpecialType.VOID;
+									}
 								},  new String[]{"a"})
 								)
 								)
@@ -74,7 +84,7 @@ public class App
 				FunctionDefinitionExpression.from(SpecialType.VOID,
 						"println",
 						Arrays.asList("a"), 
-						Arrays.asList(AggregateType.STRING_TYPE), 
+						Arrays.asList(SpecialType.ANY), 
 						new BlockExpression(Arrays.asList(
 								new InvokeNativeExpression(new NativeMethod<Data>() {
 
@@ -88,11 +98,78 @@ public class App
 									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
 										return NoneData.instance;
 									}
+
+									@Override
+									public ReimuType typeCheck(ReimuTypeResolver resolver)
+											throws ReimuCompileException {
+										return SpecialType.VOID;
+									}
+								},  new String[]{"a"})
+								)
+								)
+						),
+				FunctionDefinitionExpression.from(PrimitiveType.INT,
+						"len",
+						Arrays.asList("a"), 
+						Arrays.asList(SpecialType.ANY), 
+						new BlockExpression(Arrays.asList(
+								new ReturnExpression(
+								new InvokeNativeExpression(new NativeMethod<Data>() {
+
+									@Override
+									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
+										Data d = runtime.deref(args[0]);
+										if(d instanceof ArrayData) {
+											
+											return new IntegerData(((ArrayData)d).size());
+										}
+										return new IntegerData(0);
+									}
+
+									@Override
+									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
+										return new IntegerData(0);
+									}
+
+									@Override
+									public ReimuType typeCheck(ReimuTypeResolver resolver)
+											throws ReimuCompileException {
+										return PrimitiveType.INT;
+									}
+								},  new String[]{"a"})
+								)
+								)
+								)
+						),
+				FunctionDefinitionExpression.from(SpecialType.VOID,
+						"printa",
+						Arrays.asList("a"), 
+						Arrays.asList(SpecialType.ANY), 
+						new BlockExpression(Arrays.asList(
+								new InvokeNativeExpression(new NativeMethod<Data>() {
+
+									@Override
+									public Data call(ReimuRuntime runtime, String... args) throws ReimuRuntimeException {
+										System.out.println(runtime.deref(args[0]));
+										return NoneData.instance;
+									}
+
+									@Override
+									public Data call(ReimuRuntime runtime) throws ReimuRuntimeException {
+										return NoneData.instance;
+									}
+
+									@Override
+									public ReimuType typeCheck(ReimuTypeResolver resolver)
+											throws ReimuCompileException {
+										return SpecialType.VOID;
+									}
 								},  new String[]{"a"})
 								)
 								)
 						)
-				));
+				)
+				);
 		
 	}
 

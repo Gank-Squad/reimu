@@ -58,6 +58,11 @@ g_expr_list returns [List<Expression> value]
     : ( el+=g_expr ( ',' el+=g_expr )* )?   { for(var e : $el) $value.add(e.value); }
     ;
 
+g_expr_list_1 returns [List<Expression> value] 
+    @init { $value = new ArrayList<Expression>(); }
+    : ( ',' el+=g_expr )*   { for(var e : $el) $value.add(e.value); }
+    ;
+
 g_expr returns [Expression value]
     : e1=g_expr '.' SYMBOL          { $value = new MemberDerefExpression($e1.value, $SYMBOL.text); }
     | e1=g_expr '[' e2=g_expr ']'   { $value = ArrayIndexExpression.from($e1.value, $e2.value); }
@@ -122,12 +127,14 @@ g_expr returns [Expression value]
     | e1=g_expr '&=' e2=g_expr      { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e1.value, ArithmeticExpression.and($e1.value, $e2.value)); }
     | e1=g_expr '||' e2=g_expr      { $value = BooleanArithmetic.or($e1.value, $e2.value); }
     | e1=g_expr '&&' e2=g_expr      { $value = BooleanArithmetic.and($e1.value, $e2.value); }
+    | 'new' '(' g_type ',' g_expr ')'    { $value = NewTypeExpression.from($g_type.value, $g_expr.value); }
     | SYMBOL '(' g_expr_list ')'    { $value = InvokeFunctionExpression.from($SYMBOL.text, $g_expr_list.value); }
     | g_value                       { $value = $g_value.value; }
     ;
 
 g_value returns [Expression value]
-    : INTEGER      { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $INTEGER.text); } 
+    : '[' e=g_expr_list ']'             { $value = ArrayLiteral.from($g_expr_list.value); }
+    | INTEGER      { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $INTEGER.text); } 
     | HEX_INTEGER  { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $HEX_INTEGER.text, 16); } 
     | BIN_INTEGER  { $value = PrimitiveLiteral.fromString(PrimitiveType.INT, $BIN_INTEGER.text, 2); } 
     | SHORT        { $value = PrimitiveLiteral.fromString(PrimitiveType.SHORT, $SHORT.text); }
@@ -143,7 +150,6 @@ g_value returns [Expression value]
     | STRING       { $value = StringLiteral.fromQuotedString($STRING.text); }
     | SYMBOL       { $value = DerefExpression.fromString($SYMBOL.text); }
     | e1=INTEGER '..' e2=INTEGER        { $value = RangeLiteral.fromString($e1.text, $e2.text); }
-    | '[' e=g_expr_list ']'             { $value = ArrayLiteral.from($g_expr_list.value); }
     | SYMBOL '{' e=g_expr_list '}'      { $value = CreateUserDefinedDataExpression.from($SYMBOL.text, $g_expr_list.value); }
     ;
 

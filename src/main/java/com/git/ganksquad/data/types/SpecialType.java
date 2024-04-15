@@ -28,6 +28,28 @@ public enum SpecialType implements ReimuType{
 		}
 	},
 
+	ANY {
+
+		@Override
+		public boolean isEqualType(ReimuType other) {
+			return true;
+		}
+
+		@Override
+		public boolean isAssignableFrom(ReimuType other) {
+			return true;
+		}
+
+		@Override
+		public void resolve(ReimuTypeResolver resolver) {
+		}
+		
+		@Override
+		public boolean canBeBool() {
+			return true;
+		}
+	},
+
 	UNKNOWN {
 
 		@Override

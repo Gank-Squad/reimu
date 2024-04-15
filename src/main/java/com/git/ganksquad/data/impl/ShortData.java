@@ -330,12 +330,11 @@ public class ShortData extends PrimitiveData {
 
 	@Override
 	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
-		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
-			return new StringData(this.toString());
-		}
+
 		if(!(newType instanceof PrimitiveType)) {
-			throw new CannotCastException(this.getType(), newType);
+			return super.castTo(newType);
 		}
+
 		switch ((PrimitiveType)newType) {
 		case BOOLEAN:
 			return new BooleanData(this.value != 0);

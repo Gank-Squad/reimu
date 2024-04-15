@@ -19,18 +19,22 @@ public class ParseChecks {
 	public static void RequiredNotNull(Object... items) throws NullPointerException {
 		
 		if(items == null || items.length == 0) return;
+		
+		int i = 0;
 
 		for(Object o : items) {
 			
 			if(o == null) {
 				
-				throw new NullPointerException("Parsed a null item");
+				throw new NullPointerException("Parsed a null item at " + i);
 			}
 			
 			if(o instanceof List) {
 				
 				RequiredAllNotNull((List<?>)o);
 			}
+
+			i++;
 		}
 	}
 	

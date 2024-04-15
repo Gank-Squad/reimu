@@ -9,6 +9,7 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.types.AggregateType;
 import com.git.ganksquad.data.types.FunctionType;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.runtime.CannotCastException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 import com.git.ganksquad.expressions.BlockExpression;
@@ -63,12 +64,6 @@ public class FunctionData implements Data {
 
 	@Override
 	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
-		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
-			return new StringData(this.toString());
-		}
-		if(this.getType().isEqualType(newType)) {
-			return this;
-		}
-		throw new CannotCastException(this.getType(), newType);
+		return Data.commonCast(this, newType);
 	}
 }

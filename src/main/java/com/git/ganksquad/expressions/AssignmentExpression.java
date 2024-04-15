@@ -157,6 +157,12 @@ public class AssignmentExpression implements Expression {
 			ArrayType atype = (ArrayType)this.type;
 			ArrayData<Data> ad = (ArrayData<Data>)r;
 
+			if(atype.size == -1) {
+				
+				reimuRuntime.declare(this.symbolName, ad);	
+
+				return NoneData.instance;
+			}
 			if(ad.size() > atype.size) {
 
 				throw new ReimuRuntimeException("Cannot assign array size larger than the type says");

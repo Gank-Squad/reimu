@@ -5,6 +5,7 @@ import com.git.ganksquad.data.Data;
 import com.git.ganksquad.data.types.AggregateType;
 import com.git.ganksquad.data.types.PrimitiveType;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.runtime.CannotCastException;
 import com.git.ganksquad.exceptions.runtime.CannotCompareException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
@@ -234,12 +235,11 @@ public class DoubleData extends PrimitiveData {
 
 	@Override
 	public Data castTo(ReimuType newType) throws ReimuRuntimeException {
-		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
-			return new StringData(this.toString());
-		}
+		
 		if(!(newType instanceof PrimitiveType)) {
-			throw new CannotCastException(this.getType(), newType);
+			return super.castTo(newType);
 		}
+		
 		switch ((PrimitiveType)newType) {
 		case BOOLEAN:
 			return new BooleanData(this.value != 0);

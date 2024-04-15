@@ -26,16 +26,17 @@ public class InvokeNativeExpression implements Expression {
 		this.params = params;
 	}
 
-	@Override
-	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
-		
-		return this.nativeMethod.call(reimuRuntime, this.params);
-	}
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
 		this.trace();
-		return SpecialType.VOID;
+		return this.nativeMethod.typeCheck(resolver);
+	}
+
+	@Override
+	public Data eval(ReimuRuntime reimuRuntime) throws ReimuRuntimeException {
+		
+		return this.nativeMethod.call(reimuRuntime, this.params);
 	}
 
 }

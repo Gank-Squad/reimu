@@ -1,6 +1,8 @@
 package com.git.ganksquad.exceptions.compiler;
 
+import com.git.ganksquad.data.types.FunctionType;
 import com.git.ganksquad.data.types.ReimuType;
+import com.git.ganksquad.expressions.InvokeFunctionExpression;
 
 public class TypeException extends ReimuCompileException {
 
@@ -25,5 +27,8 @@ public class TypeException extends ReimuCompileException {
 	}
 	public TypeException(String string, String name, ReimuType type, ReimuType t) {
 		super(String.format(string, name, type.toString(), t.toString()));
+	}
+	public TypeException(String string, FunctionType func, InvokeFunctionExpression invokeFunctionExpression) {
+		super(String.format(string, func, invokeFunctionExpression.toString()));
 	}
 }
