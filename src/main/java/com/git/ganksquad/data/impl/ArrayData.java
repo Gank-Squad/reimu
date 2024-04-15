@@ -69,7 +69,7 @@ public class ArrayData<T extends Data> implements Data, IterableData, IndexableD
 	@Override
 	public void set(IndexKeyData index, T value) throws CannotIndexException {
 
-		if(index instanceof LongData) {
+		if(index instanceof PrimitiveData) {
 			
 			this.set(((PrimitiveData)index).getValue().intValue(), value);
 			return;
