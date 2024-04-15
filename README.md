@@ -30,13 +30,13 @@ java -jar reimu.jar ./src_files/test.rei
  - [x] functions
  - [x] c style for loops
  - [x] for each loop
- - [ ] arrays
+ - [x] arrays
  - [x] int
- - [ ] float/double
+ - [x] float/double
  - [x] string
  - [x] boolean
- - [ ] casting
- - [ ] type system
+ - [x] casting
+ - [x] type system
  - [ ] variable parameter function calls
  - [ ] threading
- - [ ] math casting (in cast)/(out cast)
+ - [x] math casting (in cast)/(out cast)
