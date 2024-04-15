@@ -1,23 +1,46 @@
-
-
-
-
-
 BlockExpression[
-
-    FunctionDefinitionExpression[INT, newArr, [], [], 
-
-    BlockExpression[
-
-        IfExpression[
-
-            CompareExpression[op.EQ, PrimitiveLiteral[INT, 1], PrimitiveLiteral[INT, 1]], 
-
-            BlockExpression[PrimitiveLiteral[INT, 5]]
-
-        ], 
-        PrimitiveLiteral[INT, 9]
-    ]
+    FunctionDefinitionExpression[
+        INT, 
+        fib, 
+        [i], 
+        [INT], 
+        BlockExpression[
+            IfElseExpression[
+                IfExpression[
+                    CompareExpression[op.LTEQ, DerefExpression[i], PrimitiveLiteral[INT, 0]], 
+                    BlockExpression[
+                        ReturnExpression[PrimitiveLiteral[INT, 0]]
+                    ]
+                ], 
+                IfExpression[
+                    CompareExpression[op.EQ, 
+                        CompareExpression[op.EQ, 
+                            DerefExpression[i], 
+                            BooleanArithmetic[PrimitiveLiteral[INT, 1], 15, DerefExpression[i]]
+                        ], 
+                        PrimitiveLiteral[INT, 2]
+                    ], 
+                    BlockExpression[
+                        ReturnExpression[PrimitiveLiteral[INT, 1]]
+                    ]
+                ], 
+                BlockExpression[]
+            ], 
+            ReturnExpression[
+                ArithmeticExpression[op.ADD, 
+                    InvokeFunctionExpression[fib, [ArithmeticExpression[op.SUB, DerefExpression[i], PrimitiveLiteral[INT, 1]]]], 
+                    InvokeFunctionExpression[fib, [ArithmeticExpression[op.SUB, DerefExpression[i], PrimitiveLiteral[INT, 2]]]]
+                ]
+            ]
+        ]
     ], 
-    InvokeFunctionExpression[newArr, []]
+    InvokeFunctionExpression[
+        println, 
+        [
+            CastExpression[
+                ArrayType[CHAR, size: -1], 
+                InvokeFunctionExpression[fib, [PrimitiveLiteral[INT, 10]]]
+            ]
+        ]
+    ]
 ]
