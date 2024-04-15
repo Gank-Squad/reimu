@@ -370,7 +370,7 @@ public class ShortData extends PrimitiveData {
 	
 	@Override
 	public String toString() {
-		return Long.toString(this.value);
+		return Short.toString(this.value);
 	}
 
 	@Override

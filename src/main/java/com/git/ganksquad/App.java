@@ -19,7 +19,7 @@ import com.git.ganksquad.data.NativeMethod;
 import com.git.ganksquad.data.impl.ArrayData;
 import com.git.ganksquad.data.impl.IntegerData;
 import com.git.ganksquad.data.impl.NoneData;
-import com.git.ganksquad.data.types.AggregateType;
+import com.git.ganksquad.data.impl.StringData;
 import com.git.ganksquad.data.types.PrimitiveType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.data.types.SpecialType;

@@ -23,11 +23,11 @@ import com.git.ganksquad.exceptions.runtime.arithmetic.CannotXORException;
  */
 public class FloatData extends PrimitiveData {
 	
-	public double value = 0;
+	public float value = 0;
 	
 	public FloatData(double value) {
 		
-		this.value = value;
+		this.value =(float) value;
 	}
 
 	public FloatData(float value) {
@@ -295,7 +295,7 @@ public class FloatData extends PrimitiveData {
 	
 	@Override
 	public String toString() {
-		return Double.toString(this.value);
+		return Float.toString(this.value);
 	}
 
 	@Override

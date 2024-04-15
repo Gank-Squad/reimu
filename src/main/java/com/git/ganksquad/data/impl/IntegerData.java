@@ -358,7 +358,7 @@ public class IntegerData extends PrimitiveData {
 	
 	@Override
 	public String toString() {
-		return Long.toString(this.value);
+		return Integer.toString(this.value);
 	}
 
 	@Override

@@ -378,7 +378,7 @@ public class ByteData extends PrimitiveData {
 	
 	@Override
 	public String toString() {
-		return Long.toString(this.value);
+		return Byte.toString(this.value);
 	}
 
 	@Override

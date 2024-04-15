@@ -4,17 +4,20 @@ import com.git.ganksquad.data.BooleanEvaluable;
 import com.git.ganksquad.data.ClassKeys;
 import com.git.ganksquad.data.ComparableData;
 import com.git.ganksquad.data.Data;
+import com.git.ganksquad.data.IndexKeyData;
+import com.git.ganksquad.data.IndexableData;
+import com.git.ganksquad.data.IterableData;
+import com.git.ganksquad.data.impl.iterable.CounterIterState;
 import com.git.ganksquad.data.types.AggregateType;
 import com.git.ganksquad.data.types.ReimuType;
-import com.git.ganksquad.data.types.SpecialType;
-import com.git.ganksquad.exceptions.runtime.CannotCastException;
 import com.git.ganksquad.exceptions.runtime.CannotCompareException;
+import com.git.ganksquad.exceptions.runtime.CannotIndexException;
 import com.git.ganksquad.exceptions.runtime.ReimuRuntimeException;
 
 /**
  * Represents a string value.
  */
-public class StringData implements Data, ComparableData, BooleanEvaluable {
+public class StringData implements Data, ComparableData, BooleanEvaluable, IndexableData<CharData>, IterableData {
 	
 	public String value = "";
 	
@@ -90,4 +93,43 @@ public class StringData implements Data, ComparableData, BooleanEvaluable {
 		return Data.commonCast(this, newType);
 	}
 
+
+	@Override
+	public CharData get(IndexKeyData index) throws CannotIndexException {
+		if(index instanceof PrimitiveData) {
+			
+			return new CharData(this.value.charAt(((PrimitiveData)index).getValue().intValue()));
+		}
+
+		throw CannotIndexException.typeNotIndexableBy(getClass(), index.getClass());
+	}
+
+	@Override
+	public void set(IndexKeyData index, CharData value) throws CannotIndexException {
+		throw new CannotIndexException("Strings cannot have their values set");
+	}
+
+	@Override
+	public void update(IterState state) throws ReimuRuntimeException {
+		
+		state.mustBe(CounterIterState.class);
+		
+		CounterIterState s = (CounterIterState)state;
+		
+		if(s.counter < 0 || s.counter >= this.value.length()) {
+			
+			s.markFinished();
+
+			return;
+		}
+		
+		s.value = new CharData(this.value.charAt(s.counter));
+		s.counter += 1;
+		
+	}
+
+	@Override
+	public IterState newState() {
+		return new CounterIterState(0);
+	}
 }

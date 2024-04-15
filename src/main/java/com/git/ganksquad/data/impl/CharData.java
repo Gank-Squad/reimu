@@ -374,7 +374,7 @@ public class CharData extends PrimitiveData {
 	
 	@Override
 	public String toString() {
-		return Long.toString(this.value);
+		return Character.toString(this.value);
 	}
 
 	@Override
