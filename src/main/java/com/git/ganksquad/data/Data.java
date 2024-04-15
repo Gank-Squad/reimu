@@ -1,5 +1,7 @@
 package com.git.ganksquad.data;
 
+import com.git.ganksquad.data.impl.StringData;
+import com.git.ganksquad.data.types.AggregateType;
 import com.git.ganksquad.data.types.ReimuType;
 import com.git.ganksquad.data.types.SpecialType;
 import com.git.ganksquad.exceptions.runtime.CannotCastException;
@@ -27,6 +29,9 @@ public interface Data {
 			return d;
 		}
 
+		if(newType.isEqualType(AggregateType.STRING_TYPE)) {
+			return new StringData(d.toString());
+		}
 		if(newType.isAssignableFrom(d.getType())) {
 			return d;
 		}
