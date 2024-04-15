@@ -64,6 +64,7 @@ g_expr returns [Expression value]
     | '(' g_expr ')'                { $value = $g_expr.value; }
     | '(' g_type ')' e2=g_expr      { $value = CastExpression.from($g_type.value, $e2.value);}
     | '-' e2=g_expr                 { $value = ArithmeticExpression.sub(IntegerLiteral.zero(), $e2.value);}
+    | '!' e2=g_expr                 { $value = BooleanArithmetic.not($e2.value);}
     | '++' e2=g_expr                { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e2.value, ArithmeticExpression.add($e2.value, new IntegerLiteral(1)));}
     | '--' e2=g_expr                { $value = AssignmentExpression.assign(SpecialType.UNKNOWN, $e2.value, ArithmeticExpression.sub($e2.value, new IntegerLiteral(1)));}
     | e1=g_expr '/' e2=g_expr       { $value = ArithmeticExpression.div($e1.value, $e2.value); }

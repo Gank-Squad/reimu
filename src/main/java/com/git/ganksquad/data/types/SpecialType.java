@@ -24,7 +24,7 @@ public enum SpecialType implements ReimuType{
 		
 		@Override
 		public boolean canBeBool() {
-			return false;
+			return true;
 		}
 	},
 

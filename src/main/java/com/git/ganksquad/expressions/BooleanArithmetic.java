@@ -38,6 +38,12 @@ public class BooleanArithmetic implements Expression {
 
 		return new BooleanArithmetic(Operator.BOOL_AND, l, r);
 	}
+	public static BooleanArithmetic not(Expression l) {
+		
+		ParseChecks.RequiredNotNull(l);
+
+		return new BooleanArithmetic(Operator.BOOL_NOT, l, NoneExpression.get());
+	}
 
 	@Override
 	public ReimuType typeCheck(ReimuTypeResolver resolver) throws ReimuCompileException {
@@ -86,6 +92,10 @@ public class BooleanArithmetic implements Expression {
 		
 			return new BooleanData(false);
 			
+			
+		case Operator.BOOL_NOT:
+			
+			return new BooleanData(!le.evalAsBool());
 			
 		case Operator.BOOL_OR:
 			

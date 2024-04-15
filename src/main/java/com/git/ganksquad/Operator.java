@@ -21,6 +21,8 @@ public interface Operator {
 	public static final byte BOOL_OR = 15;
 	public static final byte BOOL_AND = 16;
 
+	public static final byte BOOL_NOT = 17;
+
 	public static String opString(byte op) {
 		
 		switch (op) {
@@ -56,6 +58,8 @@ public interface Operator {
 			return "op.BOOL_AND";
 		case BOOL_OR:
 			return "op.BOOL_OR";
+		case BOOL_NOT:
+			return "op.BOOL_NOT";
 		}
 
 		return "op.UNKNOWN";
