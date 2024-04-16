@@ -3,6 +3,7 @@
 
 This is the source code for the Reimu Interpreter.
 
+A brief summary of the language can be found [here](https://docs.google.com/presentation/d/15e1qHos6hoTqXgYGeagFJkQ_4VnzNW78qeBvsubOacI/edit?usp=sharing)
 
 ## Building
 
@@ -22,7 +23,13 @@ You should then have `./target/reimu-{version}-jar-with-dependencies.jar`. This 
 Once you have the interpreter jar file, simply run it with source files as the input.
 
 ```sh
-java -jar reimu.jar ./src_files/test.rei
+java -jar ./target/reimu-{version}-jar-with-dependencies.jar ./src_files/test.rei
+```
+
+Or you can run it without source files, and access an interactive shell
+
+```sh
+java -jar ./target/reimu-{version}-jar-with-dependencies.jar
 ```
 
 ## Features
@@ -37,6 +44,5 @@ java -jar reimu.jar ./src_files/test.rei
  - [x] boolean
  - [x] casting
  - [x] type system
- - [ ] variable parameter function calls
  - [ ] threading
  - [x] math casting (in cast)/(out cast)
