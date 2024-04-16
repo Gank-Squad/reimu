@@ -11,9 +11,9 @@ public class ReimuNameResolver {
 		
 		StringBuilder sb = new StringBuilder(name).append('<');
 		
-//		for(ReimuType t : params) {
-//			sb.append(t.toString()).append(';');
-//		}
+		for(ReimuType t : params) {
+			sb.append(t.getLookupName()).append(';');
+		}
 
 		sb.append(">");
 		
